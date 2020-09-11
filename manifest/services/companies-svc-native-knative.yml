@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - image: >-
-            quay.io/mouachan/companies-app/companies-svc:native-1.0
+            quay.io/mouachan/companies-svc:native-1.0
           env:
             - name: JAVA_OPTS
               value: "-Dvertx.cacheDirBase=/work/vertx"

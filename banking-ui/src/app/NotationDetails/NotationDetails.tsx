@@ -13,23 +13,29 @@ import {
   FormGroup
 } from '@patternfly/react-core';
 import ReactJson from 'react-json-view';
+import { useLastLocation } from 'react-router-last-location';
+import { Link, useLocation, BrowserRouter as Router } from "react-router-dom";
 
 interface INotationDetails {
   idProcess: string,
   notation: object
+}
+function useQuery() {
+  return new URLSearchParams(useLocation().search).get("idProcess");
 }
 class NotationDetailsResult extends React.Component<{},INotationDetails>  {
 
   constructor(props) {
     super(props);
     this.state = {
-      idProcess:  "6500ca48-cc02-4910-b289-44cb9ff60237",
+      idProcess:"1234"  ,
       notation: {}
     }
   }
 getNotation = () => {
   var graphql = "http://localhost:8180/graphql";
   console.log(graphql);
+  console.log(useQuery());
    fetch(graphql, {
     method: 'POST',
     headers: {

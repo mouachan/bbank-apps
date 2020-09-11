@@ -22,8 +22,8 @@ import { Form,
   ModalVariant,
   Title} from '@patternfly/react-core';
 
-var LOAN_VALIDATION_URL = process.env.LOAN_VALIDATION_URL ;
-var MANAGMENT_CONSOLE_URL = process.env.MANAGMENT_CONSOLE_URL; 
+const LOAN_VALIDATION_URL = process.env.LOAN_VALIDATION_URL ;
+const MANAGMENT_CONSOLE_URL = process.env.MANAGMENT_CONSOLE_URL; 
 
 
 interface ILoanValidation {
@@ -114,7 +114,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
     });
     console.log(payload);
     var url = LOAN_VALIDATION_URL;
-    fetch({LOAN_VALIDATION_URL} , {
+    fetch(process.env.LOAN_VALIDATION_URL , {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -484,11 +484,11 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
           onClose={this.handleResultModal}
           
           actions={[
-            <Button key="confirm" variant="primary" onClick={this.handleResultModal}>
+            <Button component="a" variant="primary" href={"/notation?idProcess="+this.state.idProcess}>
               Close
             </Button>
           ]}>    
-            <Alert variant={this.convertLevel("LOW","Process started")}  title={"Process started, follow it on " +MANAGMENT_CONSOLE_URL+ this.state.idProcess } /> 
+            <Alert variant={this.convertLevel("LOW","Process started")}  title={"Process started" } /> 
         </Modal>
       </Form>
     );

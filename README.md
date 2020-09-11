@@ -117,13 +117,10 @@ Create a knative-serving instance
 ```
 oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/banking-apps.git \
 --name=companies-svc \
---context-dir=banking-apps
-
+--context-dir=bbank-apps/companies-svc
 ```
 
 ## Or build and generate container image 
-
-
 ```
 cd ../companies-svc
 ```
@@ -150,17 +147,17 @@ docker push quay.io/mouachan/companies-svc:1.0
 Or native
 ```
 docker tag mouachani/companies-svc:native-1.0 quay.io/mouachan/companies-svc:native-1.0
-docker push quay.io/mouachan/companies-app/companies-svc:native-1.0
+docker push quay.io/mouachan/bbank-apps/companies-svc:native-1.0
 ```
 
-## Create a knative service 
+## deploy a knative service 
 ```
 cd manifest
 oc apply -f ./companies-svc-knative.yml 
 ```
 
 ## verify the service availability
-Browse the url  : http://companies-svc-companies-app.apps.ocp4.ouachani.net/
+Browse the url  : http://companies-svc-bbank-apps.apps.ocp4.ouachani.net/
 replace .apps.ocp4.ouachani.net by your OCP url
 
 ![Verify service](/img/list-companies.png)
@@ -200,38 +197,55 @@ oc get secret/kogito-infinispan-credential -o yaml
 echo ZGV2ZWxvcGVy | base64 -d
 ```
 
-Modify the values of the properties related to the services kafka, infinispan, data-index and companies-svc in ./manifest/companies-notation-svc.properties also infinispan credential  and create the configmap
+Modify the values of the properties host/port to the  kafka, infinispan, data-index and companies-svc services in ./manifest/*-cm.yml also infinispan credential :
+```
+ #rest client 
+    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/url=companies-svc
+    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/scope=javax.enterprise.context.ApplicationScoped
+    
+    #infinispan 
+    quarkus.infinispan-client.sasl-mechanism=PLAIN
+    quarkus.infinispan-client.server-list=kogito-infinispan:11222
+    quarkus.infinispan-client.auth-username=developer
+    quarkus.infinispan-client.auth-password=jPBNvQ2uqg@xJ6Pd%
 
+    # kafka eligibility service 
+    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank-apps.svc:9092
 ```
-oc apply -f ./manifest/companies-notation-svc-properties.yml
-oc apply -f ./manifest/companies-notation-svc-protobuf-files.yml
+Create the config map
+```
+oc apply -f ./manifest/properties/eligibilitty-properties-cm.yml
+oc apply -f ./manifest/protobuf/eligibilitty-protobuf-files.yml
 
-oc apply -f ./manifest/companies-loan-application-svc-properties.yml
-oc apply -f ./manifest/companies-loan-application-svc-protobuf-files.yml 
-```
+oc apply -f ./manifest/properties/notation-properties-cm.yml
+oc apply -f ./manifest/protobuf/computeNotation-protobuf-files.yml
 
-
-```
-kogito deploy-service companies-notation-svc --enable-persistence --enable-events 
-```
-
-```
-./mvnw clean package -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.name=companies-notation-svc -Dquarkus.container-image.tag=1.0 -Dquarkus.container-image.builder=s2i
-```
-
-```
-oc start-build companies-notation-svc --from-dir=target -n companies-app 
-```
-
-
-```
-kogito deploy-service companies-loan-application-svc --enable-persistence --enable-events 
-```
-
-```
-./mvnw clean package -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.name=companies-loan-svc -Dquarkus.container-image.tag=1.0 -Dquarkus.container-image.builder=s2i
+oc apply -f ./manifest/properties/loan-properties-cm.yml
+oc apply -f ./manifest/protobuf/loanValidation-protobuf-files.yml 
+oc apply -f ./manifest/protobuf/callnotation-protobuf-files.yml
 ```
 
+create  eligibility, notation, loan services
 ```
-oc start-build companies-loan-application-svc --from-dir=target -n companies-app 
+kogito deploy-service eligibility --enable-persistence --enable-events 
+kogito deploy-service notation --enable-persistence --enable-events 
 ```
+
+Package and start build
+```
+cd ../eligibility
+./mvnw clean package -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.name=eligibility -Dquarkus.container-image.tag=1.0 -Dquarkus.container-image.builder=s2i
+oc start-build eligibility --from-dir=target -n bbank-apps 
+
+cd ../notation
+./mvnw clean package -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.name=notation -Dquarkus.container-image.tag=1.0 -Dquarkus.container-image.builder=s2i
+oc start-build notation --from-dir=target -n bbank-apps 
+
+cd ../loan
+./mvnw clean package -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.name=loan -Dquarkus.container-image.tag=1.0 -Dquarkus.container-image.builder=s2i
+oc start-build loan --from-dir=target -n bbank-apps 
+
+```
+
+
+....To be continued (build and deploy frontend / test the app)
