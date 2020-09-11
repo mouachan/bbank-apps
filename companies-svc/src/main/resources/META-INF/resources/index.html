@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html ng-app="CompaniesManagement">
+
+<head>
+  <meta charset="utf-8">
+  <title>Nouvelle Déclaration</title>
+
+    <!-- PatternFly Styles -->
+    <link rel="stylesheet" href="js/patternfly.min.css">
+    <link rel="stylesheet" href="js/patternfly-additions.min.css">
+  
+    <!-- Bootstrap base + PatternFly extensions + Your styles -->
+    <!-- <link rel="stylesheet" href="css/mystyles.css"> -->
+  
+    <script src="js/patternfly-settings.js"></script>
+    <script src="js/patternfly-settings-colors.js"></script>
+    <script src="js/patternfly-settings-charts.js"></script>
+    <script src="js/angular.js"></script>
+    <!--
+    <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-dragdrop.js"></script>
+    -->
+    <script src="js/angular-sanitize.js"></script>
+    <script src="js/angular-animate.js"></script>
+    <script src="js/ui-bootstrap-tpls.js"></script>
+    <!--
+    <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-bootstrap-prettify.js"></script>
+    -->
+    <script src="js/lodash.min.js"></script>
+    <script src="js/angular-patternfly.js"></script>
+    <script src="js/angular-ui-router.min.js"></script>
+    <script src="js/angular-drag-and-drop-lists.js"></script>
+
+  <script type="text/javascript">
+    var app = angular.module("CompaniesManagement", []);
+
+    //Controller Part
+    app.controller("CompaniesManagementController", function ($scope, $http) {
+
+      //Initialize page with default data which is blank in this example
+      $scope.companies = [];
+
+      $scope.form = {
+        siren: "",
+        denomination: ""
+      };
+
+      //Now load the data from server
+      _refreshPageData();
+
+      //HTTP POST methods for add 
+      $scope.add = function () {
+        var data = { "statusRcs": $scope.form.statusRcs,"siren": $scope.form.siren,"siret": $scope.form.siret, "denomination": $scope.form.denomination, "address": $scope.form.address,"type": $scope.form.type,
+        "type": $scope.form.type, "tva": $scope.form.tva, "immatriculationDate": $scope.form.immatriculationDate,"updateDate": $scope.form.updateDate};
+
+        $http({
+          method: "POST",
+          url: '/companies/add',
+          data: angular.toJson(data),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then(_success, _error);
+      };
+
+      /* Private Methods */
+      //HTTP GET- get all company collection
+      function _refreshPageData() {
+        $http({
+          method: 'GET',
+          url: '/companies'
+        }).then(function successCallback(response) {
+          $scope.companies = response.data;
+        }, function errorCallback(response) {
+          console.log(response.statusText);
+        });
+      }
+
+      function _success(response) {
+        _refreshPageData();
+        _clearForm();
+      }
+
+      function _error(response) {
+        alert(response.data.message || response.statusText);
+      }
+
+      //Clear the form
+      function _clearForm() {
+        $scope.form.siren = "";
+        $scope.form.denomination = "";
+      }
+    });
+  </script>
+
+
+</head>
+
+<body class="cards-pf">
+  <nav class="navbar navbar-default navbar-pf" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">
+        <img src="img/b.png" alt="Kogito Loan Bank" />
+      </a>
+    </div>
+    <div class="collapse navbar-collapse navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-utility">
+        <li>
+          <a href="#">Utilisateur</a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="pficon pficon-user"></span>
+            Mourad Ouachani <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#">Link</a>
+            </li>
+            <li>
+              <a href="#">Another link</a>
+            </li>
+            <li>
+              <a href="#">Something else here</a>
+            </li>
+            <li class="divider"></li>
+            <li class="dropdown-submenu">
+              <a tabindex="-1" href="#">More options</a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="#">Link</a>
+                </li>
+                <li>
+                  <a href="#">Another link</a>
+                </li>
+                <li>
+                  <a href="#">Something else here</a>
+                </li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li>
+                  <a href="#">Separated link</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="#">One more separated link</a>
+                </li>
+              </ul>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="#">One more separated link</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-primary">
+        <li>
+          <a href="#">Home</a>
+        </li>
+        <li class="active">
+          <a href="#">Register Company</a>
+        </li>
+        <li>
+          <!-- <a href="#">Decision Service Regression Testing</a> -->
+        </li>
+        <li>
+          <!-- <a href="#">Decision Service Impact Testing</a> -->
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div ng-controller="CompaniesManagementController" class="container-fluid container-cards-pf">
+
+    <div class="col-xs-6 col-md-4">
+      <div class="card-pf card-pf-utilization">
+        <div class="card-pf-heading">
+           <b>Manage companies</b> 
+        </div>
+        <div class="card-pf-body">
+          <form class="form-horizontal" role="form">
+            <div class="card-pf-title">Register a company</div>
+              <br />
+              <div class="form-group">
+                <label for="inputstatusRcs" class="col-sm-2 control-label">Rcs Id</label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.statusRcs" class="form-control" id="statusRcs" placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputsiren" class="col-sm-2 control-label">Siren</label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.siren" class="form-control" id="siren" placeholder="5">
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label for="inputsiret" class="col-sm-2 control-label">Siret</label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.siret" class="form-control" id="siret" placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputdenomination" class="col-sm-2 control-label">Denomination</label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.denomination" class="form-control" id="denomination"
+                    placeholder="5">
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="inputaddress" class="col-sm-2 control-label">Address</label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.address" class="form-control" id="address"
+                    placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputtype" class="col-sm-2 control-label">Type </label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.type" class="form-control" id="type"
+                    placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputtva" class="col-sm-2 control-label">TVA </label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.tva" class="form-control" id="tva"
+                    placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="inputimmatriculation" class="col-sm-2 control-label">Registred on </label>
+                <div class="col-sm-3">
+                  <input type="date" ng-model="form.immatriculationDate" class="form-control" id="immatriculationDate"
+                    placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="capitalSocial" class="col-sm-2 control-label">Capital</label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.capitalSocial" class="form-control" id="capitalSocial"
+                    placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="chiffreAffaire" class="col-sm-2 control-label">Revenu</label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.chiffreAffaire" class="form-control" id="chiffreAffaire"
+                    placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="trancheEffectif" class="col-sm-2 control-label">Number Employees</label>
+                <div class="col-sm-3">
+                  <input type="text" ng-model="form.trancheEffectif" class="form-control" id="trancheEffectif"
+                    placeholder="5">
+                </div>
+              </div>
+
+
+              <div class="form-group">
+                <label for="inputupdate" class="col-sm-2 control-label">Updated on </label>
+                <div class="col-sm-3">
+                  <input type="date" ng-model="form.updateDate" class="form-control" id="updateDate"
+                    placeholder="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" ng-click="add()" class="btn btn-default">Soumettre</button>
+                </div>
+              </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="col-xs-12 col-md-6">
+      <div class="card-pf">
+        <div class="card-pf-heading">  
+          <h2 class="card-pf-title">
+            <b>Registred Company</b>
+          </h2>
+        </div>
+        <div>
+          <div class="card-pf-title">Details</div>
+          <table class="table" style="margin-bottom: 10px" >
+            <thead>
+              <tr>
+                <th scope="col">Rcs Number</th>
+                <th scope="col">Siren</th>
+                <th scope="col">Siret</th>
+
+                <th scope="col">Denomination</th>
+                <th scope="col">Address</th>
+                <th scope="col">Type</th>
+                <th scope="col">TVA</th>
+                <th scope="col">Capital</th>
+                <th scope="col">Revenu</th>
+                <th scope="col">Employees number</th>
+                <th scope="col">Registred on</th>
+                <th scope="col">Updated on</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="company in companies">
+                <td>{{company.statusRcs}}</td>
+                <td>{{company.siren}}</td>
+                <td>{{company.siret}}</td>
+                <td>{{company.denomination}}</td>
+                <td>{{company.address}}</td>
+                <td>{{company.type}}</td>
+                <td>{{company.tva}}</td>
+                <td>{{company.capitalSocial}}</td>
+                <td>{{company.chiffreAffaire}}</td>
+                <td>{{company.trancheEffectif}}</td>
+                <td>{{company.immatriculationDate}}</td>
+                <td>{{company.updateDate}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

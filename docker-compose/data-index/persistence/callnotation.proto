@@ -1,0 +1,102 @@
+syntax = "proto2"; 
+package org.redhat.bbank.callnotation; 
+import "kogito-index.proto";
+import "kogito-types.proto";
+option kogito_model = "Callnotation";
+option kogito_id = "callnotation";
+
+/* @Indexed */ 
+message Bilan { 
+	option java_package = "org.redhat.bbank.callnotation";
+	/* @Field(store = Store.YES) */ 
+	optional double dl = 1; 
+	/* @Field(store = Store.YES) */ 
+	optional double ee = 2; 
+	/* @Field(store = Store.YES) */ 
+	optional double fl = 3; 
+	/* @Field(store = Store.YES) */ 
+	optional double fm = 4; 
+	/* @Field(store = Store.YES) */ 
+	optional double ga = 5; 
+	/* @Field(store = Store.YES) */ 
+	optional double gg = 6; 
+	/* @Field(store = Store.YES) */ 
+	optional double hn = 7; 
+	/* @Field(store = Store.YES) */ 
+	optional double hp = 8; 
+	/* @Field(store = Store.YES) */ 
+	optional double hq = 9; 
+	/* @Field(store = Store.YES) */ 
+	optional string siren = 10; 
+	/* @Field(store = Store.YES) */ 
+	repeated Variable variables = 11; 
+}
+/* @Indexed */ 
+message Callnotation { 
+	option java_package = "org.redhat.bbank.callnotation";
+	/* @Field(store = Store.YES)
+ @VariableInfo(tags="") */ 
+	optional Bilan _bilan = 1; 
+	/* @Field(store = Store.YES)
+ @VariableInfo(tags="") */ 
+	optional Notation _notation = 2; 
+	/* @Field(store = Store.YES) */ 
+	optional string id = 3; 
+	/* @Field(store = Store.YES)
+ @VariableInfo(tags="") */ 
+	optional Loan loan = 4; 
+	/* @Field(store = Store.YES) */ 
+	optional org.kie.kogito.index.model.KogitoMetadata metadata = 5; 
+}
+/* @Indexed */ 
+message Loan { 
+	option java_package = "org.redhat.bbank.callnotation";
+	/* @Field(store = Store.YES) */ 
+	optional int32 age = 1; 
+	/* @Field(store = Store.YES) */ 
+	optional double amount = 2; 
+	/* @Field(store = Store.YES) */ 
+	optional Bilan bilan = 3; 
+	/* @Field(store = Store.YES) */ 
+	optional double ca = 4; 
+	/* @Field(store = Store.YES) */ 
+	optional bool eligible = 5; 
+	/* @Field(store = Store.YES) */ 
+	optional string msg = 6; 
+	/* @Field(store = Store.YES) */ 
+	optional double nbEmployees = 7; 
+	/* @Field(store = Store.YES) */ 
+	optional int32 nbmonths = 8; 
+	/* @Field(store = Store.YES) */ 
+	optional Notation notation = 9; 
+	/* @Field(store = Store.YES) */ 
+	optional bool publicSupport = 10; 
+	/* @Field(store = Store.YES) */ 
+	optional double rate = 11; 
+	/* @Field(store = Store.YES) */ 
+	optional string siren = 12; 
+	/* @Field(store = Store.YES) */ 
+	optional string typeProjet = 13; 
+}
+/* @Indexed */ 
+message Notation { 
+	option java_package = "org.redhat.bbank.callnotation";
+	/* @Field(store = Store.YES) */ 
+	optional double decoupageSectoriel = 1; 
+	/* @Field(store = Store.YES) */ 
+	optional string note = 2; 
+	/* @Field(store = Store.YES) */ 
+	optional string orientation = 3; 
+	/* @Field(store = Store.YES) */ 
+	optional double score = 4; 
+	/* @Field(store = Store.YES) */ 
+	optional string typeAiguillage = 5; 
+}
+/* @Indexed */ 
+message Variable { 
+	option java_package = "org.redhat.bbank.callnotation";
+	/* @Field(store = Store.YES) */ 
+	optional string type = 1; 
+	/* @Field(store = Store.YES) */ 
+	optional double value = 2; 
+}

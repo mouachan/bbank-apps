@@ -1,0 +1,73 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  annotations:
+    org.kie.kogito/managed-by: Kogito Operator
+    org.kie.kogito/operator-crd: KogitoDataIndex
+  name: loan-protobuf-files
+  namespace: banking-apps
+  labels:
+    app: loan-protobuf-files
+data:
+  loanValidation.proto: |-
+    syntax = "proto2"; 
+    package org.redhat.notation.loanValidation; 
+    import "kogito-index.proto";
+    import "kogito-types.proto";
+    option kogito_model = "LoanValidation";
+    option kogito_id = "loanValidation";
+    /* @Indexed */ 
+    message Bilan { 
+      option java_package = "org.redhat.notation.loanValidation";
+      /* @Field(store = Store.YES) */ 
+      optional string dl = 1; 
+      /* @Field(store = Store.YES) */ 
+      optional string ee = 2; 
+      /* @Field(store = Store.YES) */ 
+      optional string fl = 3; 
+      /* @Field(store = Store.YES) */ 
+      optional string fm = 4; 
+      /* @Field(store = Store.YES) */ 
+      optional string ga = 5; 
+      /* @Field(store = Store.YES) */ 
+      optional string gg = 6; 
+      /* @Field(store = Store.YES) */ 
+      optional string hn = 7; 
+      /* @Field(store = Store.YES) */ 
+      optional string hp = 8; 
+      /* @Field(store = Store.YES) */ 
+      optional string hq = 9; 
+      /* @Field(store = Store.YES) */ 
+      optional string siren = 10; 
+    }
+    /* @Indexed */ 
+    message LoanValidation { 
+      option java_package = "org.redhat.notation.loanValidation";
+      /* @Field(store = Store.YES)
+    @VariableInfo(tags="input") */ 
+      optional Bilan bilan = 1; 
+      /* @Field(store = Store.YES) */ 
+      optional string id = 2; 
+      /* @Field(store = Store.YES)
+    @VariableInfo(tags="output,tracked") */ 
+      optional Notation notation = 3; 
+      /* @Field(store = Store.YES) */ 
+      optional org.kie.kogito.index.model.KogitoMetadata metadata = 4; 
+      /* @Field(store = Store.YES)
+    @VariableInfo(tags="internal") */
+      optional bool companyExist = 5;
+    }
+    /* @Indexed */ 
+    message Notation { 
+      option java_package = "org.redhat.notation.loanValidation";
+      /* @Field(store = Store.YES) */ 
+      optional double decoupageSectoriel = 1; 
+      /* @Field(store = Store.YES) */ 
+      optional string note = 2; 
+      /* @Field(store = Store.YES) */ 
+      optional string orientation = 3; 
+      /* @Field(store = Store.YES) */ 
+      optional double score = 4; 
+      /* @Field(store = Store.YES) */ 
+      optional string typeAiguillage = 5; 
+    }

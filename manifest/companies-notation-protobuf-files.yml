@@ -1,0 +1,95 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  annotations:
+    org.kie.kogito/managed-by: Kogito Operator
+    org.kie.kogito/operator-crd: KogitoDataIndex
+  name: companies-notation-svc-protobuf-files
+  namespace: companies-app
+  labels:
+    app: companies-notation-svc-protobuf-files
+data:
+  processNotation.proto: |-
+    syntax = "proto2"; 
+    package org.redhat.notation.processNotation; 
+    import "kogito-index.proto";
+    import "kogito-types.proto";
+    option kogito_model = "ProcessNotation";
+    option kogito_id = "processNotation";
+    /* @Indexed */ 
+    message Bilan { 
+      option java_package = "org.redhat.notation.processNotation";
+      /* @Field(store = Store.YES) */ 
+      optional double dl = 1; 
+      /* @Field(store = Store.YES) */ 
+      optional double ee = 2; 
+      /* @Field(store = Store.YES) */ 
+      optional double fl = 3; 
+      /* @Field(store = Store.YES) */ 
+      optional double fm = 4; 
+      /* @Field(store = Store.YES) */ 
+      optional double ga = 5; 
+      /* @Field(store = Store.YES) */ 
+      optional double gg = 6; 
+      /* @Field(store = Store.YES) */ 
+      optional double hn = 7; 
+      /* @Field(store = Store.YES) */ 
+      optional double hp = 8; 
+      /* @Field(store = Store.YES) */ 
+      optional double hq = 9; 
+      /* @Field(store = Store.YES) */ 
+      optional string siren = 10; 
+    }
+    /* @Indexed */ 
+    message Notation { 
+      option java_package = "org.redhat.notation.processNotation";
+      /* @Field(store = Store.YES) */ 
+      optional double decoupageSectoriel = 1; 
+      /* @Field(store = Store.YES) */ 
+      optional string note = 2; 
+      /* @Field(store = Store.YES) */ 
+      optional string orientation = 3;
+      /* @Field(store = Store.YES) */ 
+      optional double score = 4; 
+      /* @Field(store = Store.YES) */ 
+      optional string typeAiguillage = 5; 
+    }
+    /* @Indexed */ 
+    message ProcessNotation { 
+      option java_package = "org.redhat.notation.processNotation";
+      /* @Field(store = Store.YES)
+    @VariableInfo(tags="input") */ 
+      optional Bilan bilan = 1; 
+      /* @Field(store = Store.YES) */ 
+      optional string id = 2; 
+      /* @Field(store = Store.YES)
+    @VariableInfo(tags="output") */ 
+      optional Notation note = 3; 
+      /* @Field(store = Store.YES) */ 
+      optional org.kie.kogito.index.model.KogitoMetadata metadata = 4; 
+    }
+  kogito-application.proto: |-
+    syntax = "proto2";
+    package org.kie.kogito.app;
+    import "kogito-types.proto";
+    message Bilan {
+            option java_package = "org.redhat.notation";
+            optional string dl = 1;
+            optional string ee = 2;
+            optional string fl = 3;
+            optional string fm = 4;
+            optional string ga = 5;
+            optional string gg = 6;
+            optional string hn = 7;
+            optional string hp = 8;
+            optional string hq = 9;
+            optional string siren = 10;
+    }
+    message Notation {
+            option java_package = "org.redhat.notation";
+            optional double decoupageSectoriel = 1;
+            optional string note = 2;
+            optional string orientation = 3;
+            optional double score = 4;
+            optional string typeAiguillage = 5;
+    }

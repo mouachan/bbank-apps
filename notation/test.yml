@@ -1,0 +1,92 @@
+apiVersion: app.kiegroup.org/v1alpha1
+kind: KogitoRuntime
+metadata:
+  selfLink: >-
+    /apis/app.kiegroup.org/v1alpha1/namespaces/companies-app/kogitoruntimes/companies-notation-svc
+  resourceVersion: ''
+  name: companies-notation-svc
+  uid: dbdf2e66-7344-4dba-9bf5-4ea42a499d9a
+  creationTimestamp: '2020-08-27T14:29:00Z'
+  managedFields:
+    - apiVersion: app.kiegroup.org/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            .: {}
+            'f:app': {}
+        'f:spec':
+          .: {}
+          'f:image':
+            .: {}
+            'f:domain': {}
+            'f:name': {}
+            'f:namespace': {}
+            'f:tag': {}
+          'f:replicas': {}
+          'f:runtime': {}
+      manager: Mozilla
+      operation: Update
+      time: '2020-08-27T14:29:00Z'
+    - apiVersion: app.kiegroup.org/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:envs': {}
+          'f:infinispan':
+            .: {}
+            'f:credentials': {}
+          'f:kafka': {}
+          'f:resources': {}
+        'f:status':
+          .: {}
+          'f:conditions': {}
+      manager: kogito-cloud-operator
+      operation: Update
+      time: '2020-08-27T14:33:04Z'
+  namespace: companies-app
+  labels:
+    app: companies-app
+spec:
+  envs:
+    - name: HTTP_PORT
+      value: '8080'
+  image:
+    domain: quay.io
+    name: companies-notation-svc
+    namespace: mouachan
+    tag: '1.0'
+  infinispan:
+    credentials: {}
+  kafka: {}
+  replicas: 1
+  resources: {}
+  runtime: quarkus
+status:
+  conditions:
+    - lastTransitionTime: '2020-08-27T14:33:00Z'
+      message: resourceVersion should not be set on objects to be created
+      reason: Unknown
+      status: 'False'
+      type: Failed
+    - lastTransitionTime: '2020-08-27T14:33:01Z'
+      message: resourceVersion should not be set on objects to be created
+      reason: Unknown
+      status: 'False'
+      type: Failed
+    - lastTransitionTime: '2020-08-27T14:33:02Z'
+      message: resourceVersion should not be set on objects to be created
+      reason: Unknown
+      status: 'False'
+      type: Failed
+    - lastTransitionTime: '2020-08-27T14:33:03Z'
+      message: resourceVersion should not be set on objects to be created
+      reason: Unknown
+      status: 'False'
+      type: Failed
+    - lastTransitionTime: '2020-08-27T14:33:04Z'
+      message: resourceVersion should not be set on objects to be created
+      reason: Unknown
+      status: 'False'
+      type: Failed
+

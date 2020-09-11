@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: bbank-ui-properties
+data:
+  config.js: |
+    "use strict";
+    var ENV = {
+      MANAGMENT_CONSOLE_URL: "http://dmn-svc-notation-native-companies-credit.apps.ocp4.ouachani.net",
+      LOAN_VALIDATION_URL: "http://companies-svc-companies-credit.apps.ocp4.ouachani.ne/loanValidation"
+    }

@@ -1,0 +1,22 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: companies-svc-native
+  namespace: companies-app
+spec:
+  template:
+    spec:
+      containers:
+        - image: >-
+            quay.io/mouachan/companies-app/companies-svc:native-1.0
+          env:
+            - name: JAVA_OPTS
+              value: "-Dvertx.cacheDirBase=/work/vertx"
+            - name: MONGODB_SERVICE_HOST
+              value: mongodb
+            - name: MONGODB_SERVICE_PORT
+              value: 27017
+      imagePullSecrets:
+        - name: quay-secret
+
+

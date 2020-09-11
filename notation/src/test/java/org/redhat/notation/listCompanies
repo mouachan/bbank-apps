@@ -1,0 +1,79 @@
+              <!-- <h3 id="right-aligned_all-fields-required">Informations Entrprise</h3>
+              <div class="form-group">
+                <label for="selectSirene" class="col-sm-2 control-label">Numéro de SIREN</label>
+                <div class="col-sm-3">
+                  <select class="form-control" ng-model="contrepartie.siren" id="siren" required>
+                    <option label="5310Z">5310Z</option>
+                    <option label="6411Z">6411Z</option>
+                    <option label="6419Z">6419Z</option>
+                    <option label="6420Z">6420Z</option>∏
+                    <option label="6430Z">6491Z</option>
+                    <option label="1011Z">1011Z</option>
+                    <option label="1012Z">1012Z</option>
+                    <option label="1013A">1013A</option>
+                    <option label="1013B">1013B</option>
+                    <option label="1020Z">1020Z</option>
+                    <option label="4321A">4321A</option>
+                    <option label="4321B">4321B</option>
+                    <option label="4322A">4322A</option>
+                    <option label="4322B">4322B</option>
+                    <option label="4329A">4329A</option>
+                  </select>
+                </div>
+              </div> -->
+
+      db.companiesInfo.insert({  siren: "542107651",
+         denomination: "ENGIE",
+         siret: "54210765113030",
+         address: "ENGIE, 1 PL SAMUEL DE CHAMPLAIN 92400 COURBEVOIE",
+         tva: "FR03542107651",
+         immatriculationDate: "24-12-1954",
+         type: "SA à conseil d'administration",
+         updateDate: "11-04-2020",
+         capitalSocial: "2 435 285 011,00 €",
+         chiffreAffaire: "27 833 000 000.00 €",
+         trancheEffectif: "5000 à 9999 salariés"
+              }
+        )
+
+
+        db.companiesInfo.insert({  siren: "423646512",
+         denomination: "FOURNIL SAINT JACQUES",
+         siret: "	42364651200016",
+         address: "11 RUE DE LA TOMBE ISSOIRE 75014 PARIS",
+         tva: "FR03423646512",
+         immatriculationDate: "01-12-1920",
+         type: "Société à responsabilité limitée",
+         updateDate: "01-04-2020",
+         capitalSocial: "7 622,45 €",
+         chiffreAffaire: "NON Connu",
+         trancheEffectif: "1 à 2 salariés"
+        })
+
+      db.companiesInfo.insert({  siren: "510662190",
+         denomination: "ASHILEA",
+         siret: "	51066219000014",
+         address: "49 AV DE SAINT OUEN 75017 PARIS",
+         tva: "FR0510662190",
+         immatriculationDate: "26-02-2009",
+         type: "Société par actions simplifiée",
+         updateDate: "01-04-2020",
+         capitalSocial: "7 622,45 €",
+         chiffreAffaire: "21 000,00 €",
+         trancheEffectif: "10 salariés"
+        }
+        )
+
+    db.companiesInfo.insert({  siren: "510662190",
+         denomination: "ASHILEA",
+         siret: "	51066219000014",
+         address: "49 AV DE SAINT OUEN 75017 PARIS",
+         tva: "FR0510662190",
+         immatriculationDate: "26-02-2009",
+         type: "Société par actions simplifiée",
+         updateDate: "01-04-2020",
+         capitalSocial: "7 622,45 €",
+         chiffreAffaire: "21 000,00 €",
+         trancheEffectif: "10 salariés"
+        }
+        )

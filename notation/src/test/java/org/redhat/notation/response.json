@@ -1,0 +1,58 @@
+{
+    "Variables": [
+        {
+            "valeur": 10,
+            "type": "rentab_13"
+        },
+        {
+            "valeur": 25,
+            "type": "strfin_36"
+        }
+    ],
+    "ContrePartie": {
+        "DecoupageSectoriel": 1,
+        "TypeAiguillage": "MODELE_1"
+    },
+    "ScoreFinal": [
+        [
+            0,
+            {
+                "valeur": 10,
+                "type": "rentab_13"
+            }
+        ],
+        [
+            0,
+            {
+                "valeur": 25,
+                "type": "strfin_36"
+            }
+        ]
+    ],
+    "Score": "function Score( Var, CP )",
+    "rules": [],
+    "Notation": {
+        "Score": 0,
+        "DecoupageSectoriel": 1,
+        "Note": "A",
+        "TypeAiguillage": "MODELE_1",
+        "Orientation": "Favorable",
+        "Detail": [
+            [
+                0,
+                {
+                    "valeur": 10,
+                    "type": "rentab_13"
+                }
+            ],
+            [
+                0,
+                {
+                    "valeur": 25,
+                    "type": "strfin_36"
+                }
+            ]
+        ]
+    },
+    "CodeNaf": "1012Z"
+}

@@ -1,0 +1,10 @@
+apiVersion: app.kiegroup.org/v1alpha1
+kind: KogitoApp
+metadata:
+  name: companies-notation-svc
+spec:
+  enableEvents: true
+  enablePersistence: true
+  build:
+    gitSource:
+      uri: "https://github.com/mouachan/companies-notation-svc"

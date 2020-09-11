@@ -1,0 +1,109 @@
+<dmn:definitions xmlns:dmn="http://www.omg.org/spec/DMN/20180521/MODEL/" xmlns="https://kiegroup.org/dmn/_90D76F4E-EE60-487E-8B8B-1E032EB06AEC" xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" xmlns:kie="http://www.drools.org/kie/dmn/1.2" xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="_188F4526-46B9-4C7E-9DEE-3BF0B8F9675A" name="offer" typeLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" namespace="https://kiegroup.org/dmn/_90D76F4E-EE60-487E-8B8B-1E032EB06AEC">
+  <dmn:extensionElements/>
+  <dmn:itemDefinition id="_6A17F4C0-BC88-4C7D-AC54-4CF4BED4DF99" name="tNotation" isCollection="false">
+    <dmn:itemComponent id="_33F01E90-559C-47B1-B128-2E9440AEA50F" name="orientation" isCollection="false">
+      <dmn:typeRef>string</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_DA292840-0DB4-4416-A9FF-5D3AE078C08C" name="score" isCollection="false">
+      <dmn:typeRef>number</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_356BA6B8-7CE2-465C-B56D-29DD198A727B" name="note" isCollection="false">
+      <dmn:typeRef>string</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_07384E27-A32A-4A04-BA93-CB4BCDE9E037" name="decoupageSectoriel" isCollection="false">
+      <dmn:typeRef>number</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_5C18F38E-99FD-4674-A777-D60DE80ADB8B" name="typeAiguillage" isCollection="false">
+      <dmn:typeRef>Any</dmn:typeRef>
+    </dmn:itemComponent>
+  </dmn:itemDefinition>
+  <dmn:itemDefinition id="_8E4FBF73-A2DC-41D1-AF51-C67F3C93FD70" name="tOffer" isCollection="false">
+    <dmn:itemComponent id="_639532E5-170D-416E-83A6-D604E49F2E70" name="rate" isCollection="false">
+      <dmn:typeRef>number</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_A40C95ED-DBA0-45AB-87EF-9C4DFF3A879D" name="nbmonths" isCollection="false">
+      <dmn:typeRef>number</dmn:typeRef>
+    </dmn:itemComponent>
+  </dmn:itemDefinition>
+  <dmn:inputData id="_6418C7D4-39B1-410C-BC4B-F0A2FEDCF767" name="notation">
+    <dmn:extensionElements/>
+    <dmn:variable id="_A495F3F7-F027-4FB6-81F6-8873FB48F350" name="notation"/>
+  </dmn:inputData>
+  <dmn:decision id="_E1F3AE1B-DCF4-4BE3-98EF-A54FC0E3453F" name="offer">
+    <dmn:extensionElements/>
+    <dmn:variable id="_74B11F5E-0352-427B-8299-3E870377EAF5" name="offer" typeRef="tOffer"/>
+    <dmn:informationRequirement id="_DC834BCD-BD04-4158-AF25-5AA3BD662130">
+      <dmn:requiredInput href="#_6418C7D4-39B1-410C-BC4B-F0A2FEDCF767"/>
+    </dmn:informationRequirement>
+    <dmn:decisionTable id="_5B97B6A9-E768-4142-9D0B-D8E7EAC8999F" hitPolicy="UNIQUE" preferredOrientation="Rule-as-Row">
+      <dmn:input id="_6ADBAC08-A742-4CAD-ADDB-8C0F4175F690">
+        <dmn:inputExpression id="_F6FFC9ED-327B-4E87-A3C3-E2DD978AFE0C" typeRef="string">
+          <dmn:text>notation.note</dmn:text>
+        </dmn:inputExpression>
+      </dmn:input>
+      <dmn:input id="_D8243070-6668-4988-923F-ABC1C32AB8B0">
+        <dmn:inputExpression id="_17CE5247-F8D8-451C-9BDA-900EB0B0C582" typeRef="number">
+          <dmn:text>notation.score</dmn:text>
+        </dmn:inputExpression>
+      </dmn:input>
+      <dmn:output id="_6B16C4DA-268E-4371-ADC4-A7725E579D25" name="rate" typeRef="number"/>
+      <dmn:output id="_F73905C5-CDDD-4637-9A2D-A484F66E71AE" name="nbmonths" typeRef="number"/>
+      <dmn:annotation name="annotation-1"/>
+      <dmn:rule id="_888B36A3-880F-4F52-B97C-429F9389EE4C">
+        <dmn:inputEntry id="_A76F6CC7-A242-4430-A205-A408CC63B9B2">
+          <dmn:text>"A"</dmn:text>
+        </dmn:inputEntry>
+        <dmn:inputEntry id="_26AF6B69-4830-4298-8D8B-E00CA4209C5B">
+          <dmn:text>[0,4]</dmn:text>
+        </dmn:inputEntry>
+        <dmn:outputEntry id="_D351D7E5-D095-4BC8-8A37-A81FDDF23195">
+          <dmn:text>2</dmn:text>
+        </dmn:outputEntry>
+        <dmn:outputEntry id="_D932EADE-7674-441E-AACD-C9618CC1F5E6">
+          <dmn:text>36</dmn:text>
+        </dmn:outputEntry>
+        <dmn:annotationEntry>
+          <dmn:text/>
+        </dmn:annotationEntry>
+      </dmn:rule>
+    </dmn:decisionTable>
+  </dmn:decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <di:extension>
+        <kie:ComponentsWidthsExtension>
+          <kie:ComponentWidths dmnElementRef="_5B97B6A9-E768-4142-9D0B-D8E7EAC8999F">
+            <kie:width>50</kie:width>
+            <kie:width>100</kie:width>
+            <kie:width>248</kie:width>
+            <kie:width>295</kie:width>
+            <kie:width>276</kie:width>
+            <kie:width>470</kie:width>
+          </kie:ComponentWidths>
+        </kie:ComponentsWidthsExtension>
+      </di:extension>
+      <dmndi:DMNShape id="dmnshape-_6418C7D4-39B1-410C-BC4B-F0A2FEDCF767" dmnElementRef="_6418C7D4-39B1-410C-BC4B-F0A2FEDCF767" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="561" y="322" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-_E1F3AE1B-DCF4-4BE3-98EF-A54FC0E3453F" dmnElementRef="_E1F3AE1B-DCF4-4BE3-98EF-A54FC0E3453F" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="561" y="155" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="dmnedge-_DC834BCD-BD04-4158-AF25-5AA3BD662130" dmnElementRef="_DC834BCD-BD04-4158-AF25-5AA3BD662130">
+        <di:waypoint x="611" y="347"/>
+        <di:waypoint x="611" y="180"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</dmn:definitions>
