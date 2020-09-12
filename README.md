@@ -19,6 +19,8 @@ The following architecture deployed on Openshift,is composed by
 - frontend to manage all services
 - all services offers rest api
 
+![Archi](img/archi-fonctionnelle-loan-bbank-apps.png) 
+
 ##
 install :
 - oc cli
@@ -114,48 +116,48 @@ Create a knative-serving instance
 
 ## Build and deploy companies CRUD services
 
+delete the services if exist
+```
+oc delete all,configmap,pvc,serviceaccount,rolebinding --selector app=companies-svc
+```
+## way 2 : source to image build  (S2I)
 ```
 oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/banking-apps.git \
 --name=companies-svc \
---context-dir=bbank-apps/companies-svc
--e MONGODB_SERVICE_HOST=mongodb
--e MONGODB_SERVICE_PORT=27017
+--context-dir=bbank-apps/companies-svc \
+-e MONGODB_SERVICE_HOST=mongodb \
+-e MONGODB_SERVICE_PORT=27017 \
+--source-secret=github
 ```
 
-## Or build and generate container image 
+## way 2 :  build the container locally and push to the registry (java or native)) 
+```
+cd companies-svc
+```
+
+java
 ```
 cd ../companies-svc
-```
-
-Java
-```
-cd ../companies-svc
-./mvnw clean package  -Dquarkus.container-image.build=true -Dquarkus.container-image.name=companies-svc -Dquarkus.container-image.tag=1.0
-```
-
-Or native 
-```
-./mvnw clean package  -Dquarkus.container-image.build=true -Dquarkus.container-image.name=companies-svc -Dquarkus.container-image.tag=native-1.0 -Pnative  -Dquarkus.native.container-build=true 
-```
-
-### Push the image to your registry 
-
-Java
-```
+mvn clean package  -Dquarkus.container-image.build=true -Dquarkus.container-image.name=companies-svc -Dquarkus.container-image.tag=1.0
 docker tag mouachani/companies-svc:1.0 quay.io/mouachan/companies-svc:1.0
 docker push quay.io/mouachan/companies-svc:1.0
 ```
 
-Or native
+native 
 ```
-docker tag mouachani/companies-svc:native-1.0 quay.io/mouachan/companies-svc:native-1.0
-docker push quay.io/mouachan/bbank-apps/companies-svc:native-1.0
+mvn clean package  -Dquarkus.container-image.build=true -Dquarkus.container-image.name=companies-svc -Dquarkus.container-image.tag=native-1.0 -Pnative  -Dquarkus.native.container-build=true 
+docker tag mouachani/companies-svc:native-1.0 quay.io/mouachan/bbank-apps/companies-svc:native-1.0
+docker push quay.io/mouachan/bbank-apps/companies-svc:native-1.0 
 ```
 
-### deploy a knative service 
+deploy a knative service 
+java
 ```
-cd manifest
-oc apply -f ./companies-svc-knative.yml 
+oc apply -f ../manifest/companies-svc-knative.yml 
+```
+native
+```
+oc apply -f ../manifest/companies-svc-native-knative.yml 
 ```
 
 ## verify the service availability
