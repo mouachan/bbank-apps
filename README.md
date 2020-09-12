@@ -118,6 +118,8 @@ Create a knative-serving instance
 oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/banking-apps.git \
 --name=companies-svc \
 --context-dir=bbank-apps/companies-svc
+-e MONGODB_SERVICE_HOST=mongodb
+-e MONGODB_SERVICE_PORT=27017
 ```
 
 ## Or build and generate container image 
@@ -150,7 +152,7 @@ docker tag mouachani/companies-svc:native-1.0 quay.io/mouachan/companies-svc:nat
 docker push quay.io/mouachan/bbank-apps/companies-svc:native-1.0
 ```
 
-## deploy a knative service 
+### deploy a knative service 
 ```
 cd manifest
 oc apply -f ./companies-svc-knative.yml 
