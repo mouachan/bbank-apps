@@ -19,7 +19,7 @@ The following architecture deployed on Openshift,is composed by
 - frontend to manage all services
 - all services offers rest api
 
-![Archi](img/archi-fonctionnelle-loan-bbank-apps.png) 
+![Archi](img/archi-fonctionnelle-bbank-apps-loan.png) 
 
 ##
 install :
