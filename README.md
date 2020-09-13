@@ -1,23 +1,25 @@
-# Banking apps
+# bbank apps
 
 
-Banking apps is a set of services that allows business user to :
+bbank apps is a set of business services :
 
-- create/update/delete a company
-- calculate loan score using kogito DMN services or streaming process service (reactive messaging)
-- simulate loan validation process service 
+- companies-svc service : create/update/delete companies in a repository (mongodb) 
+- eligibility service : evaluate the eligibility of a company to have a loan throw business rules
+- notation service : calculate a score and note throw a process and business rules 
+- loan service : manage the orchestration between business services 
 
 
 
-The following architecture deployed on Openshift,is composed by 
+The following architecture deployed on Openshift 
+
  - mongodb instance to store company and scoring details
- - quarkus, panache services to manage CRUD companies and scoring operations (Rest operations)
- - quarkus, kogito service to calculate the score. the service offer differents ways to caclulate score :
-    - DMN rest service 
-    - event process (using kafka)
- - quarkus, kogito service to simulate a loan validation process. the communication between the process use reactive messaging, all objects are stored in infinispan.
-- frontend to manage all services
-- all services offers rest api
+ - companies-svc : microservice based on quarkus, panache to manage CRUD companies and scoring operations (Rest)
+ - eligibility : quarkus/kogito service 
+ - notation : quarkus, kogito service 
+ - loan : quarkus, kogito service 
+ - bbank-ui : frontend to manage all services
+
+All service offers rest api, the communication between processes use reactive messaging (kafka), objects are stored in infinispan.
 
 ![Archi](img/archi-fonctionnelle-bbank-apps-loan.png) 
 
