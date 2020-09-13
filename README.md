@@ -5,8 +5,12 @@ bbank apps is a set of business services :
 
 - companies-svc service : create/update/delete companies in a repository (mongodb) 
 - eligibility service : evaluate the eligibility of a company to have a loan throw business rules
+![eligibility](img/eligibility.png) 
 - notation service : calculate a score and note throw a process and business rules 
+![notation](img/notation.png)
 - loan service : manage the orchestration between business services 
+![loan](img/loan.png)
+![sub-process](img/loan-sub-process.png)
 
 
 
@@ -25,9 +29,9 @@ All service offers rest api, the communication between processes use reactive me
 
 ##
 install :
-- oc cli
-- kn cli
-- kogito cli
+- oc cli : https://docs.openshift.com/container-platform/4.5/cli_reference/openshift_cli/getting-started-cli.html
+- kn cli : https://docs.openshift.com/container-platform/4.5/serverless/installing_serverless/installing-kn.html#installing-kn
+- kogito cli : https://docs.jboss.org/kogito/release/latest/html_single/#proc-kogito-operator-and-cli-installing_kogito-deploying-on-openshift
 
 ## connect to Openshift server 
 
@@ -148,8 +152,8 @@ docker push quay.io/mouachan/companies-svc:1.0
 native 
 ```
 mvn clean package  -Dquarkus.container-image.build=true -Dquarkus.container-image.name=companies-svc -Dquarkus.container-image.tag=native-1.0 -Pnative  -Dquarkus.native.container-build=true 
-docker tag mouachani/companies-svc:native-1.0 quay.io/mouachan/bbank-apps/companies-svc:native-1.0
-docker push quay.io/mouachan/bbank-apps/companies-svc:native-1.0 
+docker tag mouachani/companies-svc:native-1.0 quay.io/mouachan/companies-svc:native-1.0
+docker push quay.io/mouachan/companies-svc:native-1.0 
 ```
 
 deploy a knative service 
@@ -185,21 +189,23 @@ kogito install infinispan
 kogito install kafka
 ```
 
+create configmap protobuf models of processes : eligibility, notation, loan  and data-index 
+
+```
+oc apply -f ./manifest/protobuf/data-index-protobuf-files.yml
+```
+
 Install data-index
 
 ```
 kogito install data-index
 ```
 
-Add protobuf models of process loanValidation, processNotation and kogitoApp
-
-```
-oc apply -f ./manifest/data-index-protobuf-files.yml
-```
 Get username and password infinispan and decode it
 
 ```
-oc get secret/kogito-infinispan-credential -o yaml
+oc get secret/kogito-infinispan-credential -o yaml | grep ' username: ' 
+
 echo ZGV2ZWxvcGVy | base64 -d
 ```
 
@@ -218,6 +224,7 @@ Modify the values of the properties host/port to the  kafka, infinispan, data-in
     # kafka eligibility service 
     kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank-apps.svc:9092
 ```
+
 Create the config map
 ```
 oc apply -f ./manifest/properties/eligibilitty-properties-cm.yml
@@ -228,30 +235,33 @@ oc apply -f ./manifest/protobuf/computeNotation-protobuf-files.yml
 
 oc apply -f ./manifest/properties/loan-properties-cm.yml
 oc apply -f ./manifest/protobuf/loanValidation-protobuf-files.yml 
-oc apply -f ./manifest/protobuf/callnotation-protobuf-files.yml
 ```
 
-create  eligibility, notation, loan services
+create  "eligibility, notation, loan" - kogito - services
 ```
 kogito deploy-service eligibility --enable-persistence --enable-events 
 kogito deploy-service notation --enable-persistence --enable-events 
+kogito deploy-service loan --enable-persistence --enable-events 
+
 ```
 
 Package and start build
 ```
-cd ../eligibility
-./mvnw clean package -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.name=eligibility -Dquarkus.container-image.tag=1.0 -Dquarkus.container-image.builder=s2i
+cd eligibility
+mvn clean package -DskipTests=true 
 oc start-build eligibility --from-dir=target -n bbank-apps 
 
 cd ../notation
-./mvnw clean package -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.name=notation -Dquarkus.container-image.tag=1.0 -Dquarkus.container-image.builder=s2i
+mvn clean package -DskipTests=true 
 oc start-build notation --from-dir=target -n bbank-apps 
 
 cd ../loan
-./mvnw clean package -DskipTests=true -Dquarkus.container-image.build=true -Dquarkus.container-image.name=loan -Dquarkus.container-image.tag=1.0 -Dquarkus.container-image.builder=s2i
+./mvnw clean package -DskipTests=true 
 oc start-build loan --from-dir=target -n bbank-apps 
-
 ```
 
+Test the processes
+```
+curl -X POST "http://loan-bbank-apps.apps.ocp4.ouachani.net/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
 
-....To be continued (build and deploy frontend / test the app)
+```

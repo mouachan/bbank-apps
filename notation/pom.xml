@@ -81,14 +81,14 @@
       <groupId>org.kie.kogito</groupId>
       <artifactId>process-management-addon</artifactId>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-s2i</artifactId>
-    </dependency>
-    <dependency>
+    </dependency-->
+    <!--dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-openshift</artifactId>
-    </dependency>
+    </dependency-->
   </dependencies>
   <build>
     <plugins>

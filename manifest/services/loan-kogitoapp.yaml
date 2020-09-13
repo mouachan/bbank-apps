@@ -1,10 +1,11 @@
 apiVersion: app.kiegroup.org/v1alpha1
 kind: KogitoApp
 metadata:
-  name: companies-loan-application
+  name: loan
 spec:
   enableEvents: true
   enablePersistence: true
   build:
     gitSource:
-      uri: "https://github.com/mouachan/companies-loan-application-svc"
+      uri: "https://github.com/mouachan/bbank-apps"
+      context-dir: bbank-apps/loan

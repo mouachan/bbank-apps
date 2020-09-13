@@ -16,12 +16,12 @@ data:
     quarkus.infinispan-client.server-list=kogito-infinispan:11222
     quarkus.infinispan-client.use-auth=true
     quarkus.infinispan-client.auth-username=developer
-    quarkus.infinispan-client.auth-password=jPBNvQ2uqg@xJ6Pd%
+    quarkus.infinispan-client.auth-password=Y582IRVhltQ8EG2Z
     
     #kogito (data-index)
     kogito.service.url=http://localhost:8080
-    kogito.dataindex.http.url=data-index:8180
-    kogito.dataindex.ws.url=ws://data-index:8180
+    kogito.dataindex.http.url=data-index-bbank-apps.apps.ocp4.ouachani.net
+    kogito.dataindex.ws.url=ws://data-index:8080
     
     # kafka loan service 
     kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank-apps.svc:9092
