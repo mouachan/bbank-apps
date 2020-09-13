@@ -122,7 +122,7 @@ delete the services if exist
 ```
 oc delete all,configmap,pvc,serviceaccount,rolebinding --selector app=companies-svc
 ```
-## way 2 : source to image build  (S2I)
+## way 1 : source to image build  (S2I)
 ```
 oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/banking-apps.git \
 --name=companies-svc \
