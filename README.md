@@ -1,7 +1,11 @@
 # bbank apps
 
 
-bbank apps is a set of business services :
+bbank apps is a set of business services to simulate a company loan approval, the diagram describe the main flow :
+
+![Archi](img/archi-fonctionnelle-bbank-apps-loan.png) 
+
+
 
 - companies-svc service : create/update/delete companies in a repository (mongodb) 
 - eligibility service : evaluate the eligibility of a company to have a loan throw business rules
@@ -14,21 +18,23 @@ bbank apps is a set of business services :
 
 
 
-The following architecture deployed on Openshift 
+We will deploy 
 
- - mongodb instance to store company and scoring details
- - companies-svc : microservice based on quarkus, panache to manage CRUD companies and scoring operations (Rest)
- - eligibility : quarkus/kogito service 
- - notation : quarkus, kogito service 
- - loan : quarkus, kogito service 
- - bbank-ui : frontend to manage all services
+ - a mongodb instance to store company and scoring details
+ - companies-svc : a microservice based on quarkus, panache to manage CRUD companies and scoring operations (Rest)
+ - eligibility : a quarkus/kogito service 
+ - notation : a quarkus, kogito service 
+ - loan : a quarkus, kogito service 
+ - bbank-ui : a nodejs/react frontend to manage all services
 
-All service offers rest api, the communication between processes use reactive messaging (kafka), objects are stored in infinispan.
+All services expose rest api, the processes use reactive messaging (kafka) to consume/push events, all events are stored in infinispan.
 
-![Archi](img/archi-fonctionnelle-bbank-apps-loan.png) 
+## to deploy the apps localy follow the instructions
 
-##
-install :
+https://github.com/mouachan/bbank-apps/tree/master/docker-compose
+
+## to deploy  the apps on openshift :
+install 
 - oc cli : https://docs.openshift.com/container-platform/4.5/cli_reference/openshift_cli/getting-started-cli.html
 - kn cli : https://docs.openshift.com/container-platform/4.5/serverless/installing_serverless/installing-kn.html#installing-kn
 - kogito cli : https://docs.jboss.org/kogito/release/latest/html_single/#proc-kogito-operator-and-cli-installing_kogito-deploying-on-openshift
