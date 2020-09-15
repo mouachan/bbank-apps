@@ -309,14 +309,20 @@ curl -X POST "http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -H  
 ```
 
 Go to the management console route, click on "Status", select "Completed" and click on "Apply filter" 
+
 ![Filter process](/img/filter-completed-process.png)
+
 ![list of process](/img/list-process-mgmt-console.png)
+
 Click on loan Validation process
+
 ![process result](/img/process-details-result.png)
 
 Notation result is :
+
 ![notation](/img/calculated-notation-model-1.png)
 
 Offer details (Rate and number of months) 
+
 ![offer](/img/offer.png)
 
