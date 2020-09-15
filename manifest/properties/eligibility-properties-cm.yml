@@ -20,7 +20,7 @@ data:
     quarkus.infinispan-client.server-list=kogito-infinispan:11222
     quarkus.infinispan-client.use-auth=true
     quarkus.infinispan-client.auth-username=developer
-    quarkus.infinispan-client.auth-password=Y582IRVhltQ8EG2Z
+    quarkus.infinispan-client.auth-password=WS5l2ffp7DuemF3s
     
     #kogito (data-index)
     kogito.service.url=http://localhost:8080

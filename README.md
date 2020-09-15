@@ -82,7 +82,22 @@ git clone https://github.com/mouachan/bbank-apps.git
 
 ## Create a persistent mongodb 
 
-From Openshift Developper view, click on Add,select Database
+Using oc cli
+```
+#check if persistent mongo exist
+
+oc get templates -n openshift | grep mongodb
+
+#get paramters list
+oc process --parameters -n openshift mongodb-persistent
+
+#create the instannce
+oc process mongodb-persistent -n openshift -p MONGODB_USER=admcomp -p MONGODB_PASSWORD=r3dhat2020! -p MONGODB_DATABASE=companies -p MONGODB_ADMIN_PASSWORD=r3dhat2020! \
+| oc create -f -
+```
+
+Or  Openshift UI
+From Developper view, click on Add,select Database
 
 ![Add database app](/img/catalog-db-ocp.png) 
 
@@ -110,11 +125,11 @@ mongodb-1-g4mwf    1/1     Running     0          35s
 
 Create the schema 
 ```
-oc exec -it mongodb-1-g4mwf -- bash -c  'mongo companies -u admcomp -p r3dhat2020!' < manifest/create-schema.js  
+oc exec -it mongodb-1-g4mwf -- bash -c  'mongo companies -u admcomp -p r3dhat2020!' < ./manifest/scripts/create-schema.js  
 ```
 add records
 ```
-oc exec -it mongodb-1-g4mwf -- bash -c  'mongo companies -u admcomp -p r3dhat2020!' < manifest/insert-records.js  
+oc exec -it mongodb-1-g4mwf -- bash -c  'mongo companies -u admcomp -p r3dhat2020!' < ./manifest/scripts/insert-records.js  
 ```
 
 
@@ -123,7 +138,7 @@ Install openshift-serverless operator from OperatorHub
 
 Create a knative-serving instance
 ```
-./manifest/knative-serving.sh
+./manifest/scripts/knative-serving.sh
 ```
 
 ## Build and deploy companies CRUD services
@@ -191,8 +206,16 @@ Install Kogito operator
 ## Install kogit-infra 
 
 ```
+cd ..
+oc apply -f ./manifest/services/data-index.yml
+kogito install mgmt-console
+```
+
+Or using kogito cli
+```
 kogito install infinispan
 kogito install kafka
+kogito install mgmt-console
 ```
 
 create configmap protobuf models of processes : eligibility, notation, loan  and data-index 
@@ -211,8 +234,13 @@ Get username and password infinispan and decode it
 
 ```
 oc get secret/kogito-infinispan-credential -o yaml | grep ' username: ' 
-
+==> username: ZGV2ZWxvcGVy
 echo ZGV2ZWxvcGVy | base64 -d
+developer
+oc get secret/kogito-infinispan-credential -o yaml | grep ' password: ' 
+==>  password: V1M1bDJmZnA3RHVlbUYzcw==
+echo V1M1bDJmZnA3RHVlbUYzcw== | base64 -d 
+WS5l2ffp7DuemF3s
 ```
 
 Modify the values of the properties host/port to the  kafka, infinispan, data-index and companies-svc services in ./manifest/*-cm.yml also infinispan credential :
@@ -233,14 +261,14 @@ Modify the values of the properties host/port to the  kafka, infinispan, data-in
 
 Create the config map
 ```
-oc apply -f ./manifest/properties/eligibilitty-properties-cm.yml
-oc apply -f ./manifest/protobuf/eligibilitty-protobuf-files.yml
+oc apply -f ./manifest/properties/eligibility-properties-cm.yml
+oc apply -f ./manifest/protobuf/eligibility-protobuf-files.yml
 
 oc apply -f ./manifest/properties/notation-properties-cm.yml
-oc apply -f ./manifest/protobuf/computeNotation-protobuf-files.yml
+oc apply -f ./manifest/protobuf/notation-protobuf-files.yml
 
 oc apply -f ./manifest/properties/loan-properties-cm.yml
-oc apply -f ./manifest/protobuf/loanValidation-protobuf-files.yml 
+oc apply -f ./manifest/protobuf/loan-protobuf-files.yml 
 ```
 
 create  "eligibility, notation, loan" - kogito - services
@@ -267,7 +295,28 @@ oc start-build loan --from-dir=target -n bbank-apps
 ```
 
 Test the processes
-```
-curl -X POST "http://loan-bbank-apps.apps.ocp4.ouachani.net/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
 
+First get the route of the management console
 ```
+oc get route management-console  
+NAME                 HOST/PORT                                              PATH   SERVICES             PORT   TERMINATION   WILDCARD
+management-console   management-console-bbank-apps.apps.ocp4.ouachani.org          management-console   8080                 None 
+```
+
+Run the process
+```
+curl -X POST "http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
+```
+
+Go to the management console route, click on "Status", select "Completed" and click on "Apply filter" 
+![Filter process](/img/filter-completed-process.png)
+![list of process](/img/list-process-mgmt-console.png)
+Click on loan Validation process
+![process result](/img/process-details-result.png)
+
+Notation result is :
+![notation](/img/calculated-notation-model1.png)
+
+Offer details (Rate and number of months) 
+![offer](/img/offer.png)
+
