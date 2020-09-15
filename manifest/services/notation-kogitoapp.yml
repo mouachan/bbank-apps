@@ -1,0 +1,21 @@
+apiVersion: app.kiegroup.org/v1alpha1
+kind: KogitoBuild
+metadata:
+  name: notation
+spec:
+  type: RemoteSource
+  gitSource:
+    contextDir: bbank-apps/notation
+    uri: "https://github.com/mouachan/bbank-apps"
+  # set your maven nexus repository to speed up the build time
+  #mavenMirrorURL:
+---
+apiVersion: app.kiegroup.org/v1alpha1
+kind: KogitoRuntime
+metadata:
+  name: notation
+spec:
+  infinispan:
+    useKogitoInfra: true
+  kafka:
+    useKogitoInfra: true

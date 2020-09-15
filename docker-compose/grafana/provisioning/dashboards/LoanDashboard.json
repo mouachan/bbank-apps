@@ -1,46 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "6.1.4"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "singlestat",
-      "name": "Singlestat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -59,7 +17,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": null,
+  "id": 13,
   "links": [],
   "panels": [
     {
@@ -71,6 +29,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
+      "datasource": null,
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -102,6 +61,7 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
+      "options": {},
       "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
@@ -122,7 +82,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kie_process_instance_started_total{process_id='travels'})",
+          "expr": "sum(kie_process_instance_started_total{process_id='loanValidation'})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
@@ -132,7 +92,7 @@
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Total travel requests",
+      "title": "Total loan requests",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -153,6 +113,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
+      "datasource": null,
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -184,6 +145,7 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
+      "options": {},
       "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
@@ -204,7 +166,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kie_process_instance_running_total{process_id='travels'})",
+          "expr": "sum(kie_process_instance_running_total{process_id='loanValidation'})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
@@ -214,7 +176,7 @@
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Open travel requests",
+      "title": "Open Loan requests",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -235,6 +197,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
+      "datasource": null,
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -266,6 +229,7 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
+      "options": {},
       "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
@@ -286,7 +250,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kie_process_instance_completed_total{status=\"3\", process_id='travels'})",
+          "expr": "sum(kie_process_instance_completed_total{status=\"3\", process_id='loanValidation'})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
@@ -296,7 +260,7 @@
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Canceled travel requests",
+      "title": "Canceled loan requests",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -317,6 +281,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
+      "datasource": null,
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -348,6 +313,7 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
+      "options": {},
       "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
@@ -368,7 +334,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(kie_process_instance_completed_total{status=\"2\", process_id='travels'})",
+          "expr": "sum(kie_process_instance_completed_total{status=\"2\", process_id='loanValidation'})",
           "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
@@ -378,7 +344,7 @@
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
-      "title": "Completed travel requests",
+      "title": "Completed loan requests",
       "type": "singlestat",
       "valueFontSize": "80%",
       "valueMaps": [
@@ -392,6 +358,7 @@
     },
     {
       "columns": [],
+      "datasource": null,
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -401,6 +368,7 @@
       },
       "id": 38,
       "links": [],
+      "options": {},
       "pageSize": null,
       "scroll": true,
       "showHeader": true,
@@ -466,7 +434,7 @@
       ],
       "targets": [
         {
-          "expr": "kie_work_item_duration_seconds_count",
+          "expr": "kie_process_instance_completed_total",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
@@ -475,12 +443,13 @@
       ],
       "timeFrom": "30m",
       "timeShift": null,
-      "title": "Services invoked",
+      "title": "Process invoked",
       "transform": "table",
       "type": "table"
     },
     {
       "columns": [],
+      "datasource": null,
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -490,6 +459,7 @@
       },
       "id": 40,
       "links": [],
+      "options": {},
       "pageSize": null,
       "scroll": true,
       "showHeader": true,
@@ -571,7 +541,7 @@
       ],
       "targets": [
         {
-          "expr": "acme_travels_visas_approved_total",
+          "expr": "loan_approved_total",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
@@ -580,7 +550,7 @@
       ],
       "timeFrom": "30m",
       "timeShift": null,
-      "title": "Visas approved",
+      "title": "Loan approved",
       "transform": "table",
       "type": "table"
     },
@@ -589,7 +559,9 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": null,
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 7,
@@ -610,6 +582,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "paceLength": 10,
       "percentage": false,
       "pointradius": 2,
@@ -673,6 +648,7 @@
     },
     {
       "columns": [],
+      "datasource": null,
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -682,6 +658,7 @@
       },
       "id": 36,
       "links": [],
+      "options": {},
       "pageSize": null,
       "scroll": true,
       "showHeader": true,
@@ -778,6 +755,7 @@
     },
     {
       "columns": [],
+      "datasource": null,
       "fontSize": "100%",
       "gridPos": {
         "h": 8,
@@ -787,6 +765,7 @@
       },
       "id": 41,
       "links": [],
+      "options": {},
       "pageSize": null,
       "scroll": true,
       "showHeader": true,
@@ -868,7 +847,7 @@
       ],
       "targets": [
         {
-          "expr": "acme_travels_visas_rejected_total",
+          "expr": "loan_rejected_total",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
@@ -877,7 +856,7 @@
       ],
       "timeFrom": "30m",
       "timeShift": null,
-      "title": "Visas rejected",
+      "title": "Loan rejected",
       "transform": "table",
       "type": "table"
     },
@@ -888,6 +867,7 @@
       "dashes": false,
       "datasource": "Prometheus",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 7,
@@ -908,6 +888,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "paceLength": 10,
       "percentage": false,
       "pointradius": 2,
@@ -931,7 +914,7 @@
       "timeFrom": "30m",
       "timeRegions": [],
       "timeShift": null,
-      "title": "Travel request processing time",
+      "title": "Loan request processing time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -968,10 +951,218 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 0,
+        "y": 20
+      },
+      "id": 43,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 1,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "__name__",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "job",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "app_id",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "instance",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "notation_approved_total",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Approved notation",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "columns": [],
+      "datasource": null,
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 8,
+        "y": 20
+      },
+      "id": 45,
+      "options": {},
+      "pageSize": null,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "__name__",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "job",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "app_id",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "instance",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "notation_rejected_total",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Rejected Notation",
+      "transform": "table",
+      "type": "table"
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 18,
+  "schemaVersion": 20,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1007,7 +1198,7 @@
     ]
   },
   "timezone": "",
-  "title": "KogitoTravel Dashboard",
+  "title": "Loan Dashboard",
   "uid": "k-HGr5qmzsv",
   "version": 12
 }

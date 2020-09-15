@@ -24,19 +24,19 @@ import org.kie.kogito.process.impl.DefaultProcessEventListenerConfig;
 @ApplicationScoped
 public class ProcessEventListenerConfig extends DefaultProcessEventListenerConfig {
    
-	private LoanPrometheusProcessEventListener listener;
+	private EligibilityPrometheusProcessEventListener listener;
     public ProcessEventListenerConfig() {
         super();
     }
     
     @PostConstruct
     public void setup() {
-    	this.listener = new LoanPrometheusProcessEventListener("loan");
+    	this.listener = new EligibilityPrometheusProcessEventListener("eligibility");
     	register(this.listener);
     }
     
     @PreDestroy
     public void close() { 
-    	this.listener.cleanup();
+    	this.listener.cleanup();;
     }
 }

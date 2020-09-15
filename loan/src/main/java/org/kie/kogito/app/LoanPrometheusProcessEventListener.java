@@ -17,28 +17,29 @@ package org.kie.kogito.app;
 
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 import org.kie.kogito.monitoring.process.PrometheusProcessEventListener;
+import org.redhat.bbank.model.Loan;
 import org.kie.api.event.process.ProcessCompletedEvent;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
 
-public class LoanApplicationPrometheusProcessEventListener extends PrometheusProcessEventListener {
+public class LoanPrometheusProcessEventListener extends PrometheusProcessEventListener {
 	
 	protected final Counter numberOfLoanApplicationsApproved = Counter.build()
-            .name("companies_loan_approved_total")
+            .name("loan_approved_total")
             .help("Approved loan applications")
-            .labelNames("app_id", "duration")
+            .labelNames("app_id","note", "score","rate","months" )
             .register();
 	
 	protected final Counter numberOfLoanApplicationsRejected = Counter.build()
-            .name("companies_loan_rejected_total")
+            .name("loan_rejected_total")
             .help("Rejected loan applications")
-            .labelNames("app_id", "duration")
-            .register();
+            .labelNames("app_id", "reason")
+			.register();
 
 	private String identifier;
 	
-	public LoanApplicationPrometheusProcessEventListener(String identifier) {
+	public LoanPrometheusProcessEventListener(String identifier) {
 		super(identifier);
 		this.identifier = identifier;
 	}
@@ -52,13 +53,22 @@ public class LoanApplicationPrometheusProcessEventListener extends PrometheusPro
 	public void afterProcessCompleted(ProcessCompletedEvent event) {
 		super.afterProcessCompleted(event);
 		final WorkflowProcessInstanceImpl processInstance = (WorkflowProcessInstanceImpl) event.getProcessInstance();
+		if (processInstance.getProcessId().equals("loanValidation")) {
+			Loan application = (Loan) processInstance.getVariable("loan");
+		
+			if (application.isEligible()) {
+				numberOfLoanApplicationsApproved.labels(identifier, safeValue(application.getNotation().getNote()), String.valueOf(application.getNotation().getScore()), safeValue(String.valueOf(application.getRate())), safeValue(String.valueOf(application.getNbmonths()))).inc();
+			} else {
+				numberOfLoanApplicationsRejected.labels(identifier, safeValue(application.getMsg())).inc();
+			}
+		
+		}
 	}
 
 	protected String safeValue(String value) {
 		if (value == null) {
 			return "unknown";
-		}
-		
+		}		
 		return value;
 	}
 }
