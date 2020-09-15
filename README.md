@@ -315,7 +315,7 @@ Click on loan Validation process
 ![process result](/img/process-details-result.png)
 
 Notation result is :
-![notation](/img/calculated-notation-model1.png)
+![notation](/img/calculated-notation-model-1.png)
 
 Offer details (Rate and number of months) 
 ![offer](/img/offer.png)
