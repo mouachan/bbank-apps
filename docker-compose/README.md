@@ -49,9 +49,9 @@ Prometheus will also be available on http://localhost:9090, no authentication is
 
   ### Start data-index
   ./data-index/run-data-index-minimal.sh
-  ### Start managment console
+  ### Start management console
   ./mgmt-services/run-mgmt-console.sh
-  ### Start kadrop
+  ### Start kafdrop
   ./kafdrop/run-kafdrop.sh
 
   ### Install mongodb
