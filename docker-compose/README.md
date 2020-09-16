@@ -7,14 +7,14 @@ To allow a quick setup of all services required to run this demo, we provide a d
 - Prometheus
 - Grafana
 
-This setup ensures that all services are connected using the default configuration as well as provisioning the Travel Agency dashboard to Grafana.  
+This setup ensures that all services are connected using the default configuration as well as provisioning the BBank apps dashboard to Grafana.  
 
 In order to use it, please ensure you have Docker Compose installed on your machine, otherwise follow the instructions available
  in [here](https://docs.docker.com/compose/install/).
  
 ### Starting required services
 
-  You should start all the services before you execute any of the Travel Agency applications, to do that please execute:
+  You should start all the services before you execute any of the BBank apps applications, to do that please execute:
   
   For MacOS and Windows:
   
