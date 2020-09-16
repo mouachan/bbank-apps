@@ -115,7 +115,7 @@ kcontext.setVariable("_bilan",_bilan);</bpmn2:script>
       <bpmn2:script>System.out.println("not noted "+_notation);
 loan.setNotation(_notation);
 loan.setEligible(false);
-loan.setMessage("Non note");
+loan.setMsg("Non note");
 kcontext.setVariable("loan",loan);</bpmn2:script>
     </bpmn2:scriptTask>
     <bpmn2:scriptTask id="_23AC4DB0-1C4D-429F-A7D4-64583EE30C22" name="mapping data" scriptFormat="http://www.java.com/java">

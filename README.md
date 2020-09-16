@@ -97,7 +97,7 @@ oc process mongodb-persistent -n openshift -p MONGODB_USER=admcomp -p MONGODB_PA
 ```
 
 Or  Openshift UI
-From Developper view, click on Add,select Database
+From Developer view, click on Add,select Database
 
 ![Add database app](/img/catalog-db-ocp.png) 
 
@@ -111,7 +111,7 @@ Click on Instantiate Template (use the filled values)
 
 
 
-## Build and deploy companies services managment (create/update/delete company and score)
+## Build and deploy companies services management (create/update/delete company and score)
 
 ## Create  DB and collection
 Get mongo pod name
@@ -203,7 +203,7 @@ Install Strimizi operator
 Install Kogito operator
 ![strimzi installation](/img/install-kogito.png)
 
-## Install kogit-infra 
+## Install kogito-infra 
 
 ```
 cd ..
