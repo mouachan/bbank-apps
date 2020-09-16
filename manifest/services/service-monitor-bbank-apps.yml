@@ -1,0 +1,56 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: eligibility
+  name: eligibility-service-monitor
+  namespace: bbank-apps
+spec:
+  endpoints:
+  - path: /metrics
+    targetPort: 8080
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - bbank-apps
+  selector:
+    matchLabels:
+      app: eligibility
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: notation
+  name: notation-service-monitor
+  namespace: bbank-apps
+spec:
+  endpoints:
+  - path: /metrics
+    targetPort: 8080
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - bbank-apps
+  selector:
+    matchLabels:
+      app: notation
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: loan
+  name: loan-service-monitor
+  namespace: bbank-apps
+spec:
+  endpoints:
+  - path: /metrics
+    targetPort: 8080
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - bbank-apps
+  selector:
+    matchLabels:
+      app: loan
