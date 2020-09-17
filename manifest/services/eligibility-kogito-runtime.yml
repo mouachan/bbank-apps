@@ -10,9 +10,11 @@ metadata:
     prometheus.io/scrape: "true"
   labels:
     app: eligibility
-    computeNotation: process
+    eligibility: process
   name: eligibility
 spec:
+  serviceLabels:
+    app: eligibility
   infinispan:
     useKogitoInfra: true
   kafka:

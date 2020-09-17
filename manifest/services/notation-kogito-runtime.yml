@@ -2,6 +2,7 @@ apiVersion: app.kiegroup.org/v1alpha1
 kind: KogitoRuntime
 metadata:
   annotations:
+    name: notation
     org.kie.kogito/managed-by: Kogito Operator
     org.kie.kogito/operator-crd: KogitoRuntime
     prometheus.io/path: /metrics
@@ -13,6 +14,8 @@ metadata:
     computeNotation: process
   name: notation
 spec:
+  serviceLabels:
+    app: notation
   infinispan:
     useKogitoInfra: true
   kafka:

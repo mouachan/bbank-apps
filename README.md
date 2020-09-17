@@ -1,3 +1,5 @@
+![BBank Logo](/img/logo.png) 
+
 # bbank apps
 
 
@@ -140,7 +142,13 @@ Create a knative-serving instance
 ```
 ./manifest/scripts/knative-serving.sh
 ```
+## Build the Model
 
+```
+cd model
+mvn clean install
+
+```
 ## Build and deploy companies CRUD services
 
 delete the services if exist
@@ -159,7 +167,7 @@ oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.c
 
 ## way 2 :  build the container locally and push to the registry (java or native)) 
 ```
-cd companies-svc
+cd ../companies-svc
 ```
 
 java
@@ -273,10 +281,9 @@ oc apply -f ./manifest/protobuf/loan-protobuf-files.yml
 
 create  "eligibility, notation, loan" - kogito - services
 ```
-kogito deploy-service eligibility --enable-persistence --enable-events 
-kogito deploy-service notation --enable-persistence --enable-events 
-kogito deploy-service loan --enable-persistence --enable-events 
-
+oc apply -f ./manifest/services/eligibility-kogitoapp.yml
+oc apply -f ./manifest/services/notation-kogitoapp.yml
+oc apply -f ./manifest/services/loan-kogitoapp.yml
 ```
 
 Package and start build
@@ -292,6 +299,8 @@ oc start-build notation --from-dir=target -n bbank-apps
 cd ../loan
 ./mvnw clean package -DskipTests=true 
 oc start-build loan --from-dir=target -n bbank-apps 
+
+cd ..
 ```
 
 Test the processes
@@ -326,3 +335,53 @@ Offer details (Rate and number of months)
 
 ![offer](/img/offer.png)
 
+## Monitoring 
+
+Install Prometheus operator throw Openshift OperatorHub and add instance from the opertaor
+
+Expose service
+
+```
+oc expose svc prometheus
+```
+Configure prometheus
+
+```
+oc apply -f ./manifest/services/prometheus-config.yml
+```
+
+add Service Monitor
+
+```
+oc apply -f ./manifest/services/prometheus-services-monitor.yml
+```
+
+Install Grafana operator Openshift OperatorHub
+
+create instance 
+
+```
+oc apply -f ./manifest/services/grafana-instance.yml
+```
+add prometheus data-source
+
+```
+oc apply -f ./manifest/services/grafana-prometheus-data-source.yml
+```
+
+add the Loan Dashboard
+
+```
+oc apply -f ./manifest/services/grafana-loan-dashboard.yml
+```
+
+Get grafana route
+
+```
+oc get route | grep grafana 
+grafana-route        grafana-route-bbank-apps.apps.ocp4.ouachani.org               grafana-service      3000   edge          None
+```
+
+Here we go ! enjoy :)
+
+![Dashboard](/img/dashboard-grafana.png)
