@@ -21,9 +21,11 @@ import { Form,
   Modal,
   ModalVariant,
   Title} from '@patternfly/react-core';
+import ReactJson from 'react-json-view';
 
 const LOAN_VALIDATION_URL = process.env.LOAN_VALIDATION_URL ;
-const MANAGMENT_CONSOLE_URL = process.env.MANAGMENT_CONSOLE_URL; 
+const MANAGMENT_CONSOLE_URL = process.env.MANAGMENT_CONSOLE_URL;
+const GRAPHQL_URL = process.env.GRAPHQL_URL; 
 
 
 interface ILoanValidation {
@@ -35,7 +37,7 @@ interface ILoanValidation {
   publicSupport: boolean,
   typeProjet: string,
   amount: number,
-  notation: object,
+  loan: object,
   gg: number,
   ga: number,
   hp: number,
@@ -47,6 +49,7 @@ interface ILoanValidation {
   ee: number, 
   isResultModal: boolean, 
   alerts: Array<object>
+  result: string;
 };
 
 class LoanValidationForm extends React.Component<{},ILoanValidation> {
@@ -62,7 +65,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
       publicSupport: true,
       typeProjet: 'AI',
       amount: 90000,
-      notation: {},
+      loan: {},
       gg: 5,
       ga: 2,
       hp: 1,
@@ -73,7 +76,8 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
       dl: 50,
       ee: 2,
       isResultModal: false,
-      alerts: []
+      alerts: [],
+      result: ""
     };
      
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -89,6 +93,59 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
   
  
   getUniqueId = () => (new Date().getTime());
+  checkStateProcess = (id) => {
+    var graphql = GRAPHQL_URL;
+    fetch(graphql, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({query: "{ ProcessInstances (where: {id: {equal: \""+id+"\"}}){state} }"})
+      })
+      .then(r => r.json())
+      .then(data => {
+        var state = data.data.ProcessInstances[0]["state"];
+        console.log(state);
+        if(state != "COMPLETED")
+          this.checkStateProcess(id);
+        else
+          this.getNotation(id);
+      })
+  };
+  getNotation = (id) => {
+    var graphql = GRAPHQL_URL;
+    console.log(graphql);
+     fetch(graphql, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({query: "{ ProcessInstances (where: {id: {equal: \""+id+"\"}}){variables} }"})
+      })
+      .then(r => r.json())
+      .then(data => {
+        var variables = data.data.ProcessInstances[0]["variables"];
+        console.log(variables);
+        var loan = JSON.parse(variables).loan;
+        console.log(loan);
+       // var notation = JSON.parse(loan).notation
+        console.log(loan.notation);
+        var result;
+        if(loan.eligible){
+          result = "Approved"
+      } else {
+          result = "Refused"
+          loan.notation = null;
+      }
+      this.setState({
+        loan: loan,
+        result: result,
+        isResultModal: true
+    })
+      })
+   };
 
    handleSubmit(event) {
    const payload =JSON.stringify({
@@ -128,11 +185,10 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
           result.json().then((body) => { 
               console.log(body);
               this.setState({
-                idProcess: body.id,
-                isResultModal: true
+                idProcess: body.id
               });
+              this.checkStateProcess(this.state.idProcess); 
               console.log(body.id);
-
             });
           } else {
             this.addAlert('Call Error : ' + result.status + ' ' + result.statusText , 'danger', this.getUniqueId());
@@ -478,17 +534,19 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
           <Button variant="primary" type="submit">Envoyer</Button>
         </ActionGroup>
         <Modal
-          title="Notation"
+          title="Result"
           variant={ModalVariant.small}
           isOpen={this.state.isResultModal}
           onClose={this.handleResultModal}
           
           actions={[
-            <Button component="a" variant="primary" href={"/notation?idProcess="+this.state.idProcess}>
+            <Button key="confirm" variant="primary" onClick={this.handleResultModal}>
               Close
             </Button>
           ]}>    
-            <Alert variant={this.convertLevel("LOW","Process started")}  title={"Process started" } /> 
+            <Alert variant={this.convertLevel("LOW","Process started")}  title={this.state.result}>
+              <ReactJson src={this.state.loan} />
+            </Alert> 
         </Modal>
       </Form>
     );
@@ -506,8 +564,6 @@ const LoanValidation: React.FunctionComponent = () => (
       </CardBody>
      
     </Card>
-   
-
   </PageSection>
 )
 

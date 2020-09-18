@@ -32,17 +32,16 @@ class NotationDetailsResult extends React.Component<{},INotationDetails>  {
       notation: {}
     }
   }
-getNotation = () => {
+getNotation = (id) => {
   var graphql = "http://localhost:8180/graphql";
   console.log(graphql);
-  console.log(useQuery());
    fetch(graphql, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
-    body: JSON.stringify({query: "{ ProcessInstances (where: {id: {equal: \""+this.state.idProcess+"\"}}){variables} }"})
+    body: JSON.stringify({query: "{ ProcessInstances (where: {id: {equal: \""+id+"\"}}){variables} }"})
     })
     .then(r => r.json())
     .then(data => {
@@ -58,7 +57,6 @@ getNotation = () => {
     })
  };
 render() {
-  this.getNotation();
   return (
         <>
       <TextContent>
