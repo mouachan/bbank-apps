@@ -7,7 +7,6 @@ import { LoanValidation } from '@app/LoanValidation/LoanValidation';
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
-import { NotationDetails } from '@app/NotationDetails/NotationDetails';
 
 
 let routeFocusTimer: number;
@@ -57,13 +56,6 @@ const routes: IAppRoute[] = [
     label: 'LoanValidation',
     path: '/',
     title: 'LoanValidation| Simulation',
-  },
-  {
-    component: NotationDetails,
-    exact: true,
-    label: 'Notation',
-    path: '/notation',
-    title: 'Notation| details',
   }
 ];
 
