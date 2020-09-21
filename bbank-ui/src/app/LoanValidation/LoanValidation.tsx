@@ -148,6 +148,8 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
    };
 
    handleSubmit(event) {
+     console.log("Loan Validation : "+LOAN_VALIDATION_URL);
+     console.log("Graphql : "+GRAPHQL_URL);
    const payload =JSON.stringify({
       "loan":{
       "siren": this.state.siren,
