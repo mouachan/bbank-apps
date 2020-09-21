@@ -3,13 +3,13 @@
 # bbank apps
 
 
-bbank apps is a set of business services to simulate a company loan approval, the diagram describe the main flow :
+bbank-apps illustrate how is easy to build and deploy on Openshift a set of business services created by a business users to simulate a loan apporval.
+The loan approval is an orchestration of 4 services
 
 ![Archi](img/archi-fonctionnelle-bbank-apps-loan.png) 
 
 
-
-- companies-svc service : create/update/delete companies in a repository (mongodb) 
+- companies-svc service : CRUD services to manage companies on a repository (mongodb) 
 - eligibility service : evaluate the eligibility of a company to have a loan throw business rules
 ![eligibility](img/eligibility.png) 
 - notation service : calculate a score and note throw a process and business rules 
@@ -24,10 +24,11 @@ We will deploy
 
  - a mongodb instance to store company and scoring details
  - companies-svc : a microservice based on quarkus, panache to manage CRUD companies and scoring operations (Rest)
- - eligibility : a quarkus/kogito service 
- - notation : a quarkus, kogito service 
- - loan : a quarkus, kogito service 
- - bbank-ui : a nodejs/react frontend to manage all services
+ - eligibility : a quarkus/kogito service to evaluate the eligibility of the company 
+ - notation : a quarkus, kogito service to calculate the score and note 
+ - loan : a quarkus, kogito service to orchestrate loan steps
+ - bbank-ui : a nodejs/react frontend to simulate the loan
+ - monitoring service : functional dashboard to 
 
 All services expose rest api, the processes use reactive messaging (kafka) to consume/push events, all events are stored in infinispan.
 
@@ -41,13 +42,15 @@ install
 - kn cli : https://docs.openshift.com/container-platform/4.5/serverless/installing_serverless/installing-kn.html#installing-kn
 - kogito cli : https://docs.jboss.org/kogito/release/latest/html_single/#proc-kogito-operator-and-cli-installing_kogito-deploying-on-openshift
 
-## connect to Openshift server 
+### connect to Openshift server 
 
 ```
 oc login https://ocp-url:6443 -u login -p password
 ```
 
-## create new namespace
+
+
+### create new namespace
 ```
 oc new-project bbank-apps
 ```
@@ -84,7 +87,8 @@ git clone https://github.com/mouachan/bbank-apps.git
 
 ## Create a persistent mongodb 
 
-Using oc cli
+Option 1 : using oc cli
+
 ```
 #check if persistent mongo exist
 
@@ -98,7 +102,7 @@ oc process mongodb-persistent -n openshift -p MONGODB_USER=admcomp -p MONGODB_PA
 | oc create -f -
 ```
 
-Or  Openshift UI
+Option 2: using Openshift UI
 From Developer view, click on Add,select Database
 
 ![Add database app](/img/catalog-db-ocp.png) 
@@ -116,6 +120,7 @@ Click on Instantiate Template (use the filled values)
 ## Build and deploy companies services management (create/update/delete company and score)
 
 ## Create  DB and collection
+
 Get mongo pod name
 ```
 oc get pods    
@@ -142,6 +147,7 @@ Create a knative-serving instance
 ```
 ./manifest/scripts/knative-serving.sh
 ```
+
 ## Build the Model
 
 ```
@@ -155,7 +161,7 @@ delete the services if exist
 ```
 oc delete all,configmap,pvc,serviceaccount,rolebinding --selector app=companies-svc
 ```
-## way 1 : source to image build  (S2I)
+option 1 : source to image build  (S2I)
 ```
 oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/banking-apps.git \
 --name=companies-svc \
@@ -165,7 +171,7 @@ oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.c
 --source-secret=github
 ```
 
-## way 2 :  build the container locally and push to the registry (java or native)) 
+option 2 :  build the container locally and push to the registry (java or native)) 
 ```
 cd ../companies-svc
 ```
@@ -196,6 +202,7 @@ oc apply -f ../manifest/companies-svc-native-knative.yml
 ```
 
 ## verify the service availability
+
 Browse the url  : http://companies-svc-bbank-apps.apps.ocp4.ouachani.net/
 replace .apps.ocp4.ouachani.net by your OCP url
 
@@ -286,7 +293,7 @@ oc apply -f ./manifest/services/notation-kogitoapp.yml
 oc apply -f ./manifest/services/loan-kogitoapp.yml
 ```
 
-Package and start build
+Package and start the build
 ```
 cd eligibility
 mvn clean package -DskipTests=true 
@@ -303,7 +310,7 @@ oc start-build loan --from-dir=target -n bbank-apps
 cd ..
 ```
 
-Test the processes
+## Test the processes
 
 First get the route of the management console
 ```
@@ -334,6 +341,32 @@ Notation result is :
 Offer details (Rate and number of months) 
 
 ![offer](/img/offer.png)
+
+
+## Frontend
+
+We validate that all services works fine, so let's deploy the frontend using the nodejs S2I builder  
+```
+oc new-app nodejs:12~http://github.com/mouachan/bbank-apps --context-dir=/bbank-ui  -l 'name=bbank-ui,app=bbank-ui,app.kubernetes.io/component=bbank-ui,app.kubernetes.io/instance=bbank-ui,deployment=bbank-ui' --source-secret=github -e  LOAN_VALIDATION_URL="http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -e   GRAPHQL_URL="http://data-index-bbank-apps.apps.ocp4.ouachani.org/graphql"  --name=bbank-ui
+
+```
+
+Get the route
+
+```
+oc get route bbank-ui 
+
+
+NAME       HOST/PORT                                    PATH   SERVICES   PORT       TERMINATION   WILDCARD
+bbank-ui   bbank-ui-bbank-apps.apps.ocp4.ouachani.org          bbank-ui   8080-tcp                 None
+```
+
+If you click on submit using the filled values the result is an approved loan
+![frontend](/img/loan-validattion-ui.png)
+
+Result
+![Result](/img/Result.png)
+
 
 ## Monitoring 
 
@@ -381,7 +414,6 @@ Get grafana route
 oc get route | grep grafana 
 grafana-route        grafana-route-bbank-apps.apps.ocp4.ouachani.org               grafana-service      3000   edge          None
 ```
-
-Here we go ! enjoy :)
+Go to  http://grafana-route-bbank-apps.apps.ocp4.ouachani.org, you will see some metrics :
 
 ![Dashboard](/img/dashboard-grafana.png)
