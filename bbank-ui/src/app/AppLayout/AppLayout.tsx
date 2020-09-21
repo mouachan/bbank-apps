@@ -36,8 +36,8 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({children}) => {
   };
   const Header = (
     <PageHeader
-      logo="B Services"
-      logo={<img src={'/b-icon.png'} width="125" height="50"/>}
+      logo="BBank Services"
+      logo={<img src={'/logo.png'} width="125" height="50"/>}
       logoProps={logoProps}
       showNavToggle
       isNavOpen={isNavOpen}
