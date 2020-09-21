@@ -23,9 +23,7 @@ import { Form,
   Title} from '@patternfly/react-core';
 import ReactJson from 'react-json-view';
 
-const LOAN_VALIDATION_URL = process.env.LOAN_VALIDATION_URL ;
-const MANAGMENT_CONSOLE_URL = process.env.MANAGMENT_CONSOLE_URL;
-const GRAPHQL_URL = process.env.GRAPHQL_URL; 
+
 
 
 interface ILoanValidation {
@@ -148,6 +146,10 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
    };
 
    handleSubmit(event) {
+    var LOAN_VALIDATION_URL = process.env.LOAN_VALIDATION_URL ;
+    var MANAGMENT_CONSOLE_URL = process.env.MANAGMENT_CONSOLE_URL;
+    var GRAPHQL_URL = process.env.GRAPHQL_URL; 
+    
      console.log("Loan Validation : "+LOAN_VALIDATION_URL);
      console.log("Graphql : "+GRAPHQL_URL);
    const payload =JSON.stringify({
