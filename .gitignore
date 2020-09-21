@@ -34,4 +34,10 @@ pom.xml.releaseBackup
 pom.xml.versionsBackup
 release.properties
 #nodejs
-node-module/
+**/node_modules
+//dist
+yarn-error.log
+stats.json
+coverage
+storybook-static
+.env
