@@ -91,8 +91,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
   
  
   getUniqueId = () => (new Date().getTime());
-  checkStateProcess = (id) => {
-    var graphql = GRAPHQL_URL;
+  checkStateProcess = (graphql, id) => {
     fetch(graphql, {
       method: 'POST',
       headers: {
@@ -106,13 +105,12 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
         var state = data.data.ProcessInstances[0]["state"];
         console.log(state);
         if(state != "COMPLETED")
-          this.checkStateProcess(id);
+          this.checkStateProcess(graphql, id);
         else
-          this.getNotation(id);
+          this.getNotation(graphql,id);
       })
   };
-  getNotation = (id) => {
-    var graphql = GRAPHQL_URL;
+  getNotation = (graphql, id) => {
     console.log(graphql);
      fetch(graphql, {
       method: 'POST',
@@ -175,8 +173,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
     }
     });
     console.log(payload);
-    var url = LOAN_VALIDATION_URL;
-    fetch(process.env.LOAN_VALIDATION_URL , {
+    fetch(LOAN_VALIDATION_URL , {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -192,7 +189,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
               this.setState({
                 idProcess: body.id
               });
-              this.checkStateProcess(this.state.idProcess); 
+              this.checkStateProcess(GRAPHQL_URL, this.state.idProcess); 
               console.log(body.id);
             });
           } else {
