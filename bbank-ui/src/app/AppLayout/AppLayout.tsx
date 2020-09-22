@@ -11,6 +11,7 @@ import {
   SkipToContent
 } from '@patternfly/react-core';
 import { routes } from '@app/routes';
+import bbankLogo from '../../images/logo.png';
 
 
 interface IAppLayout {
@@ -36,8 +37,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({children}) => {
   };
   const Header = (
     <PageHeader
-      logo="BBank Services"
-      logo={<img src={'/logo.png'} width="125" height="50"/>}
+      logo={<Brand src={bbankLogo} alt="BBank" />}
       logoProps={logoProps}
       showNavToggle
       isNavOpen={isNavOpen}
