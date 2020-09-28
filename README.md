@@ -4,7 +4,7 @@
 
 As a developper, we always have in mind the same question "What if we can avoid a long meeting with business users ? What if we can let them design the business case and just plug and play with the other pieces : build, secure, deploy  and monitor the application !"
 
-And the same from them : « F..c… I lost my morning, I can’t remember if he talk about Streaming or API, he also said something about deploying in 2 weeks the new feature because of I don’t know what !!! Why I can’t update my rating rule in a real time ??? » 
+And the same from them : « F..c… I lost my morning, I can’t remember if he talk about Streaming or API, he also said something about deploying in 2 weeks the new feature because of I don’t know what !!! Why I can’t update my rating rule in real time ??? » 
 
 Throw this story, we will demonstrate how can gives the hands to Business Users to create throw processes and rules a functional core of a company loan simulator. Based on the functional core, developper can build, secure and deploy the application in a few clicks/commands.
 
@@ -14,16 +14,16 @@ My story is around « loan validation », meaning how to simulate a loan for a
 *What’s a loan approval ?*
 
 « The applicant »  - a company - request for a loan, the system get the request and start the orchestrator « loan process  » .
-Then « loan process » invoke « eligibility » process to know where if the applicant could be notated or not. 
-If yes « loan process » invoke the « notation »  process to calculate a Notation which is a structure composed by a calculated Score, a Note (a could be  A, B, C or D), and an Orientation (could be « Approved » « Reserve », « To Review » or  « Disapproved » . 
-Getting the notation, the « loan process » make an offer for 
-« the applicant » , an offer is composed by a credit rate and term  (e.g 2% and 36 months).
+Then the « loan process » invoke the « eligibility process » to know if the applicant could be notated or not. 
+If yes, the « loan process » invoke the « notation process »  to calculate a Notation which is a structure composed by a calculated Score, a Note (could be  A, B, C or D), and an Orientation (could be « Approved » « Reserve », « To Review » or  « Disapproved ») . 
+Finally, the « loan process » make an offer for 
+« the applicant » , which is composed by a credit rate and a creditterm  (e.g 2% and 36 months).
 
-Clear ? Yes ? If not,  maybe this picture will gives more clarity on the orchestration between services. 
+Clear ? Yes ? If not,  maybe the following diagram will gives more clarity on the orchestration between services. 
 
-![Archi](_img/archi-fonctionnelle-bbank-apps-loan.png) 
+![Archi](./img/archi-fonctionnelle-bbank-apps-loan.png) 
 
-Let’s go detail each service :
+Let’s go deeper on each service :
 
 - companies-svc service : CRUD services to manage companies on a repository (mongodb) 
 - eligibility service : evaluate the eligibility of a company to have a loan throw business rules
@@ -65,7 +65,7 @@ No more leaking abstraction of the tool into your client applications.
 If you think about business automation think about the cloud as this is where your business logic lives these days. By taking advantage of the latest technologies (Quarkus, knative, etc.), you get amazingly fast boot times and instant scaling on orchestration platforms like Kubernetes.
  
 *Having Fun*
- At first you will be angry, then sad,  and …. you will break your laptop at the end you will be happy because it works like magic ! 
+ At first you will be angry, then sad,  and …. you will break your laptop. At the end you will be happy because it works like magic ! 
 
 Ready ? Hands On :)
 
