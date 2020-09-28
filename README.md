@@ -513,7 +513,7 @@ public class LoanPrometheusProcessEventListener extends PrometheusProcessEventLi
 }
 ```
 
-Prometheus, and to put the cherry on the cake, a dashboard Grafana will shows the metrics
+Metrics exposed, let's install Prometheus and Grafana to catch and show the dashboard
 
 ### Install Prometheus Operator 
 Install Prometheus operator throw Openshift OperatorHub and add instance from the opertaor
@@ -566,6 +566,7 @@ Go to  http://grafana-route-bbank-apps.apps.ocp4.ouachani.org, you will see some
 ![Dashboard](./img/dashboard-grafana.png)
 
 ## Did I forget something ? [This section is under construction]
+
 We build, deploy, test the application. But my boss is not happy, he said to me with « a red face » that Business User would like only login once. It means you must integrate all services to our a Single Sign On solution.  Ok Boss !
 The good news is that Quarkus and Kogito comes with a SSO integration, yeah yeah no need to put a dozen of code lines.
 
