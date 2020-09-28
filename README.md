@@ -54,18 +54,22 @@ We finish with the functional stuff :)
 I took some quotes from [Kogito](https://kogito.kie.org/) because I found it realistic !
   
 *For Business Users*
+
 Thanks to Kogito : Stay focused on what the business is about instead of being concerned with technology behind it.
 Kogito adopts to your business domain rather than the other way around. 
 
 *API First* 
+
 Thanks to Quarkus/ Kogito : all api are generated throw both frameworks. 
 No more leaking abstraction of the tool into your client applications.
 
 *Super Fast and Cloud Ready*
+
 If you think about business automation think about the cloud as this is where your business logic lives these days. By taking advantage of the latest technologies (Quarkus, knative, etc.), you get amazingly fast boot times and instant scaling on orchestration platforms like Kubernetes.
  
 *Having Fun*
- At first you will be angry, then sad,  and …. you will break your laptop. At the end you will be happy because it works like magic ! 
+
+At first you will be angry, then sad,  and …. you will break your laptop. At the end you will be happy because it works like magic ! 
 
 Ready ? Hands On :)
 
