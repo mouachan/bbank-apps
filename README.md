@@ -1,4 +1,4 @@
-# ![BBank Logo](_/img/logo.png_) 
+# ![BBank Logo](./img/logo.png_) 
 
 # how to makes Business Users happy !
 
@@ -27,12 +27,12 @@ Let’s go detail each service :
 
 - companies-svc service : CRUD services to manage companies on a repository (mongodb) 
 - eligibility service : evaluate the eligibility of a company to have a loan throw business rules
-![eligibility](_img/eligibility.png_) 
+![eligibility](./img/eligibility.png_) 
 - notation service : calculate a score and note throw a process and business rules 
-![notation](_img/notation.png_)
+![notation](./img/notation.png_)
 - loan service : manage the orchestration between business services 
-![loan](_img/loan.png_)
-![sub-process](_img/loan-sub-process.png_)
+![loan](./img/loan.png_)
+![sub-process](./img/loan-sub-process.png_)
 
 We finish with the functional stuff :)
 
@@ -139,15 +139,15 @@ oc process mongodb-persistent -n openshift -p MONGODB_USER=admcomp -p MONGODB_PA
 #### Option 2: using Openshift UI
 From Developer view, click on Add,select Database
 
-![Add database app](_/img/catalog-db-ocp.png_) 
+![Add database app](./img/catalog-db-ocp.png_) 
 
 From the developer catalog, click on MongoDB Template (persistent)
 
-![Developer catalog](_/img/developer-catalog.png_) 
+![Developer catalog](./img/developer-catalog.png_) 
 
 Click on Instantiate Template (use the filled values)
 
-![Instantiate the template](_/img/instantiate-template-mongodb.png_) 
+![Instantiate the template](./img/instantiate-template-mongodb.png_) 
 
 ### Build the Loan Model
 
@@ -240,18 +240,18 @@ oc apply -f ../manifest/companies-svc-native-knative.yml
 Browse the url  : http://companies-svc-bbank-apps.apps.ocp4.ouachani.net/
 replace .apps.ocp4.ouachani.net by your OCP url
 
-![Verify service](_/img/list-companies.png_)
+![Verify service](./img/list-companies.png_)
 
 ### Build and deploy the services
 
 #### Install Strimzi, infinispan and kogito operator
 
 Install Infinispan/Red Hat Data Grid operator (operator version 1.1.X)
-![infinispan installation](_/img/install-infinispan-11x.png_)
+![infinispan installation](./img/install-infinispan-11x.png_)
 Install Strimizi operator
-![strimzi installation](_/img/install-strimzi.png_)
+![strimzi installation](./img/install-strimzi.png_)
 Install Kogito operator
-![strimzi installation](_/img/install-kogito.png_)
+![strimzi installation](./img/install-kogito.png_)
 
 #### Install data-index e.g the kogito-infra
 
@@ -403,21 +403,21 @@ curl -X POST "http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -H  
 
 Now, open the management console (management-console-bbank-apps.apps.ocp4.ouachani.org) , click on « Status »,  select « Completed » and click on « Apply filter » 
 
-![Filter process](_/img/filter-completed-process.png_)
+![Filter process](./img/filter-completed-process.png_)
 
-![list of process](_/img/list-process-mgmt-console.png_)
+![list of process](./img/list-process-mgmt-console.png_)
 
 Click on loan Validation process
 
-![process result](_/img/process-details-result.png_)
+![process result](./img/process-details-result.png_)
 
 Wawww the result is :
 
-![notation](_/img/calculated-notation-model-1.png_)
+![notation](./img/calculated-notation-model-1.png_)
 
 And the Offer details (Rate and number of months) 
 
-![offer](_/img/offer.png_)
+![offer](./img/offer.png_)
 
 Beautiful right ? Heuuu Business Users does not like curl … Okay okay let’s deploy THE WEB UI   
 
@@ -441,10 +441,10 @@ bbank-ui   bbank-ui-bbank-apps.apps.ocp4.ouachani.org          bbank-ui   8080-t
 ```
 
 If you click on submit using the filled values the result is an approved loan
-![frontend](_/img/loan-validattion-ui.png_)
+![frontend](./img/loan-validattion-ui.png_)
 
 Result
-![Result](_/img/Result.png_)
+![Result](./img/Result.png_)
 
 
 ##  Business Users will love you 
@@ -555,7 +555,7 @@ grafana-route        grafana-route-bbank-apps.apps.ocp4.ouachani.org            
 
 Go to  http://grafana-route-bbank-apps.apps.ocp4.ouachani.org, you will see some metrics :
 
-![Dashboard](_/img/dashboard-grafana.png_)
+![Dashboard](./img/dashboard-grafana.png_)
 
 ## Did I forget something ? [This section is under construction]
 We build, deploy, test the application. But my boss is not happy, he said to me with « a red face » that Business User would like only login once. It means you must integrate all services to our a Single Sign On solution.  Ok Boss !
