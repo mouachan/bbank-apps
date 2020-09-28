@@ -1,4 +1,4 @@
-# ![BBank Logo](img/logo.png_) 
+# ![BBank Logo](./img/logo.png) 
 
 # how to makes Business Users happy !
 
@@ -21,18 +21,18 @@ Getting the notation, the « loan process » make an offer for
 
 Clear ? Yes ? If not,  maybe this picture will gives more clarity on the orchestration between services. 
 
-![Archi](_img/archi-fonctionnelle-bbank-apps-loan.png_) 
+![Archi](_img/archi-fonctionnelle-bbank-apps-loan.png) 
 
 Let’s go detail each service :
 
 - companies-svc service : CRUD services to manage companies on a repository (mongodb) 
 - eligibility service : evaluate the eligibility of a company to have a loan throw business rules
-![eligibility](./img/eligibility.png_) 
+![eligibility](./img/eligibility.png) 
 - notation service : calculate a score and note throw a process and business rules 
-![notation](./img/notation.png_)
+![notation](./img/notation.png)
 - loan service : manage the orchestration between business services 
-![loan](./img/loan.png_)
-![sub-process](./img/loan-sub-process.png_)
+![loan](./img/loan.png)
+![sub-process](./img/loan-sub-process.png)
 
 We finish with the functional stuff :)
 
@@ -139,15 +139,15 @@ oc process mongodb-persistent -n openshift -p MONGODB_USER=admcomp -p MONGODB_PA
 #### Option 2: using Openshift UI
 From Developer view, click on Add,select Database
 
-![Add database app](./img/catalog-db-ocp.png_) 
+![Add database app](./img/catalog-db-ocp.png) 
 
 From the developer catalog, click on MongoDB Template (persistent)
 
-![Developer catalog](./img/developer-catalog.png_) 
+![Developer catalog](./img/developer-catalog.png) 
 
 Click on Instantiate Template (use the filled values)
 
-![Instantiate the template](./img/instantiate-template-mongodb.png_) 
+![Instantiate the template](./img/instantiate-template-mongodb.png) 
 
 ### Build the Loan Model
 
@@ -205,7 +205,7 @@ oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.c
 --source-secret=github
 ```
 
-##### option 2 :  build the container locally and push to the registry (java or native)) 
+##### option 2 :  build the container locally and push to the registry (java or native)
 ```shell
 cd ../companies-svc
 ```
@@ -240,18 +240,18 @@ oc apply -f ../manifest/companies-svc-native-knative.yml
 Browse the url  : http://companies-svc-bbank-apps.apps.ocp4.ouachani.net/
 replace .apps.ocp4.ouachani.net by your OCP url
 
-![Verify service](./img/list-companies.png_)
+![Verify service](./img/list-companies.png)
 
 ### Build and deploy the services
 
 #### Install Strimzi, infinispan and kogito operator
 
 Install Infinispan/Red Hat Data Grid operator (operator version 1.1.X)
-![infinispan installation](./img/install-infinispan-11x.png_)
+![infinispan installation](./img/install-infinispan-11x.png)
 Install Strimizi operator
-![strimzi installation](./img/install-strimzi.png_)
+![strimzi installation](./img/install-strimzi.png)
 Install Kogito operator
-![strimzi installation](./img/install-kogito.png_)
+![strimzi installation](./img/install-kogito.png)
 
 #### Install data-index e.g the kogito-infra
 
@@ -403,21 +403,21 @@ curl -X POST "http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -H  
 
 Now, open the management console (management-console-bbank-apps.apps.ocp4.ouachani.org) , click on « Status »,  select « Completed » and click on « Apply filter » 
 
-![Filter process](./img/filter-completed-process.png_)
+![Filter process](./img/filter-completed-process.png)
 
-![list of process](./img/list-process-mgmt-console.png_)
+![list of process](./img/list-process-mgmt-console.png)
 
 Click on loan Validation process
 
-![process result](./img/process-details-result.png_)
+![process result](./img/process-details-result.png)
 
 Wawww the result is :
 
-![notation](./img/calculated-notation-model-1.png_)
+![notation](./img/calculated-notation-model-1.png)
 
 And the Offer details (Rate and number of months) 
 
-![offer](./img/offer.png_)
+![offer](./img/offer.png)
 
 Beautiful right ? Heuuu Business Users does not like curl … Okay okay let’s deploy THE WEB UI   
 
@@ -441,10 +441,10 @@ bbank-ui   bbank-ui-bbank-apps.apps.ocp4.ouachani.org          bbank-ui   8080-t
 ```
 
 If you click on submit using the filled values the result is an approved loan
-![frontend](./img/loan-validattion-ui.png_)
+![frontend](./img/loan-validattion-ui.png)
 
 Result
-![Result](./img/Result.png_)
+![Result](./img/Result.png)
 
 
 ##  Business Users will love you 
@@ -555,7 +555,7 @@ grafana-route        grafana-route-bbank-apps.apps.ocp4.ouachani.org            
 
 Go to  http://grafana-route-bbank-apps.apps.ocp4.ouachani.org, you will see some metrics :
 
-![Dashboard](./img/dashboard-grafana.png_)
+![Dashboard](./img/dashboard-grafana.png)
 
 ## Did I forget something ? [This section is under construction]
 We build, deploy, test the application. But my boss is not happy, he said to me with « a red face » that Business User would like only login once. It means you must integrate all services to our a Single Sign On solution.  Ok Boss !
