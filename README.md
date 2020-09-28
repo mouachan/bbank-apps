@@ -390,7 +390,7 @@ oc start-build loan --from-dir=target -n bbank-apps
 cd ..
 ```
 
-## We are Ready for tests, go fin more people 😆
+## We are ready for tests, go find more people for help 😆
 
 First get the route of the management console
 ```shell
@@ -427,9 +427,13 @@ Beautiful right ? Heuuu Business Users does not like curl … Okay okay let’s 
 
 ## The UI
 
-We validate that all services works fine, so let’s deploy the frontend using the nodejs S2I builder  
+We validate that all services works fine, so let’s deploy the UI using the nodejs S2I builder.  
 As you can see, I add some parameters to simplify the integration :
-	- a lot of labels to easily manage the app (e.g I can do an « oc delete all —Selector: 
+	- a lot of labels to easily manage the app
+    - source-secret to pull the source from github
+    - LOAN_VALIDATION_URL is used by the frontend to call "loan process"
+    - GRAPHQL_URL is used by the frontend to get the result from infinispan by using graphql queries
+    - --name : to name the application
 
 ```shell
 oc new-app nodejs:12~http://github.com/mouachan/bbank-apps --context-dir=/bbank-ui  -l 'name=bbank-ui,app=bbank-ui,app.kubernetes.io/component=bbank-ui,app.kubernetes.io/instance=bbank-ui,deployment=bbank-ui' --source-secret=github -e  LOAN_VALIDATION_URL="http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -e   GRAPHQL_URL="http://data-index-bbank-apps.apps.ocp4.ouachani.org/graphql"  --name=bbank-ui
@@ -445,10 +449,10 @@ bbank-ui   bbank-ui-bbank-apps.apps.ocp4.ouachani.org          bbank-ui   8080-t
 ```
 
 If you click on submit using the filled values the result is an approved loan
-![frontend](./img/loan-validattion-ui.png)
+![frontend](./img/loan-validation-ui.png)
 
 Result
-![Result](./img/Result.png)
+![Result](./img/result.png)
 
 
 ##  Business Users will love you 
