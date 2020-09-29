@@ -1,4 +1,4 @@
-# ! [BBank Logo](./img/logo.png) 
+# ![BBank Logo](./img/logo.png) 
 
 # how to makes Business Users happy !
 
