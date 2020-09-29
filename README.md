@@ -1,83 +1,85 @@
-# ![BBank Logo](./img/logo.png) 
+# ! [BBank Logo](./img/logo.png) 
 
 # how to makes Business Users happy !
 
-As a developper, we always have in mind the same question "What if we can avoid a long meeting with business users ? What if we can let them design the business case and just plug and play with the other pieces : build, secure, deploy  and monitor the application !"
+As a developper, we always have in mind the same question « What if we could avoid a long meeting with business users ? What if we could let them design the business case and just plug in and play with the other element : build, secure, deploy  and monitor the app ! »
 
-And the same from them : « F..c… I lost my morning, I can’t remember if he talk about Streaming or API, he also said something about deploying in 2 weeks the new feature because of I don’t know what !!! Why I can’t update my rating rule in real time ??? » 
+And the same thing for operational guys : « … I wasted my morning, always same gibberish
+Kafka, Streaming , API. They also said something about rolling out in 2 weeks the new feature because of I don’t know what !!! Why can’t I update my scoring rule in real time ??? » 
 
-Throw this story, we will demonstrate how can gives the hands to Business Users to create throw processes and rules a functional core of a company loan simulator. Based on the functional core, developper can build, secure and deploy the application in a few clicks/commands.
+Throw this story, we will show how we can easily build, secure and deploy a functional core created by business users.
 
-My story is around « loan validation », meaning how to simulate a loan for a company. 
+My story is about « loan validation », which is how to simulate a loan for a company. 
 
 
-*What’s a loan approval ?*
+What’s a loan approval ?
 
-« The applicant »  - a company - request for a loan, the system get the request and start the orchestrator « loan process  » .
-Then the « loan process » invoke the « eligibility process » to know if the applicant could be notated or not. 
-If yes, the « loan process » invoke the « notation process »  to calculate a Notation which is a structure composed by a calculated Score, a Note (could be  A, B, C or D), and an Orientation (could be « Approved » « Reserve », « To Review » or  « Disapproved ») . 
-Finally, the « loan process » make an offer for 
-« the applicant » , which is composed by a credit rate and a creditterm  (e.g 2% and 36 months).
+“The applicant” - a company - requests a loan, the system retrieves the request and starts the “loan process” orchestrator.
+Then the “loan process” invokes the “eligibility process” to find out whether the applicant can be scored or not.
+If so, the “loan process” invokes the “scoring process” to calculate a Rating which is a structure composed of a calculated Score, a Note (can be A, B, C or D), and a Guidance (can be “Approved” “Reserve”, “To review” or “Disapproved”).
+Finally, the « loan process » makes an offer for
+« The applicant », which is composed of a credit rate and a term (for example 2% and 36 months).
+
 
 Clear ? Yes ? If not,  maybe the following diagram will gives more clarity on the orchestration between services. 
 
-![Archi](./img/archi-fonctionnelle-bbank-apps-loan.png) 
+![Archi](_./img/archi-fonctionnelle-bbank-apps-loan.png_) 
 
 Let’s go deeper on each service :
 
 - companies-svc service : CRUD services to manage companies on a repository (mongodb) 
 - eligibility service : evaluate the eligibility of a company to have a loan throw business rules
-![eligibility](./img/eligibility.png) 
+![eligibility](_./img/eligibility.png_) 
 - notation service : calculate a score and note throw a process and business rules 
-![notation](./img/notation.png)
+![notation](_./img/notation.png_)
 - loan service : manage the orchestration between business services 
-![loan](./img/loan.png)
-![sub-process](./img/loan-sub-process.png)
+![loan](_./img/loan.png_)
+![sub-process](_./img/loan-sub-process.png_)
 
-We finish with the functional stuff :)
+We have finished with the functional stuff :)
 
-*From technical perspective, what we need ?* 
+*From technical perspective, what we need ?*
 
  - datalake store : a mongodb instance to store company and scoring details
  - manage CRUD operation : a microservice based on quarkus, panache to manage CRUD companies and scoring operations (Rest)
- - eligibility, notation and loan services : a quarkus/kogito services to evaluate the eligibility, calculate the notation and orchestrate calls between services
+ - eligibility, notation and loan services : a quarkus/kogito services to evaluate the eligibility, calculate the rating and orchestrate calls between services
  - a beautiful UI : a nodejs/react web UI to simulate the loan
  - a monitoring service : functional dashboard based on Prometheus and Grafana 
  - secure services : an SSO such as Keycloak 
  - event messaging : Kafka to manage events throws processes/services 
- - events cache : infinispan cache to manage the events store (which can give the timeline of the process execution for example) 
- - Serverless : Knative make the service scalable when is need it , it start the service only if the application receive a request 
+ - events cache : infinispan cache to manage the events store (which can give the chronology of the execution of the process for example)
+ - Serverless : Knative makes the service scalable when needed, it only starts the service if the application receives a request 
 
-*all services expose rest api, the processes use reactive messaging (kafka) to consume/push events, all events are stored in infinispan.*
+all services expose rest api, the processes use reactive messaging (kafka) to consume/push events, all events are stored in infinispan.
 
 ## What’s the benefits of such architecture ?
-I took some quotes from [Kogito](https://kogito.kie.org/) because I found it realistic !
+I took some quotes from [Kogito](_https://kogito.kie.org/_) because I found it realistic !
   
-*For Business Users*
+For Business Users
 
 Thanks to Kogito : Stay focused on what the business is about instead of being concerned with technology behind it.
 Kogito adopts to your business domain rather than the other way around. 
 
-*API First* 
+API First
 
 Thanks to Quarkus/ Kogito : all api are generated throw both frameworks. 
 No more leaking abstraction of the tool into your client applications.
 
-*Super Fast and Cloud Ready*
+Super Fast and Cloud Ready
 
 If you think about business automation think about the cloud as this is where your business logic lives these days. By taking advantage of the latest technologies (Quarkus, knative, etc.), you get amazingly fast boot times and instant scaling on orchestration platforms like Kubernetes.
  
-*Having Fun*
+Having Fun
 
-At first you will be angry, then sad,  and …. you will break your laptop. At the end you will be happy because it works like magic ! 
+At first you will be angry, then sad,  and …. you will break your laptop. In the end you will be happy because it works like magic ! 
 
 Ready ? Hands On :)
 
-## to deploy the apps localy 
+## to deploy the apps localy
 
 https://github.com/mouachan/bbank-apps/tree/master/docker-compose
 
-## to deploy  the apps on openshift  
+## to deploy  the apps on openshift
 Please install : 
 - oc cli : https://docs.openshift.com/container-platform/4.5/cli_reference/openshift_cli/getting-started-cli.html
 - kn cli : https://docs.openshift.com/container-platform/4.5/serverless/installing_serverless/installing-kn.html#installing-kn
@@ -123,7 +125,7 @@ oc secrets link default quay-secret --for=pull
 git clone https://github.com/mouachan/bbank-apps.git
 ```
 
-### Create a persistent mongodb 
+### Create a persistent mongodb
 
 #### Option 1 : using oc cli
 
@@ -143,15 +145,15 @@ oc process mongodb-persistent -n openshift -p MONGODB_USER=admcomp -p MONGODB_PA
 #### Option 2: using Openshift UI
 From Developer view, click on Add,select Database
 
-![Add database app](./img/catalog-db-ocp.png) 
+![Add database app](_./img/catalog-db-ocp.png_) 
 
 From the developer catalog, click on MongoDB Template (persistent)
 
-![Developer catalog](./img/developer-catalog.png) 
+![Developer catalog](_./img/developer-catalog.png_) 
 
 Click on Instantiate Template (use the filled values)
 
-![Instantiate the template](./img/instantiate-template-mongodb.png) 
+![Instantiate the template](_./img/instantiate-template-mongodb.png_) 
 
 ### Build the Loan Model
 
@@ -161,7 +163,7 @@ mvn clean install
 ```
 
 
-### Build and deploy companies services management 
+### Build and deploy companies services management
 
 ####  Create  DB and collection
 
@@ -244,18 +246,18 @@ oc apply -f ../manifest/companies-svc-native-knative.yml
 Browse the url  : http://companies-svc-bbank-apps.apps.ocp4.ouachani.net/
 replace .apps.ocp4.ouachani.net by your OCP url
 
-![Verify service](./img/list-companies.png)
+![Verify service](_./img/list-companies.png_)
 
 ### Build and deploy the services
 
 #### Install Strimzi, infinispan and kogito operator
 
 Install Infinispan/Red Hat Data Grid operator (operator version 1.1.X)
-![infinispan installation](./img/install-infinispan-11x.png)
+![infinispan installation](_./img/install-infinispan-11x.png_)
 Install Strimizi operator
-![strimzi installation](./img/install-strimzi.png)
+![strimzi installation](_./img/install-strimzi.png_)
 Install Kogito operator
-![strimzi installation](./img/install-kogito.png)
+![strimzi installation](_./img/install-kogito.png_)
 
 #### Install data-index e.g the kogito-infra
 
@@ -271,7 +273,7 @@ kogito install infinispan
 kogito install kafka
 ```
 
-You understood that this infra, will manage kafka topics and infinispan cache ! That’s one of the magic round I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !
+You understood that this infra, will manage kafka topics and infinispan cache ! That’s one of the magic kogito I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !
 
 Sure there is a magic, but it needs a little configuration. Infinispan, needs the models/processes to store all actions done by the process. Below and exemple :
 
@@ -281,42 +283,42 @@ package org.kie.kogito.app;
 import "kogito-types.proto";
 
 message Bilan { 
-	option java_package = "org.redhat.bbank.model";
-	optional double dl = 1; 
-	optional double ee = 2; 
-	optional double fl = 3; 
-	optional double fm = 4; 
-	optional double ga = 5; 
-	optional double gg = 6; 
-	optional double hn = 7; 
-	optional double hp = 8; 
-	optional double hq = 9; 
-	optional string siren = 10; 
-	repeated Variable variables = 11; 
+    option java_package = "org.redhat.bbank.model";
+    optional double dl = 1; 
+    optional double ee = 2; 
+    optional double fl = 3; 
+    optional double fm = 4; 
+    optional double ga = 5; 
+    optional double gg = 6; 
+    optional double hn = 7; 
+    optional double hp = 8; 
+    optional double hq = 9; 
+    optional string siren = 10; 
+    repeated Variable variables = 11; 
 }
 message Notation { 
-	option java_package = "org.redhat.bbank.model";
-	optional double decoupageSectoriel = 1; 
-	optional string note = 2; 
-	optional string orientation = 3; 
-	optional double score = 4; 
-	optional string typeAiguillage = 5; 
+    option java_package = "org.redhat.bbank.model";
+    optional double decoupageSectoriel = 1; 
+    optional string note = 2; 
+    optional string orientation = 3; 
+    optional double score = 4; 
+    optional string typeAiguillage = 5; 
 }
 message Variable { 
-	option java_package = "org.redhat.bbank.model";
-	optional string type = 1; 
-	optional double value = 2; 
+    option java_package = "org.redhat.bbank.model";
+    optional string type = 1; 
+    optional double value = 2; 
 }
 ```
 
 
- You can found those  generated files by the quarkus/kogito when you build the services in /target/classes/persistence directory. So I create configmap protobuf models of processes : eligibility, notation, loan  and data-index for you. Let’s just create it on Openshift :
+ You can find those files (generated by kogito when you build the services) in /target/classes/persistence directory. So, I create a configmap containing all protobuf models of processes : eligibility, notation, loan  and data-index for you. Let’s just create it on Openshift :
 
 ```shell
 oc apply -f ./manifest/protobuf/data-index-protobuf-files.yml
 ```
 
-Done ? Go to create a data-index service to index and manage all process events 
+create a data-index service
 
 ``` shell
 kogito install data-index
@@ -335,9 +337,10 @@ echo V1M1bDJmZnA3RHVlbUYzcw== | base64 -d
 WS5l2ffp7DuemF3s
 ```
 
-As I said we don’t need to manage the caches and topics, but we need to specify to Kogito services kafka and infinispan properties to reach them.
+As I said we don’t need to manage the caches and topics, but we need to specify to Kogito services the kafka and infinispan properties to reach them.
 
-Modify the values of the properties host/port to the  kafka, infinispan, data-index and companies-svc services in ./manifest/*-cm.yml also infinispan credential :
+Modify the values of the properties values of host/port/credential of  kafka, infinispan, data-index , companies-svc services in ./manifest/*-cm.yml  :
+
 ```properties
  #rest client 
     org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/url=companies-svc
@@ -366,7 +369,7 @@ oc apply -f ./manifest/properties/loan-properties-cm.yml
 oc apply -f ./manifest/protobuf/loan-protobuf-files.yml 
 ```
 
-create  « eligibility, notation, loan » - kogito - services
+create  « eligibility, notation, loan » - kogito - services
 ``` shell
 oc apply -f ./manifest/services/eligibility-kogitoapp.yml
 oc apply -f ./manifest/services/notation-kogitoapp.yml
@@ -396,7 +399,7 @@ First get the route of the management console
 ```shell
 oc get route management-console  
 NAME                 HOST/PORT                                              PATH   SERVICES             PORT   TERMINATION   WILDCARD
-management-console   *management-console-bbank-apps.apps.ocp4.ouachani.org*          management-console   8080                 None 
+management-console   management-console-bbank-apps.apps.ocp4.ouachani.org          management-console   8080                 None 
 ```
 
 Go go go
@@ -405,35 +408,41 @@ curl -X POST "http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -H  
 ```
 
 
-Now, open the management console (management-console-bbank-apps.apps.ocp4.ouachani.org) , click on « Status »,  select « Completed » and click on « Apply filter » 
+Now, open the management console (management-console-bbank-apps.apps.ocp4.ouachani.org) , click on « Status »,  select « Completed » and click on « Apply filter » 
 
-![Filter process](./img/filter-completed-process.png)
+![Filter process](_./img/filter-completed-process.png_)
 
-![list of process](./img/list-process-mgmt-console.png)
+![list of process](_./img/list-process-mgmt-console.png_)
 
 Click on loan Validation process
 
-![process result](./img/process-details-result.png)
+![process result](_./img/process-details-result.png_)
 
 Wawww the result is :
 
-![notation](./img/calculated-notation-model-1.png)
+![notation](_./img/calculated-notation-model-1.png_)
 
 And the Offer details (Rate and number of months) 
 
-![offer](./img/offer.png)
+![offer](_./img/offer.png_)
 
 Beautiful right ? Heuuu Business Users does not like curl … Okay okay let’s deploy THE WEB UI   
 
 ## The UI
 
-We validate that all services works fine, so let’s deploy the UI using the nodejs S2I builder.  
-As you can see, I add some parameters to simplify the integration :
-	- a lot of labels to easily manage the app
+We validate that all services works fine, so let’s deploy the UI using nodejs S2I builder.  
+ 
+I add some parameters to simplify the integration :
+
+    - a lot of labels to easily manage the app
+    
     - source-secret to pull the source from github
-    - LOAN_VALIDATION_URL is used by the frontend to call "loan process"
+    
+    - LOAN_VALIDATION_URL is used by the frontend to call « loan process »
+    
     - GRAPHQL_URL is used by the frontend to get the result from infinispan by using graphql queries
-    - --name : to name the application
+    
+    - name : to name the application
 
 ```shell
 oc new-app nodejs:12~http://github.com/mouachan/bbank-apps --context-dir=/bbank-ui  -l 'name=bbank-ui,app=bbank-ui,app.kubernetes.io/component=bbank-ui,app.kubernetes.io/instance=bbank-ui,deployment=bbank-ui' --source-secret=github -e  LOAN_VALIDATION_URL="http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -e   GRAPHQL_URL="http://data-index-bbank-apps.apps.ocp4.ouachani.org/graphql"  --name=bbank-ui
@@ -449,17 +458,17 @@ bbank-ui   bbank-ui-bbank-apps.apps.ocp4.ouachani.org          bbank-ui   8080-t
 ```
 
 If you click on submit using the filled values the result is an approved loan
-![frontend](./img/loan-validation-ui.png)
+![frontend](_./img/loan-validation-ui.png_)
 
 Result
-![Result](./img/result.png)
+![Result](_./img/result.png_)
 
 
-##  Business Users will love you 
-The most things that matter to Business Users is to follow the business, meaning showing business (yes again) metrics on a wonderful dashboard.
+##  Business Users will love you
+The most things that matter to Business Users is to track business metrics, meaning display the business metrics on a wonderful dashboard.
 
-The good point is : you don’t have anything to do, believe me :) 
- Will let Kogito listener track result and expose it as metrics :
+The good point is : you don’t have anything to do :) 
+ Kogito listener will track result and expose it as metrics.
 
 ```java
 public class LoanPrometheusProcessEventListener extends PrometheusProcessEventListener {
@@ -513,9 +522,10 @@ public class LoanPrometheusProcessEventListener extends PrometheusProcessEventLi
 }
 ```
 
-Metrics exposed, let's install Prometheus and Grafana to catch and show the dashboard
+Metrics exposed, let’s install Prometheus and Grafana to catch metrics and show the dashboard
 
-### Install Prometheus Operator 
+### Prometheus Operator
+
 Install Prometheus operator throw Openshift OperatorHub and add instance from the opertaor
 
 Expose service
@@ -561,27 +571,27 @@ oc get route | grep grafana
 grafana-route        grafana-route-bbank-apps.apps.ocp4.ouachani.org               grafana-service      3000   edge          None
 ```
 
-Go to  http://grafana-route-bbank-apps.apps.ocp4.ouachani.org, you will see some metrics :
+Go to  http://grafana-route-bbank-apps.apps.ocp4.ouachani.org, you will see the metrics :
 
-![Dashboard](./img/dashboard-grafana.png)
+![Dashboard](_./img/dashboard-grafana.png_)
 
 ## Did I forget something ? [This section is under construction]
 
-We build, deploy, test the application. But my boss is not happy, he said to me with « a red face » that Business User would like only login once. It means you must integrate all services to our a Single Sign On solution.  Ok Boss !
+We built, deploy, test the application. But my boss is not happy, he said  that Business User would like only login once. It means you must integrate all services to our a Single Sign On solution.  Ok Boss !
 The good news is that Quarkus and Kogito comes with a SSO integration, yeah yeah no need to put a dozen of code lines.
 
 Let’s secure communication between services ! Follow the steps :
 
 ### Install Keycloak Operator
-Navigate to the OLM Web Console to navigate to the Keycloak Operator using menu on the left side and following Operators → OperatorHub. Then, focus on the search input box and type « keycloak »  : 
+Navigate to the OLM Web Console to navigate to the Keycloak Operator using menu on the left side and following Operators → OperatorHub. Then, focus on the search input box and type « keycloak »  : 
 
-![Keycloak Operator HUB](img/keycloak-ohub.png)
+![Keycloak Operator HUB](_img/keycloak-ohub.png_)
 
-Next, navigate to Keycloak Operator and click on it. Next, follow the instructions on the screen. Make sure you’ve chosen « bank-apps » namespace when selecting the Subscription in the next screen.
+Next, navigate to Keycloak Operator and click on it. Next, follow the instructions on the screen. Make sure you’ve chosen « bank-apps » namespace when selecting the Subscription in the next screen.
 
 ### Create Keycloak cluster using Keycloak Operator
 
-Once Keycloak Operator is subscribed to a « bank-apps », you can install a Keycloak installation by creating a Keycloak Custom Resource:
+Once Keycloak Operator is subscribed to a « bank-apps », you can install a Keycloak installation by creating a Keycloak Custom Resource:
 
 ```shell
 oc apply -f ./manifest/services/bbank-sso-instance
@@ -602,7 +612,7 @@ Keycloak Operator uses KeycloakRealm Custom Resources to create and manage Realm
 oc apply -f ./manifest/services/bbank-sso-realm.yml
 ```
 
-The above command will create a new Realm in Keycloak installation matched by instanceSelector. The newly created Realm will be named « bank-realm ».
+The above command will create a new Realm in Keycloak installation matched by instanceSelector. The newly created Realm will be named « bank-realm ».
 Once the Realm is created, check if it’s ready:
 ```shell
 oc get keycloakrealms bbank-realm -o jsonpath=‘{.status.ready}’
@@ -616,12 +626,12 @@ Keycloak Operator uses KeycloakUser Custom Resources to create and manage Users.
  oc apply -f ./manifest/services/bbank-sso-users.yml 
 ```
 
-The above command will create a new User within Keycloak Realm matched by realmSelector. The newly created User will have username set to « mouchan ». If you want to change the username , edit ./manifest/services/bbank-sso-users.yml  and change the username :
+The above command will create a new User within Keycloak Realm matched by realmSelector. The newly created User will have username set to « mouchan ». If you want to change the username , edit ./manifest/services/bbank-sso-users.yml  and change the username :
 
 ```yaml
 spec:
   user:
-    username: *" mouachan "*
+    username: " mouachan "
 ```
 
 Once the User is created, you may check if it’s ready:
@@ -633,7 +643,7 @@ true
 User’s password is stored in a Secret generated with the following pattern: credential-<realm>-<username>-<namespace> :
 
 ```shell
-oc get secret  -o go-template='{{range $k,$v := .data}}{{printf " %s: "  $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64 -d }}{{end}}{{" \n "}}{{end}}'
+oc get secret  -o go-template='{{range $k,$v := .data}}{{printf " %s: "  $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64 -d }}{{end}}{{" \n "}}{{end}}'
 ```
 
 
@@ -644,7 +654,7 @@ Keycloak Operator uses KeycloakClient Custom Resources to create and manage Clie
 ```
 
 ### Secure the management console
-For Quarkus-based Kogito services, you can use the  [Quarkus OpenID Connect adapter](https://quarkus.io/guides/security-openid-connect)  with the Kogito Management Console to enable the console to interact with the Kogito Data Index Service using bearer token authorization. These tokens are issued by OpenID Connect and OAuth 2.0 compliant authorization servers such as  [Keycloak](https://www.keycloak.org/about.html) .
+For Quarkus-based Kogito services, you can use the  [Quarkus OpenID Connect adapter](_https://quarkus.io/guides/security-openid-connect_)  with the Kogito Management Console to enable the console to interact with the Kogito Data Index Service using bearer token authorization. These tokens are issued by OpenID Connect and OAuth 2.0 compliant authorization servers such as  [Keycloak](_https://www.keycloak.org/about.html_) .
 
 ```yaml
 kind: ConfigMap
@@ -653,7 +663,7 @@ metadata:
   name: management-console
 data:
   application.properties : |-
-	  ## true means auth is disabled
+      ## true means auth is disabled
     kogito.auth.enabled=false 
     kogito.auth.keycloak.url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org
     kogito.auth.keycloak.realm=bbank-apps
