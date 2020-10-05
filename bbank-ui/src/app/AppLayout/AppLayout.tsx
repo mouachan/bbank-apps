@@ -233,11 +233,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({children}) => {
       </SkipToContent>
     );
     
-    // const keycloak = Keycloak( {url: 'http://localhost:8080/auth', realm: 'bbank-apps', clientId: 'bbank-ui'});
-    // keycloak.init({onLoad: 'login-required'}).then(authenticated => {
-    //   setKeycloak(keycloak);
-    //   setIsAuthenticated(authenticated);
-    //   ReactDOM.render(
+
       return(
             <Page
                   mainContainerId={"primary-app-container"}
@@ -247,7 +243,5 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({children}) => {
                   {children}
             </Page> 
           );
-        // })
-        //   .error(error => console.log(error));
 }
 export { AppLayout };

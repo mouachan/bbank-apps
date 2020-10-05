@@ -5,7 +5,7 @@ import Keycloak from 'keycloak-js';
 const keycloak = Keycloak({
   url: 'https://keycloak-bbank-apps.apps.ocp4.ouachani.org/auth',
   realm: 'bbank-apps',
-  clientId: 'bbank-ui',
+  clientId: 'bbank-sso-client',
 });
 
 export default keycloak;
