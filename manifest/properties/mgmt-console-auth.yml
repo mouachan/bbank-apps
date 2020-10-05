@@ -6,6 +6,6 @@ data:
   application.properties : |-
 	  ## true means auth is disabled
     kogito.auth.enabled=false 
-    kogito.auth.keycloak.url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org
+    kogito.auth.keycloak.url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org/auth
     kogito.auth.keycloak.realm=bbank-apps
     kogito.auth.keycloak.client.id=bbank-apps-console

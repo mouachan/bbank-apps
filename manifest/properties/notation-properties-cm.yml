@@ -17,6 +17,14 @@ data:
     quarkus.infinispan-client.use-auth=true
     quarkus.infinispan-client.auth-username=developer
     quarkus.infinispan-client.auth-password=WS5l2ffp7DuemF3s
+
+    # OIDC server (keycloak) connection config
+    quarkus.oidc.auth-server-url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org/auth/realms/bbank-apps
+    quarkus.oidc.client-id=bbank-sso-client
+    quarkus.oidc.credentials.secret=secret
+    # Endpoint security configuration
+    quarkus.http.auth.permission.authenticated.paths=/*
+    quarkus.http.auth.permission.authenticated.policy=authenticated
     
     #kogito 
     kogito.service.url=http://localhost:8080

@@ -102,9 +102,10 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
       })
       .then(r => r.json())
       .then(data => {
-        var state = data.data.ProcessInstances[0]["state"];
-        console.log(state);
-        if(state != "COMPLETED")
+        console.log(data.data);
+        var status = data.data.ProcessInstances[0]["state"];
+        console.log(status);
+        if(status != "COMPLETED")
           this.checkStateProcess(graphql, id);
         else
           this.getNotation(graphql,id);
