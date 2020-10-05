@@ -66,6 +66,23 @@
           <dmn:text/>
         </dmn:annotationEntry>
       </dmn:rule>
+      <dmn:rule id="_DF462C4D-8994-4D1F-B773-7513A049A5C0">
+        <dmn:inputEntry id="_069954C1-F3B6-470C-B1B5-F495AE1CF3F0">
+          <dmn:text>"B"</dmn:text>
+        </dmn:inputEntry>
+        <dmn:inputEntry id="_0AD897BB-3A30-41B1-B3D4-3F53A378280F">
+          <dmn:text>[5,7]</dmn:text>
+        </dmn:inputEntry>
+        <dmn:outputEntry id="_A8167762-2ED2-402D-9950-3739930DCB5E">
+          <dmn:text>3</dmn:text>
+        </dmn:outputEntry>
+        <dmn:outputEntry id="_17B79F21-C707-402A-AE59-2FC6880DC97E">
+          <dmn:text>36</dmn:text>
+        </dmn:outputEntry>
+        <dmn:annotationEntry>
+          <dmn:text/>
+        </dmn:annotationEntry>
+      </dmn:rule>
     </dmn:decisionTable>
   </dmn:decision>
   <dmndi:DMNDI>
@@ -78,7 +95,7 @@
             <kie:width>248</kie:width>
             <kie:width>295</kie:width>
             <kie:width>276</kie:width>
-            <kie:width>470</kie:width>
+            <kie:width>104</kie:width>
           </kie:ComponentWidths>
         </kie:ComponentsWidthsExtension>
       </di:extension>

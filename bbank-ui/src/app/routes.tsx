@@ -4,9 +4,14 @@ import { Alert, PageSection } from '@patternfly/react-core';
 import { LoanValidationImport} from '@app/LoanValidationImport';
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
 import { LoanValidation } from '@app/LoanValidation/LoanValidation';
+import { AppLayout } from '@app/AppLayout/AppLayout';
+import { Secured } from '@app/Secured/Secured';
+
+
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
+
 
 
 let routeFocusTimer: number;
@@ -54,7 +59,7 @@ const routes: IAppRoute[] = [
     component: LoanValidation,
     exact: true,
     label: 'LoanValidation',
-    path: '/',
+    path: '/loan',
     title: 'LoanValidation| Simulation',
   }
 ];
@@ -90,10 +95,13 @@ const PageNotFound = ({ title }: { title: string }) => {
   return <Route component={NotFound} />;
 };
 
+
+
 const AppRoutes = (): React.ReactElement => (
+  
   <LastLocationProvider>
     <Switch>
-      {routes.map(({ path, exact, component, title, isAsync }, idx) => (
+    {routes.map(({ path, exact, component, title, isAsync }, idx) => (
         <RouteWithTitleUpdates
           path={path}
           exact={exact}
@@ -103,7 +111,6 @@ const AppRoutes = (): React.ReactElement => (
           isAsync={isAsync}
         />
       ))}
-      <PageNotFound title="404 Page Not Found" />
     </Switch>
   </LastLocationProvider>
 );

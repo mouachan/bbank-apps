@@ -1,0 +1,26 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: mouachan
+  labels:
+   app: bbank-sso
+spec:
+  user:
+    username: "mouachan"
+    firstName: "Mourad"
+    lastName: "Ouachani"
+    email: "mouachan@redhat.com"
+    enabled: True
+    realmRoles:
+      - "offline_access"
+    clientRoles:
+      account:
+        - "manage-account"
+      realm-management:
+        - "manage-users"
+    credentials:
+      - type: "password"
+        value: "r3dhat2020!"
+  realmSelector:
+    matchLabels:
+      app: bbank-realm

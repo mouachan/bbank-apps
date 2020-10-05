@@ -1,0 +1,25 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: management-console
+data:
+  application.properties : |-
+  # OpenID Connect configurations
+  %keycloak.quarkus.oidc.enabled=true
+  %keycloak.quarkus.oidc.tenant-enabled=true
+  %keycloak.quarkus.oidc.auth-server-url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org/auth/realms/bbank-sso
+  %keycloak.quarkus.oidc.client-id=kogito-service
+  %keycloak.quarkus.oidc.credentials.secret=secret
+  %keycloak.quarkus.oidc.application-type=service
+
+  %keycloak.quarkus.oidc.web-app-tenant.auth-server-url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org/auth/realms/bbank-sso
+  %keycloak.quarkus.oidc.web-app-tenant.client-id=kogito-service
+  %keycloak.quarkus.oidc.web-app-tenant.credentials.secret=secret
+  %keycloak.quarkus.oidc.web-app-tenant.application-type=web-app
+
+  kogito.data-index.vertx-graphql.ui.path=/graphiql
+  kogito.data-index.vertx-graphql.ui.tenant=web-app-tenant
+
+  # HTTP security configurations
+  %keycloak.quarkus.http.auth.permission.authenticated.paths=/*
+  %keycloak.quarkus.http.auth.permission.authenticated.policy=authenticated

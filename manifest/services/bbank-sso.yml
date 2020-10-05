@@ -1,0 +1,65 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: bbank-sso
+  labels:
+   app: bbank-sso
+spec:
+  instances: 1
+  externalAccess:
+    enabled: True
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: bbank-realm
+  labels:
+    app: bbank-sso
+spec:
+  realm:
+    id: "bbank_apps"
+    realm: "bbank_apps"
+    enabled: True
+    displayName: "Realm BBank-apps"
+  instanceSelector:
+    matchLabels:
+      app: bbank-sso
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: bbank-sso-client
+  labels:
+    app: bbank-sso
+spec:
+  realmSelector:
+     matchLabels:
+      app: bbank-realm
+  client:
+    clientId: bbank-sso-client-secret
+    secret: bbank-sso-client-secret
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: bbank-sso-user
+  labels:
+   app: bbank-sso
+spec:
+  user:
+    username: "mouachan"
+    firstName: "Mourad"
+    lastName: "Ouachani"
+    email: "mouachan@redhat.com"
+    enabled: True
+    emailVerified: False
+    realmRoles:
+      - "offline_access"
+    clientRoles:
+      account:
+        - "manage-account"
+      realm-management:
+        - "manage-users"
+  realmSelector:
+    matchLabels:
+      app: bbank-realm

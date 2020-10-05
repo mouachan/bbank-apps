@@ -1,0 +1,15 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: bbank-realm
+  labels:
+    app: bbank-sso
+spec:
+  realm:
+    id: "bbank_apps"
+    realm: "bbank_apps"
+    enabled: True
+    displayName: "Realm BBank-apps"
+  instanceSelector:
+    matchLabels:
+      app: bbank-sso
