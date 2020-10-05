@@ -7,7 +7,6 @@ metadata:
 spec:
   realmSelector:
      matchLabels:
-      app: bbank-realm
+      app: bbank-sso
   client:
-    clientId: bbank-sso-client-secret
-    secret: bbank-sso-client-secret
+    clientId: bbank-sso-client

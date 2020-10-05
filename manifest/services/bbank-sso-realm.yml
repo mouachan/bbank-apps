@@ -6,8 +6,8 @@ metadata:
     app: bbank-sso
 spec:
   realm:
-    id: "bbank_apps"
-    realm: "bbank_apps"
+    id: "bbank-apps"
+    realm: "bbank-apps"
     enabled: True
     displayName: "Realm BBank-apps"
   instanceSelector:

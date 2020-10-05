@@ -23,4 +23,4 @@ spec:
         value: "r3dhat2020!"
   realmSelector:
     matchLabels:
-      app: bbank-realm
+      app: bbank-sso
