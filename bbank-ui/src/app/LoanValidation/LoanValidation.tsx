@@ -102,13 +102,12 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
       })
       .then(r => r.json())
       .then(data => {
-        console.log(data.data);
-        var status = data.data.ProcessInstances[0]["state"];
-        console.log(status);
-        if(status != "COMPLETED")
-          this.checkStateProcess(graphql, id);
-        else
+        console.log(data);
+        if(data != null && data.data !== null  &&  data.data.ProcessInstances[0]["state"] == "COMPLETED"){
           this.getNotation(graphql,id);
+        } else {
+          this.checkStateProcess(graphql, id);
+        }
       })
   };
   getNotation = (graphql, id) => {

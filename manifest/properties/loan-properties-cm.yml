@@ -28,7 +28,7 @@ data:
     
     #kogito (data-index)
     kogito.service.url=http://localhost:8080
-    kogito.dataindex.http.url=data-index-bbank-apps.apps.ocp4.ouachani.net
+    kogito.dataindex.http.url=data-index-bbank-apps.apps.ocp4.ouachani.org
     kogito.dataindex.ws.url=ws://data-index:8080
     
     # kafka loan service 

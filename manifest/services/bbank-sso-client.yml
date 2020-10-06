@@ -10,3 +10,15 @@ spec:
       app: bbank-sso
   client:
     clientId: bbank-sso-client
+    secret: bbank-sso-client
+    clientAuthenticatorType: bbank-sso-client
+    protocol: openid-connect
+    enabled: true
+    access: "public"
+    standardFlowEnabled: true
+    directAccessGrantsEnabled: true
+    rootUrl: "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org"
+    redirectUris: "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org/*"
+    baseUrl: "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org/index.html"
+    adminUrl: "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org"
+    webOrigins: "*"

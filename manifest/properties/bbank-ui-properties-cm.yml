@@ -6,6 +6,6 @@ data:
   config.js: |
     "use strict";
     var ENV = {
-      MANAGMENT_CONSOLE_URL: "http://dmn-svc-notation-native-companies-credit.apps.ocp4.ouachani.net",
+      MANAGMENT_CONSOLE_URL: "http://dmn-svc-notation-native-companies-credit.apps.ocp4.ouachani.org",
       LOAN_VALIDATION_URL: "http://companies-svc-companies-credit.apps.ocp4.ouachani.ne/loanValidation"
     }
