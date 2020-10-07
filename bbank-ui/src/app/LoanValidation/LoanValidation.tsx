@@ -103,7 +103,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
       .then(r => r.json())
       .then(data => {
         console.log(data);
-        if(data != null && data.data !== null  &&  data.data.ProcessInstances[0]["state"] == "COMPLETED"){
+        if((data != null) && (data.data !== null)  && (data.data.ProcessInstances != null) && (data.data.ProcessInstances.size() > 0) && (data.data.ProcessInstances[0]["state"] == "COMPLETED")){
           this.getNotation(graphql,id);
         } else {
           this.checkStateProcess(graphql, id);
@@ -172,6 +172,8 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
       }
     }
     });
+
+
     console.log(payload);
     fetch(LOAN_VALIDATION_URL , {
       method: 'POST',
