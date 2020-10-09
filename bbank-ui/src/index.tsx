@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { App } from '@app/index';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 
+
 import * as Keycloak from 'keycloak-js';
 if (process.env.NODE_ENV !== "production") {
   const config = {
@@ -20,7 +21,9 @@ if (process.env.NODE_ENV !== "production") {
 
 
 
-ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);
+ReactDOM.render( 
+  <App /> ,
+ document.getElementById("root") as HTMLElement);
 
 // let keycloak = Keycloak({
 //   url: 'http://localhost:8080/auth',

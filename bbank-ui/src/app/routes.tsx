@@ -4,6 +4,8 @@ import { Alert, PageSection } from '@patternfly/react-core';
 import { LoanValidationImport} from '@app/LoanValidationImport';
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
 import { LoanValidation } from '@app/LoanValidation/LoanValidation';
+import { Monitoring } from '@app/Monitoring/Monitoring';
+
 import { AppLayout } from '@app/AppLayout/AppLayout';
 import { Secured } from '@app/Secured/Secured';
 
@@ -58,10 +60,17 @@ const routes: IAppRoute[] = [
   {
     component: LoanValidation,
     exact: true,
-    label: 'LoanValidation',
+    label: 'Loan Simulation',
     path: '/loan',
-    title: 'LoanValidation| Simulation',
-  }
+    title: 'Loan | Simulation'
+  },
+  {
+    component: Monitoring,
+    exact: true,
+    label: 'Monitoring',
+    path: '/monitoring',
+    title: 'Monitoring'
+  },
 ];
 
 // a custom hook for sending focus to the primary content container

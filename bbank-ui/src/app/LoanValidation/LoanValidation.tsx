@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import 'whatwg-fetch';
 import { Form,
   Card, 
@@ -55,7 +56,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
   constructor(props) {
     super(props);
     this.state = {
-      idProcess:"",
+      idProcess:  "",
       siren: "423646512",
       ca: 50000,
       nbEmployees: 50,
@@ -103,7 +104,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
       .then(r => r.json())
       .then(data => {
         console.log(data);
-        if((data != null) && (data.data !== null)  && (data.data.ProcessInstances != null) && (data.data.ProcessInstances.size() > 0) && (data.data.ProcessInstances[0]["state"] == "COMPLETED")){
+        if((data != null) && (data.data !== null)  && (data.data.ProcessInstances != null) && (data.data.ProcessInstances.length > 0) && (data.data.ProcessInstances[0]["state"] == "COMPLETED")){
           this.getNotation(graphql,id);
         } else {
           this.checkStateProcess(graphql, id);
@@ -140,6 +141,7 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
         result: result,
         isResultModal: true
     })
+
       })
    };
 
@@ -191,7 +193,9 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
               this.setState({
                 idProcess: body.id
               });
-              this.checkStateProcess(GRAPHQL_URL, this.state.idProcess); 
+              //this.checkStateProcess(GRAPHQL_URL, this.state.idProcess);
+              localStorage.setItem('idProcess', body.id);
+ 
               console.log(body.id);
             });
           } else {

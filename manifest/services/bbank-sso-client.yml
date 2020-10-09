@@ -17,8 +17,6 @@ spec:
     publicClient: true
     standardFlowEnabled: true
     directAccessGrantsEnabled: true
-    rootUrl: "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org"
     redirectUris: ["http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org/*"]
-    baseUrl: "/index.html"
-    adminUrl: "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org"
-    webOrigins: ["+"]
+    webOrigins: ["*"]
+    fullScopeAllowed: false
