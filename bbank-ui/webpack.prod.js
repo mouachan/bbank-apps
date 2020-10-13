@@ -37,9 +37,9 @@ module.exports = merge(common('production'), {
         ],
         use: [MiniCssExtractPlugin.loader, 'css-loader']
       }
-    ],
-    output: {
-      crossOriginLoading: 'anonymous'
-    }
+    ]
+  },
+  output: {
+    crossOriginLoading: 'anonymous'
   }
 });

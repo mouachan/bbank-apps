@@ -35,9 +35,9 @@ module.exports = merge(common('development'), {
         ],
         use: ["style-loader", "css-loader"]
       }
-    ],
-    output: {
-      crossOriginLoading: 'anonymous'
-    }
+    ]
+  },
+  output: {
+    crossOriginLoading: 'anonymous'
   }
 });
