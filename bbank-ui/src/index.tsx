@@ -1,10 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { App } from '@app/index';
-import { ReactKeycloakProvider } from '@react-keycloak/web';
 
 
-import * as Keycloak from 'keycloak-js';
 if (process.env.NODE_ENV !== "production") {
   const config = {
     rules: [
@@ -21,8 +19,9 @@ if (process.env.NODE_ENV !== "production") {
 
 
 
-ReactDOM.render( 
-  <App /> ,
+ReactDOM.render(
+
+  <App />,
  document.getElementById("root") as HTMLElement);
 
 // let keycloak = Keycloak({

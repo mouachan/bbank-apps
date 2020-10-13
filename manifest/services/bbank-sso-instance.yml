@@ -17,3 +17,9 @@ spec:
         memory: 1G
         cpu: 1
       type: Container
+    livenessProbe:
+      initialDelaySeconds: 120
+      timeoutSeconds: 5
+    readinessProbe:
+      initialDelaySeconds: 120
+      timeoutSeconds: 10

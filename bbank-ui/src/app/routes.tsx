@@ -5,9 +5,10 @@ import { LoanValidationImport} from '@app/LoanValidationImport';
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
 import { LoanValidation } from '@app/LoanValidation/LoanValidation';
 import { Monitoring } from '@app/Monitoring/Monitoring';
+import { Dashboard } from '@app/Dashboard/Dashboard';
+
 
 import { AppLayout } from '@app/AppLayout/AppLayout';
-import { Secured } from '@app/Secured/Secured';
 
 
 import { NotFound } from '@app/NotFound/NotFound';
@@ -45,6 +46,12 @@ const Support = (routeProps: RouteComponentProps): React.ReactElement => {
   );
 };
 
+const getPath = () => {
+  if(localStorage.getItem("idProcess") != null)
+    return "http://management-console-bbank-apps.apps.ocp4.ouachani.org/ProcessInstances/Process/"+localStorage.getItem("idProcess")
+  else return "http://management-console-bbank-apps.apps.ocp4.ouachani.org/ProcessInstances/"
+};
+
 export interface IAppRoute {
   label?: string;
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -67,9 +74,9 @@ const routes: IAppRoute[] = [
   {
     component: Monitoring,
     exact: true,
-    label: 'Monitoring',
-    path: '/monitoring',
-    title: 'Monitoring'
+    label: 'Loan Simulation Result',
+    path: '/result',
+    title: 'Loan Result'
   },
 ];
 
@@ -120,7 +127,9 @@ const AppRoutes = (): React.ReactElement => (
           isAsync={isAsync}
         />
       ))}
+      
     </Switch>
+
   </LastLocationProvider>
 );
 

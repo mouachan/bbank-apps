@@ -8,17 +8,19 @@ import {
   EmptyStateVariant,
   EmptyStateIcon,
   EmptyStateBody,
-  EmptyStateSecondaryActions
+  EmptyStateSecondaryActions, DataListItem, DataListItemRow, DataListItemCells, DataListCell, FormGroup, DataList, DataListToggle, DataListCheck, DataListAction,DataListContent
 } from '@patternfly/react-core';
 import ReactJson from 'react-json-view';
 import { JsonTable } from "react-json-table";
+import Switch from 'react-bootstrap/esm/Switch';
 
 
 
 export interface ISupportProps {
-  sampleProp?: string,
-  loan: object,
+  processId: string,
+  decision:  object,
   result: string;
+
 }
 
 
@@ -27,16 +29,17 @@ class Monitoring extends React.Component<{},ISupportProps> {
   constructor(props) {
     super(props);
     this.state = {
-      idProcess: "",
+      processId: "id",
       decision: {},
       result: ""
+
     }
   }
   componentDidMount(){
     var GRAPHQL_URL = process.env.GRAPHQL_URL || 'http://data-index-bbank-apps.apps.ocp4.ouachani.org/graphql'; 
     var idp = localStorage.getItem("idProcess");
     console.log(GRAPHQL_URL);
-    console.log("idProcess " + this.idProcess)
+    console.log("idProcess " + idp)
      fetch(GRAPHQL_URL, {
       method: 'POST',
       headers: {
@@ -64,7 +67,7 @@ class Monitoring extends React.Component<{},ISupportProps> {
           dec = {Process : {id: idp, result: res}, Reason: {eligible: loan.eligible, details: loan.msg}};
         }
       this.setState({
-        idProcess: idp,
+        processId: idp,
         decision: dec,
         result: res,
       })
@@ -78,6 +81,32 @@ class Monitoring extends React.Component<{},ISupportProps> {
         <div>
         <ReactJson src={this.state.decision} theme="rjv-default"   name="Decision" collapsed={false} displayObjectSize={false} displayDataTypes={false}/>
       </div>
+  
+      <DataList aria-label="Decision">
+
+      <DataListItem aria-labelledby="ex-item1">
+          <DataListCell>
+            <div id="id">Process ID</div>
+          </DataListCell>
+          <DataListContent aria-label="Primary Content Details">
+            <p>
+             {this.state.processId}
+            </p>
+          </DataListContent>
+        </DataListItem>
+
+        <DataListItem aria-labelledby="ex-item1">
+          <DataListCell>
+            <div id="result">Result</div>
+          </DataListCell>
+          <DataListContent aria-label="Primary Content Details">
+            <p>
+             {this.state.result}
+            </p>
+          </DataListContent>
+        </DataListItem>
+      
+      </DataList>
     </PageSection>
   )
     }
