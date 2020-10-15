@@ -14,6 +14,7 @@ import { AppLayout } from '@app/AppLayout/AppLayout';
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
+import { MgmtConsole } from './MgmtConsole/MgmtConsole';
 
 
 
@@ -77,6 +78,20 @@ const routes: IAppRoute[] = [
     label: 'Loan Simulation Result',
     path: '/result',
     title: 'Loan Result'
+  },
+  {
+    component: Dashboard,
+    exact: true,
+    label: 'Dashboard',
+    path: '/dashboard',
+    title: 'Loan Dashboard'
+  },
+  {
+    component: MgmtConsole,
+    exact: true,
+    label: 'Management Console',
+    path: '/mgmtConsole',
+    title: 'Management Console'
   },
 ];
 
