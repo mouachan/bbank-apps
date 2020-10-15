@@ -12,7 +12,7 @@
     <dmn:itemComponent id="_2489c863-930f-49f1-a6fa-ebca7f174259" name="type" isCollection="false">
       <dmn:typeRef>string</dmn:typeRef>
     </dmn:itemComponent>
-    <dmn:itemComponent id="_db70e853-eab2-4729-a7c4-66d4e953688e" name="valeur" isCollection="false">
+    <dmn:itemComponent id="_db70e853-eab2-4729-a7c4-66d4e953688e" name="value" isCollection="false">
       <dmn:typeRef>number</dmn:typeRef>
     </dmn:itemComponent>
   </dmn:itemDefinition>
@@ -57,7 +57,7 @@
       <dmn:requiredKnowledge href="#_e6c81b55-760f-420c-9aad-fb6320dd8491"/>
     </dmn:knowledgeRequirement>
     <dmn:literalExpression id="_869f6f14-da0f-4bbd-bed3-c1a482e8c290" typeRef="Any">
-      <dmn:text>for i in bilan.variables return [scorefunc (i,aiguillage), i]</dmn:text>
+      <dmn:text>for variable in bilan.variables return [scorefunc (variable,aiguillage), variable]</dmn:text>
     </dmn:literalExpression>
   </dmn:decision>
   <dmn:decision id="_df30a179-726b-4616-bef7-803b8c294fde" name="notation">
@@ -282,7 +282,7 @@
             </dmn:input>
             <dmn:input id="_4320e1f5-892e-450f-9f91-d9dff7aaa690">
               <dmn:inputExpression id="_26655B85-B219-4068-8532-C94459B29775" typeRef="number">
-                <dmn:text>var.valeur</dmn:text>
+                <dmn:text>var.value</dmn:text>
               </dmn:inputExpression>
             </dmn:input>
             <dmn:input id="_0a28aabd-3345-428a-9496-1fe18405e6c9">
@@ -320,7 +320,7 @@
                 <dmn:text>"MODELE_1"</dmn:text>
               </dmn:inputEntry>
               <dmn:outputEntry id="_1833cbda-8bed-4971-a2ff-aebdfb94595b">
-                <dmn:text>0.71</dmn:text>
+                <dmn:text>0.5</dmn:text>
               </dmn:outputEntry>
               <dmn:annotationEntry>
                 <dmn:text/>
@@ -534,7 +534,7 @@
         </dmn:contextEntry>
         <dmn:contextEntry>
           <dmn:literalExpression id="_c891895c-5792-41c9-ad56-104f8820bcb6">
-            <dmn:text>if(score != null) then  score else 0</dmn:text>
+            <dmn:text>if(score != null) then score else 0</dmn:text>
           </dmn:literalExpression>
         </dmn:contextEntry>
       </dmn:context>
@@ -587,22 +587,22 @@
           <kie:ComponentWidths dmnElementRef="_c3f819a5-99d9-4503-9d7d-a5cc4f3a9daf">
             <kie:width>50</kie:width>
             <kie:width>100</kie:width>
-            <kie:width>826</kie:width>
+            <kie:width>945</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_51d433ba-0d46-4889-ba56-81bebda84fff">
             <kie:width>50</kie:width>
             <kie:width>100</kie:width>
             <kie:width>100</kie:width>
-            <kie:width>100</kie:width>
+            <kie:width>219</kie:width>
             <kie:width>100</kie:width>
             <kie:width>356</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_c891895c-5792-41c9-ad56-104f8820bcb6">
-            <kie:width>826</kie:width>
+            <kie:width>945</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_40baa4e4-f879-43b4-a99e-1b606d36f9fe">
             <kie:width>50</kie:width>
-            <kie:width>996</kie:width>
+            <kie:width>1115</kie:width>
           </kie:ComponentWidths>
         </kie:ComponentsWidthsExtension>
       </di:extension>

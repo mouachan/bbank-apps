@@ -27,7 +27,7 @@ import ReactJson from 'react-json-view';
 
 
 
-interface ILoanValidation {
+interface ITasks {
   idProcess: string,
   siren: string,
   ca: number,
@@ -51,7 +51,7 @@ interface ILoanValidation {
   result: string;
 };
 
-class LoanValidationForm extends React.Component<{},ILoanValidation> {
+class LoanValidationForm extends React.Component<{},ITasks> {
 
   constructor(props) {
     super(props);
