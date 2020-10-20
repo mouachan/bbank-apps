@@ -3,7 +3,6 @@ import * as ReactDOM from 'react-dom';
 
 import { NavLink } from 'react-router-dom';
 import { routes } from '@app/routes';
-import {BBankLoginPage} from '@app/BBankLoginPage/BBankLoginPage'
 import bbankLogo from '../../images/logo.png';
 import "@patternfly/react-core/dist/styles/base.css";
 import '../../fonts.css';
@@ -128,85 +127,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({children}) => {
       </NavList>
       </Nav>
     );
-    // const kebabDropdownItems = [
-    //   <DropdownItem key="settings">
-    //     <CogIcon /> Settings
-    //   </DropdownItem>,
-    //   <DropdownItem key="help">
-    //     <HelpIcon /> Help
-    //   </DropdownItem>
-    // ];
-    // const userDropdownItems = [
-    //   <DropdownGroup key="group 2">
-    //     <DropdownItem key="group 2 profile">My profile</DropdownItem>
-    //     <DropdownItem key="group 2 user" component="button">
-    //       User management
-    //     </DropdownItem>
-    //     <DropdownItem key="group 2 logout">Logout</DropdownItem>
-    //   </DropdownGroup>
-    // ];
-    // let profile = JSON.parse(localStorage.getItem('profile'));
-    // console.log("profile in applyout"+JSON.stringify(profile, null, "  "));    
-    // const headerTools = (
-    //   <PageHeaderTools>
-    //     <PageHeaderToolsGroup
-    //       visibility={{
-    //         default: 'hidden',
-    //         lg: 'visible'
-    //       }} /** the settings and help icon buttons are only visible on desktop sizes and replaced by a kebab dropdown for other sizes */
-    //     >
-    //       <PageHeaderToolsItem>
-    //         <Button aria-label="Settings actions" variant={ButtonVariant.plain}>
-    //           <CogIcon />
-    //         </Button>
-    //       </PageHeaderToolsItem>
-    //       <PageHeaderToolsItem>
-    //         <Button aria-label="Help actions" variant={ButtonVariant.plain}>
-    //           <HelpIcon />
-    //         </Button>
-    //       </PageHeaderToolsItem>
-    //     </PageHeaderToolsGroup>
-    //     <PageHeaderToolsGroup>
-    //       <PageHeaderToolsItem
-    //         visibility={{
-    //           lg: 'hidden'
-    //         }} /** this kebab dropdown replaces the icon buttons and is hidden for desktop sizes */
-    //       >
-    //         <Dropdown
-    //           isPlain
-    //           position="right"
-    //           onSelect={onKebabDropdownSelect}
-    //           toggle={<KebabToggle onToggle={onKebabDropdownToggle} />}
-    //           isOpen={isKebabDropdownOpen}
-    //           dropdownItems={kebabDropdownItems}
-    //         />
-    //       </PageHeaderToolsItem>
-    //       <PageHeaderToolsItem
-    //         visibility={{ default: 'hidden', md: 'visible' }} /** this user dropdown is hidden on mobile sizes */
-    //       >
-    //         <Dropdown
-    //           isPlain
-    //           position="right"
-    //           onSelect={onDropdownSelect}
-    //           isOpen={isDropdownOpen}
-    //           toggle={<DropdownToggle onToggle={onDropdownToggle}>{profile.firstName} {profile.lastName}</DropdownToggle>}
-    //           dropdownItems={userDropdownItems}
-    //         />
-    //       </PageHeaderToolsItem>
-    //     </PageHeaderToolsGroup>
-    //     <Avatar src={imgAvatar} alt="Avatar image" />
-    //   </PageHeaderTools>
-    // );
 
-   /* const Header = (
-      <PageHeader
-        logo={<Brand src={bbankLogo} alt="BBank Logo" />} 
-        headerTools={headerTools} 
-        showNavToggle     
-        isNavOpen={isNavOpen}
-        onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
-      />
-    );*/
 
     const Header = (
       <PageHeader

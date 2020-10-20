@@ -18,7 +18,6 @@ const LoginItem = withRouter(({ location }) => {
       from: { pathname: '/' },
     };
     const { keycloak } = useKeycloak();
-    keycloak?.init({ onLoad: 'login-required' });
     const login = useCallback(() => {
       keycloak?.login();
     }, [keycloak]);

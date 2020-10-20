@@ -23,7 +23,7 @@ Finally, the « loan process » makes an offer for
 
 Clear ? Yes ? If not,  maybe the following diagram will gives more clarity on the orchestration between services. 
 
-![Archi](./img/archi-fonctionnelle-bbank-apps-loan.png) 
+![Archi](./img/archi-fonctionnelle-bbank-loan.png) 
 
 Let’s go deeper on each service :
 
@@ -77,7 +77,7 @@ Ready ? Hands On :)
 
 ## to deploy the apps localy
 
-https://github.com/mouachan/bbank-apps/tree/master/docker-compose
+https://github.com/mouachan/bbank/tree/master/docker-compose
 
 ## to deploy  the apps on openshift
 Please install : 
@@ -95,7 +95,7 @@ oc login https://ocp-url:6443 -u login -p password
 
 ### create new namespace
 ```shell
-oc new-project bbank-apps
+oc new-project bbank
 ```
 
 ### add a github secret to checkout sources
@@ -122,7 +122,7 @@ oc secrets link default quay-secret --for=pull
 
 ### Clone the source from github
 ```git
-git clone https://github.com/mouachan/bbank-apps.git
+git clone -b v2 https://github.com/mouachan/bbank-apps.git
 ```
 
 ### Create a persistent mongodb
@@ -203,9 +203,9 @@ oc delete all,configmap,pvc,serviceaccount,rolebinding --selector app=companies-
 ```
 ##### option 1 : source to image build  (S2I)
 ```shell
-oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/banking-apps.git \
+oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/bank-apps.git \
 --name=companies-svc \
---context-dir=bbank-apps/companies-svc \
+--context-dir=bbank/companies-svc \
 -e MONGODB_SERVICE_HOST=mongodb \
 -e MONGODB_SERVICE_PORT=27017 \
 --source-secret=github
@@ -243,7 +243,7 @@ oc apply -f ../manifest/services/companies-svc-native-knative.yml
 
 #### verify the service availability
 
-Browse the url  : http://companies-svc-bbank-apps.apps.ocp4.ouachani.org/
+Browse the url  : http://companies-svc-bbank.apps.ocp4.ouachani.org/
 replace .apps.ocp4.ouachani.net by your OCP url
 
 ![Verify service](./img/list-companies.png) 
@@ -347,7 +347,7 @@ Modify the values of the properties values of host/port/credential of  kafka, in
     quarkus.infinispan-client.auth-password=jPBNvQ2uqg@xJ6Pd%
 
     # kafka eligibility service 
-    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank-apps.svc:9092
+    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank.svc:9092
 ```
 
 Create the protobuf  and services properties config maps that’s allow to data-index to load all protobufs and to loan, eligibility, notation services to load their infra properties 
@@ -374,15 +374,15 @@ Package and start the build
 ```java
 cd eligibility
 mvn clean package -DskipTests=true 
-oc start-build eligibility --from-dir=target -n bbank-apps 
+oc start-build eligibility --from-dir=target -n bbank 
 
 cd ../notation
 mvn clean package -DskipTests=true 
-oc start-build notation --from-dir=target -n bbank-apps 
+oc start-build notation --from-dir=target -n bbank 
 
 cd ../loan
 ./mvnw clean package -DskipTests=true 
-oc start-build loan --from-dir=target -n bbank-apps 
+oc start-build loan --from-dir=target -n bbank 
 
 cd ..
 ```
@@ -393,16 +393,16 @@ First get the route of the management console
 ```shell
 oc get route management-console  
 NAME                 HOST/PORT                                              PATH   SERVICES             PORT   TERMINATION   WILDCARD
-management-console   management-console-bbank-apps.apps.ocp4.ouachani.org          management-console   8080                 None 
+management-console   management-console-bbank.apps.ocp4.ouachani.org          management-console   8080                 None 
 ```
 
 Go go go
 ```shell
-curl -X POST "http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
+curl -X POST "http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
 ```
 
 
-Now, open the management console (management-console-bbank-apps.apps.ocp4.ouachani.org) , click on « Status »,  select « Completed » and click on « Apply filter » 
+Now, open the management console (management-console-bbank.apps.ocp4.ouachani.org) , click on « Status »,  select « Completed » and click on « Apply filter » 
 
 ![Filter process](./img/filter-completed-process.png) 
 
@@ -439,7 +439,7 @@ I add some parameters to simplify the integration :
     - name : to name the application
 
 ```shell
-oc new-app nodejs:12~http://github.com/mouachan/bbank-apps --context-dir=/bbank-ui  -l 'name=bbank-ui,app=bbank-ui,app.kubernetes.io/component=bbank-ui,app.kubernetes.io/instance=bbank-ui,deployment=bbank-ui' --source-secret=github -e  LOAN_VALIDATION_URL="http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation" -e   GRAPHQL_URL="http://data-index-bbank-apps.apps.ocp4.ouachani.org/graphql"  --name=bbank-ui
+oc new-app nodejs:12~http://github.com/mouachan/bbank-apps#v2 --context-dir=/bbank-ui  -l 'name=bbank-ui,app=bbank-ui,app.kubernetes.io/component=bbank-ui,app.kubernetes.io/instance=bbank-ui,deployment=bbank-ui' --source-secret=github -e  LOAN_VALIDATION_URL="http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -e   GRAPHQL_URL="http://data-index-bbank.apps.ocp4.ouachani.org/graphql"  --name=bbank-ui -n bbank
 
 ```
 
@@ -448,7 +448,7 @@ Get the route
 ```shell
 oc get route bbank-ui 
 NAME       HOST/PORT                                    PATH   SERVICES   PORT       TERMINATION   WILDCARD
-bbank-ui   bbank-ui-bbank-apps.apps.ocp4.ouachani.org          bbank-ui   8080-tcp                 None
+bbank-ui   bbank-ui-bbank.apps.ocp4.ouachani.org          bbank-ui   8080-tcp                 None
 ```
 
 If you click on submit using the filled values the result is an approved loan
@@ -562,10 +562,10 @@ Get grafana route
 
 ```shell
 oc get route | grep grafana 
-grafana-route        grafana-route-bbank-apps.apps.ocp4.ouachani.org               grafana-service      3000   edge          None
+grafana-route        grafana-route-bbank.apps.ocp4.ouachani.org               grafana-service      3000   edge          None
 ```
 
-Go to  http://grafana-route-bbank-apps.apps.ocp4.ouachani.org, you will see the metrics :
+Go to  http://grafana-route-bbank.apps.ocp4.ouachani.org, you will see the metrics :
 
 ![Dashboard](./img/dashboard-grafana.png) 
 
@@ -659,9 +659,9 @@ data:
   application.properties : |-
       ## true means auth is disabled
     kogito.auth.enabled=false 
-    kogito.auth.keycloak.url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org
-    kogito.auth.keycloak.realm=bbank-apps
-    kogito.auth.keycloak.client.id=bbank-apps-console
+    kogito.auth.keycloak.url=https://keycloak-bbank.apps.ocp4.ouachani.org
+    kogito.auth.keycloak.realm=bbank
+    kogito.auth.keycloak.client.id=bbank-console
 ```
 
 Create the config map

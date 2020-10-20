@@ -23,8 +23,8 @@ data:
     quarkus.infinispan-client.auth-password=kD5XxN7quVQrZEWr
   
     # OIDC server (keycloak) connection config
-    #quarkus.oidc.auth-server-url=https://keycloak-bbank.apps.ocp4.ouachani.org/auth/realms/bbank
-    #quarkus.oidc.client-id=bbank-sso-client
+    #quarkus.oidc.auth-server-url=https://keycloak-bbank.apps.ocp4.ouachani.org/auth/realms/kogito
+    #quarkus.oidc.client-id=eligibility
     #quarkus.oidc.credentials.secret=secret
     # Endpoint security configuration
     #quarkus.http.auth.permission.authenticated.paths=/*
