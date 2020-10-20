@@ -1,11 +1,23 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: management-console
+  name: management-console-properties
 data:
   application.properties : |-
-	  ## true means auth is disabled
-    kogito.auth.enabled=false 
-    kogito.auth.keycloak.url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org/auth
-    kogito.auth.keycloak.realm=bbank-apps
-    kogito.auth.keycloak.client.id=bbank-apps-console
+    quarkus.http.cors=true
+    quarkus.oidc.enabled=true
+    quarkus.oidc.tenant-enabled=false
+    quarkus.http.auth.permission.roles1.paths=/*
+    quarkus.http.auth.permission.roles1.policy=permit
+    quarkus.profile=keycloak
+    #enabled with the profile: 'keycloak' (-Dquarkus.profile=keycloak)
+    %keycloak.quarkus.oidc.enabled=true
+    %keycloak.quarkus.oidc.tenant-enabled=true
+    %keycloak.quarkus.oidc.auth-server-url=https://keycloak-bbank.apps.ocp4.ouachani.org/auth/realms/kogito
+    %keycloak.quarkus.oidc.client-id=kogito-console-quarkus
+    %keycloak.quarkus.oidc.credentials.secret=secret
+    %keycloak.quarkus.oidc.application-type=web-app
+    %keycloak.quarkus.oidc.logout.path=/logout
+    %keycloak.quarkus.oidc.logout.post-logout-path=/
+    %keycloak.quarkus.http.auth.permission.roles1.paths=/*
+    %keycloak.quarkus.http.auth.permission.roles1.policy=authenticated

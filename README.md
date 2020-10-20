@@ -234,16 +234,16 @@ docker push quay.io/mouachan/companies-svc:native-1.0
 deploy a knative service 
 java
 ```shell
-oc apply -f ../manifest/companies-svc-knative.yml 
+oc apply -f ../manifest/services/companies-svc-knative.yml 
 ```
 native
 ```shell
-oc apply -f ../manifest/companies-svc-native-knative.yml 
+oc apply -f ../manifest/services/companies-svc-native-knative.yml 
 ```
 
 #### verify the service availability
 
-Browse the url  : http://companies-svc-bbank-apps.apps.ocp4.ouachani.net/
+Browse the url  : http://companies-svc-bbank-apps.apps.ocp4.ouachani.org/
 replace .apps.ocp4.ouachani.net by your OCP url
 
 ![Verify service](./img/list-companies.png) 
@@ -259,18 +259,12 @@ Install Strimizi operator
 Install Kogito operator
 ![strimzi installation](./img/install-kogito.png) 
 
-#### Install data-index e.g the kogito-infra
+#### Install data-index e.g the kogito-infra (kogito v0.16)
 
-##### Option 1 : by manifest
 ```shell
-cd ..
-oc apply -f ./manifest/services/data-index.yml
-```
-
-##### Option 2 :  by kogito cli
-```shell
-kogito install infinispan
-kogito install kafka
+kogito install infra infinispan --kind Infinispan --apiVersion infinispan.org/v1
+kogito install infra kafka --kind Kafka --apiVersion kafka.strimzi.io/v1beta1
+kogito install data-index --infra kafka --infra infinispan
 ```
 
 You understood that this infra, will manage kafka topics and infinispan cache ! That’s one of the magic kogito I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !

@@ -147,9 +147,9 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
 
    handleSubmit(event) {
 
-    var LOAN_VALIDATION_URL = process.env.LOAN_VALIDATION_URL || 'http://loan-bbank-apps.apps.ocp4.ouachani.org/loanValidation';
+    var LOAN_VALIDATION_URL = process.env.LOAN_VALIDATION_URL || 'http://loan-bbank.apps.ocp4.ouachani.org/loanValidation';
     var MANAGMENT_CONSOLE_URL = process.env.MANAGMENT_CONSOLE_URL;
-    var GRAPHQL_URL = process.env.GRAPHQL_URL || 'http://data-index-bbank-apps.apps.ocp4.ouachani.org/graphql'; 
+    var GRAPHQL_URL = process.env.GRAPHQL_URL || 'http://data-index-bbank.apps.ocp4.ouachani.org/graphql'; 
 
      console.log("Loan Validation : "+LOAN_VALIDATION_URL);
      console.log("Graphql : "+GRAPHQL_URL);
