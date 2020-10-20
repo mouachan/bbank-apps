@@ -35,7 +35,7 @@ const UserItem = () => {
    
     const { keycloak } = useKeycloak();
 
-    if (keycloak?.authenticated) return  <ApplicationLauncherItem key="userItem_key">{keycloak.tokenParsed?.name} ({keycloak.tokenParsed?.email})</ApplicationLauncherItem>  ;
+    if (keycloak?.authenticated) return  <ApplicationLauncherItem key="userItem_key">{keycloak.loadUserInfo?.name} {keycloak.loadUserProfile?.email}</ApplicationLauncherItem>  ;
 
     return null;
 };
