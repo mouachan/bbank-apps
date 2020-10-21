@@ -726,8 +726,8 @@
         "id": "8d966c48-d11b-4bfb-b1a2-18c21f0130e1",
         "clientId": "kogito-console-quarkus",
         "rootUrl": "http://management-console-bbank-apps.apps.ocp4.ouachani.org",
-        "adminUrl": "http://management-console-bbank.apps-apps.ocp4.ouachani.org/",
-        "baseUrl": "http://management-console-bbank.apps-apps.ocp4.ouachani.org/",
+        "adminUrl": "http://management-console-bbank-apps.apps.ocp4.ouachani.org/",
+        "baseUrl": "http://management-console-bbank-apps.apps.ocp4.ouachani.org/",
         "surrogateAuthRequired": false,
         "enabled": true,
         "alwaysDisplayInConsole": false,
@@ -1082,15 +1082,15 @@
       {
         "id": "0c01ce68-0d0a-42d6-8c1d-2e31ba054e72",
         "clientId": "loan",
-        "rootUrl": "http://loan-bbank.apps.ocp4.ouachani.org",
-        "adminUrl": "http://loan-bbank.apps.ocp4.ouachani.org",
+        "rootUrl": "http://loan-bbank-apps.apps.ocp4.ouachani.org",
+        "adminUrl": "http://loan-bbank-apps.apps.ocp4.ouachani.org",
         "surrogateAuthRequired": false,
         "enabled": true,
         "alwaysDisplayInConsole": false,
         "clientAuthenticatorType": "client-secret",
         "secret": "**********",
         "redirectUris": [
-          "http://loan-bbank.apps.ocp4.ouachani.org/*"
+          "http://loan-bbank-apps.apps.ocp4.ouachani.org/*"
         ],
         "webOrigins": [
           "*"
