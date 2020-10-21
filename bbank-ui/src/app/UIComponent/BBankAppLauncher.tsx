@@ -7,6 +7,8 @@ import { ApplicationLauncher, ApplicationLauncherItem, DropdownPosition } from '
 
 import { useKeycloak } from '@react-keycloak/web';
 
+
+
 const LogoutItem = () => {
     const { keycloak } = useKeycloak();
     if (keycloak?.authenticated) return <ApplicationLauncherItem  key="logoutItem_key"onClick={() => keycloak?.logout()}>Logout</ApplicationLauncherItem> ;
@@ -34,8 +36,28 @@ const LoginItem = withRouter(({ location }) => {
 const UserItem = () => {
    
     const { keycloak } = useKeycloak();
-
-    if (keycloak?.authenticated) return  <ApplicationLauncherItem key="userItem_key">{keycloak.loadUserInfo?.name} {keycloak.loadUserProfile?.email}</ApplicationLauncherItem>  ;
+    var name ="";
+    var username="";
+    var email ="";
+    var givenName="";
+    var familyName="";
+    if (keycloak?.authenticated) {
+      if (keycloak.idToken) {
+        username = keycloak.idTokenParsed?.preferred_username;
+        email = keycloak.idTokenParsed?.email;
+        name = keycloak.idTokenParsed?.name;
+        givenName = keycloak.idTokenParsed?.given_name;
+        familyName = keycloak.idTokenParsed?.family_name;
+    } else {
+            username = keycloak.loadUserProfile?.username;
+            email = keycloak.loadUserProfile?.email;
+            name = keycloak.loadUserProfile?.firstName + ' ' + keycloak.loadUserProfile?.lastName;
+            givenName = keycloak.loadUserProfile?.firstName;
+            familyName = keycloak.loadUserProfile?.lastName;
+        }
+      console.log(" Username "+ username+" email "+email+ " name "+name+ " given name "+givenName+ " family name "+familyName);
+      return  <ApplicationLauncherItem key="userItem_key">{keycloak.loadUserInfo?.name} {keycloak.loadUserProfile?.email}</ApplicationLauncherItem>  ;
+    }
 
     return null;
 };
