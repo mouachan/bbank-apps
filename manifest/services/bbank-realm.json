@@ -474,17 +474,17 @@
             },
             {
                 "clientId": "bbank-ui",
-                "rootUrl": "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org",
-                "adminUrl": "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org",
+                "rootUrl": "http://bbank-ui-bbank.apps.ocp4.ouachani.org",
+                "adminUrl": "http://bbank-ui-bbank.apps.ocp4.ouachani.org",
                 "surrogateAuthRequired": false,
                 "enabled": true,
                 "clientAuthenticatorType": "client-secret",
                 "secret": "secret",
                 "redirectUris": [
-                "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org/*"
+                "http://bbank-ui-bbank.apps.ocp4.ouachani.org/*"
                 ],
                 "webOrigins": [
-                "http://bbank-ui-bbank-apps.apps.ocp4.ouachani.org"
+                "http://bbank-ui-bbank.apps.ocp4.ouachani.org"
                 ],
                 "notBefore": 0,
                 "bearerOnly": false,

@@ -1,0 +1,12 @@
+apiVersion: app.kiegroup.org/v1alpha1
+kind: KogitoRuntime
+metadata:
+  name: task-console
+  namespace: bbank
+  labels:
+    app: task-console
+spec:
+  env:
+    - name: HTTP_PORT
+      value: '8080'
+  replicas: 1
