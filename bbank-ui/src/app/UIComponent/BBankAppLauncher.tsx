@@ -56,7 +56,7 @@ const UserItem = () => {
             familyName = keycloak.loadUserProfile?.lastName;
         }
       console.log(" Username "+ username+" email "+email+ " name "+name+ " given name "+givenName+ " family name "+familyName);
-      return  <ApplicationLauncherItem key="userItem_key">{keycloak.loadUserInfo?.name} {keycloak.loadUserProfile?.email}</ApplicationLauncherItem>  ;
+      return  <ApplicationLauncherItem key="userItem_key">{username} ({name} - {email})</ApplicationLauncherItem>  ;
     }
 
     return null;
