@@ -8,4 +8,5 @@ java \
 -Dquarkus.infinispan-client.auth-username=mourad \
 -Dquarkus.infinispan-client.auth-password=mourad \
 -Dquarkus.infinispan-client.sasl-mechanism=PLAIN \
+-Dquarkus.http.port=8380 \
 -jar data-index-service-${DATA_INDEX_VERSION}-runner.jar   

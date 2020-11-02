@@ -78,21 +78,7 @@ const routes: IAppRoute[] = [
     label: 'Loan Simulation Result',
     path: '/result',
     title: 'Loan Result'
-  },
-  {
-    component: Dashboard,
-    exact: true,
-    label: 'Dashboard',
-    path: '/dashboard',
-    title: 'Loan Dashboard'
-  },
-  {
-    component: MgmtConsole,
-    exact: true,
-    label: 'Management Console',
-    path: '/mgmtConsole',
-    title: 'Management Console'
-  },
+  }
 ];
 
 // a custom hook for sending focus to the primary content container

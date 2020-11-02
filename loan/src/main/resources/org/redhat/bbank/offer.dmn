@@ -27,7 +27,7 @@
   </dmn:itemDefinition>
   <dmn:inputData id="_6418C7D4-39B1-410C-BC4B-F0A2FEDCF767" name="notation">
     <dmn:extensionElements/>
-    <dmn:variable id="_A495F3F7-F027-4FB6-81F6-8873FB48F350" name="notation"/>
+    <dmn:variable id="_A495F3F7-F027-4FB6-81F6-8873FB48F350" name="notation" typeRef="tNotation"/>
   </dmn:inputData>
   <dmn:decision id="_E1F3AE1B-DCF4-4BE3-98EF-A54FC0E3453F" name="offer">
     <dmn:extensionElements/>
