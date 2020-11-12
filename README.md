@@ -446,23 +446,54 @@ cd ..
 From the kogito operator, create the management-console
 ![management console](./img/management-console.png) 
 
+We have to deploy the task console from code, it's not included on the management console, we have to create a kogito service based on the latest task-console jar file.
+Get the file 
+
+```shell
+export TASK_CONSOLE_VERSION="0.17.0"
+TASK_CONSOLE_RUNNER=https://search.maven.org/remotecontent?filepath=org/kie/kogito/task-console/${TASK_CONSOLE_VERSION}/task-console-${TASK_CONSOLE_VERSION}-runner.jar
+wget -nc -O task-console-${TASK_CONSOLE_VERSION}-runner.jar ${TASK_CONSOLE_RUNNER}
+oc apply -f manifest/properties/task-console-auth.yml
+oc apply -f manifest/services/task-console.yml
+oc start-build task-console --from-file=./task-console-0.17.0-runner.jar -n bbank
+```
+
+Get the task-console route
+```shell
+oc get route | grep task-console
+task-console         task-console-bbankapps.apps.ocp4.ouachani.org                task-console         http                     None
+```
+you can access to the console using 2 users jdoe/jdoe or alice/alice
+![task console](./img/task-console.png) 
+
 
 ## We are ready for tests, go find more people for help 😆
 
 First get the route of the management console
+
 ```shell
 oc get route management-console  
 NAME                 HOST/PORT                                              PATH   SERVICES             PORT   TERMINATION   WILDCARD
 management-console   management-console-bbank.apps.ocp4.ouachani.org          management-console   8080                 None 
 ```
 
-Go go go
+Let's execute 3 different cases :
+
+
+### Loan Refused 
+
+```shell
+curl -X POST "http://loan-bbankapps.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":0,\"hq\":2,\"dl\":16,\"ee\":4,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":false,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
+```
+
+### Loan Approved with note A
+
 ```shell
 curl -X POST "http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
 ```
 
 
-Now, open the management console (management-console-bbank.apps.ocp4.ouachani.org) , click on « Status »,  select « Completed » and click on « Apply filter » 
+Open the management console (management-console-bbank.apps.ocp4.ouachani.org) , click on « Status »,  select « Completed » and click on « Apply filter » 
 
 ![Filter process](./img/filter-completed-process.png) 
 
@@ -472,7 +503,7 @@ Click on loan Validation process
 
 ![process result](./img/process-details-result.png) 
 
-Wawww the result is :
+The result is :
 
 ![notation](./img/calculated-notation-model-1.png) 
 
@@ -480,7 +511,39 @@ And the Offer details (Rate and number of months)
 
 ![offer](./img/offer.png) 
 
-Beautiful right ? Heuuu Business Users does not like curl … Okay okay let’s deploy THE WEB UI   
+
+### Loan to review, approval by managers, 2 different levels of approvals : Agency and Regional
+
+```shell
+curl -X POST "http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":12,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
+```
+From management console, we can see that the process is waiting to approval from the agency
+ ![process active ht](./img/process-active-ht.png) 
+
+Click on the loanValidation process to get the details, see that is waiting for an approval
+ ![agency approval in management console](./img/agency-approval-mgmt-console.png)
+
+Access to the task inbox as the agency manager John (jdoe/jdoe)  
+![task inbox jdoe](./img/agency-approval-jdoe-task-inbox.png)
+
+Click on the human task "Agency approval" to get the form
+![form agency approval](./img/form-agency-approval-jdoe.png)
+
+Change the following values and click on complete
+Note : A
+Orientation : Approved
+![complete task jdoe](./img/complete-task-jdoe.png)
+
+Go back to the management console, refresh, you can see that the agency approval is done, and the process is waiting for a regional approval
+![regional approval task mgmt-console](./img/regional-approval-mgmt-console.png)
+
+Back to the task console, disconnect jdoe, and connect to the console as the regional manager Alice (alice/alice)
+![regional approval task inbox for alice](./img/regional-approval-alice-task-inbox.png)
+Click on the task, you will get the form. You can see that the new values are propagated to Alice for validation
+![regional approval task inbox for alice](./img/form-regional-approval-alice.png)
+Complete the task (click on Complete), go back to the managment console. The loan is approved
+![Loan approved](./img/loan-approved-double-validation.png)  
+
 
 ## The UI
 
@@ -500,7 +563,6 @@ I add some parameters to simplify the integration :
 
 ```shell
 oc new-app nodejs:12~http://github.com/mouachan/bbank-apps#v2 --context-dir=/bbank-ui  -l 'name=bbank-ui,app=bbank-ui,app.kubernetes.io/component=bbank-ui,app.kubernetes.io/instance=bbank-ui,deployment=bbank-ui' --source-secret=github -e  LOAN_VALIDATION_URL="http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -e   GRAPHQL_URL="http://data-index-bbank.apps.ocp4.ouachani.org/graphql"  --name=bbank-ui -n bbank
-
 ```
 
 Get the route
@@ -643,3 +705,5 @@ grafana-route        grafana-route-bbank.apps.ocp4.ouachani.org               gr
 Go to  http://grafana-route-bbank.apps.ocp4.ouachani.org, you will see the metrics :
 
 ![Dashboard](./img/dashboard-grafana.png) 
+
+
