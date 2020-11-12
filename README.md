@@ -20,10 +20,12 @@ If so, the “loan process” invokes the “scoring process” to calculate a R
 Finally, the « loan process » makes an offer for
 « The applicant », which is composed of a credit rate and a term (for example 2% and 36 months).
 
+If the guidance is "To review", the decision to accept or refuse the requet must be approved by 2 level of managers (agency and regional). 
+
 
 Clear ? Yes ? If not,  maybe the following diagram will gives more clarity on the orchestration between services. 
 
-![Archi](./img/archi-fonctionnelle-bbank-loan.png) 
+![Archi](./img/archi-fonctionnelle-bbank-apps-loan.png) 
 
 Let’s go deeper on each service :
 
@@ -130,7 +132,7 @@ git clone -b v2 https://github.com/mouachan/bbank-apps.git
 ### Install RHSSO Operator
 Navigate to the OLM Web Console to navigate to the RHSSO Operator using menu on the left side and following Operators → OperatorHub. Then, focus on the search input box and type « rhsso »  : 
 
-![Keycloak Operator HUB](./img/keycloak-ohub.png) 
+![RHSSO Operator HUB](./img/rhsso-ohub.png) 
 
 Next, navigate to RHSSO Operator and click on it. Next, follow the instructions on the screen. Make sure you’ve chosen « bank » namespace when selecting the Subscription in the next screen.
 
@@ -175,7 +177,7 @@ Click on  "add realm"
 Click on "Select file" (use the file ./manifest/services/kogito-realm.json)
 
 import the realm from ./manifest/services/bbank-realm.json
-![import kogito realm](./img/rhsso-import-relam.png)  
+![import kogito realm](./img/rhsso-import-realm.png)  
 
 It will create a realm "kogito", clients, users and credentials.
 
@@ -444,7 +446,7 @@ cd ..
 ```
 
 From the kogito operator, create the management-console
-![management console](./img/management-console.png) 
+![management console](./img/create-mgmt-console.png) 
 
 We have to deploy the task console from code, it's not included on the management console, we have to create a kogito service based on the latest task-console jar file.
 Get the file 
