@@ -16,11 +16,11 @@ data:
     quarkus.infinispan-client.server-list=kogito-infinispan:11222
     quarkus.infinispan-client.use-auth=true
     quarkus.infinispan-client.auth-username=developer
-    quarkus.infinispan-client.auth-password=kD5XxN7quVQrZEWr
+    quarkus.infinispan-client.auth-password=keVRDvVTfRgvHJPF
 
     # OIDC server (keycloak) connection config
     quarkus.http.cors=true
-    quarkus.oidc.auth-server-url=https://keycloak-bbank.apps.ocp4.ouachani.org/auth/realms/kogito
+    quarkus.oidc.auth-server-url=https://keycloak-bbankapps.apps.ocp4.ouachani.org/auth/realms/kogito
     quarkus.oidc.client-id=loan
     quarkus.oidc.credentials.secret=secret
     quarkus.oidc.enabled=true
@@ -28,13 +28,13 @@ data:
     quarkus.http.auth.permission.authenticated.policy=authenticated
     
     #kogito (data-index)
-    kogito.service.url=http://loan-bbank.apps.ocp4.ouachani.org
-    kogito.dataindex.http.url=http://data-index-bbank.apps.ocp4.ouachani.org
+    kogito.service.url=http://loan-bbankapps.apps.ocp4.ouachani.org
+    kogito.dataindex.http.url=http://data-index-bbankapps.apps.ocp4.ouachani.org
     kogito.dataindex.ws.url=ws://data-index:8080
     quarkus.http.cors=true
 
     # kafka loan service 
-    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank.svc:9092
+    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbankapps.svc:9092
 
     mp.messaging.outgoing.eligibilityapplication.bootstrap.servers=${kafka.bootstrap.servers}
     mp.messaging.outgoing.eligibilityapplication.connector=smallrye-kafka

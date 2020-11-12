@@ -97,7 +97,7 @@ oc login https://ocp-url:6443 -u login -p password
 ```shell
 oc new-project bbank
 ```
-
+Routes include the project name, if you choose another one, don't forget to change it on the differents places/files (such kogito-realm) to use the correct urls. 
 ### add a github secret to checkout sources
 
 ```shell
@@ -121,9 +121,65 @@ oc secrets link default quay-secret --for=pull
 ```
 
 ### Clone the source from github
+
 ```git
 git clone -b v2 https://github.com/mouachan/bbank-apps.git
 ```
+
+
+### Install RHSSO Operator
+Navigate to the OLM Web Console to navigate to the RHSSO Operator using menu on the left side and following Operators → OperatorHub. Then, focus on the search input box and type « rhsso »  : 
+
+![Keycloak Operator HUB](./img/keycloak-ohub.png) 
+
+Next, navigate to RHSSO Operator and click on it. Next, follow the instructions on the screen. Make sure you’ve chosen « bank » namespace when selecting the Subscription in the next screen.
+
+### Create RHSSO instance using RHSSO Operator
+
+Once RHSSO Operator is subscribed to a « bank », you can install a RHSSO installation by creating a RHSSO Custom Resource:
+
+```shell
+oc apply -f ./manifest/services/bbank-sso-instance.yml
+```
+
+After a few minutes, Keycloak cluster should be up and running. Once the RHSSO instance is created, check if it’s ready:
+
+```shell
+oc get keycloak bbank-sso -o jsonpath=‘{.status.ready}’
+true
+```
+
+### Create Keycloak Realm
+
+Get the RHSSO credential secret name
+```shell
+oc get secret | grep bbank-sso
+credential-bbank-sso                           Opaque
+```
+
+Get the login/password
+```shell
+oc get secret credential-bbank-sso -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
+```
+
+Get the RHSSO route
+```shell
+oc get route | grep keycloak
+keycloak        keycloak-bbankapps.apps.ocp4.ouachani.org               keycloak        keycloak   reencrypt     None
+```
+before to create the realm, if you use another namespace name, you must change all the urls used by the clients in the ./manifest/services/kogito-realm.json or from the administration console after the realm creation. 
+
+Access to the administration console as a admin (use the credential)
+Click on  "add realm" 
+![add realm](./img/rhsso-add-relam.png)  
+Click on "Select file" (use the file ./manifest/services/kogito-realm.json)
+
+import the realm from ./manifest/services/bbank-realm.json
+![import kogito realm](./img/rhsso-import-relam.png)  
+
+It will create a realm "kogito", clients, users and credentials.
+
+
 
 ### Create a persistent mongodb
 
@@ -195,17 +251,19 @@ Create a knative-serving instance
 ./manifest/scripts/knative-serving.sh
 ```
 
-#### Build and deploy companies CRUD services
+#### Build and deploy serverless companies CRUD services
 
 delete the services if exist
 ```shell
 oc delete all,configmap,pvc,serviceaccount,rolebinding --selector app=companies-svc
 ```
-##### option 1 : source to image build  (S2I)
+##### option 1 : source to image native build (S2I)
+The native build consume a lot of ressources 
+
 ```shell
-oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/bank-apps.git \
+oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/bbank-apps.git \
 --name=companies-svc \
---context-dir=bbank/companies-svc \
+--context-dir=companies-svc \
 -e MONGODB_SERVICE_HOST=mongodb \
 -e MONGODB_SERVICE_PORT=27017 \
 --source-secret=github
@@ -242,9 +300,13 @@ oc apply -f ../manifest/services/companies-svc-native-knative.yml
 ```
 
 #### verify the service availability
+Get route
+```shell                                                                                                                                                                            
+oc get routes.serving.knative.dev  | grep companies
+companies-svc   companies-svc-bbank.apps.ocp4.ouachani.org          true
+```
 
 Browse the url  : http://companies-svc-bbank.apps.ocp4.ouachani.org/
-replace .apps.ocp4.ouachani.net by your OCP url
 
 ![Verify service](./img/list-companies.png) 
 
@@ -259,17 +321,16 @@ Install Strimizi operator
 Install Kogito operator
 ![strimzi installation](./img/install-kogito.png) 
 
-#### Install data-index e.g the kogito-infra (kogito v0.16)
+#### Install data-index e.g the kogito-infra (kogito v0.17)
 
 ```shell
 kogito install infra infinispan --kind Infinispan --apiVersion infinispan.org/v1
 kogito install infra kafka --kind Kafka --apiVersion kafka.strimzi.io/v1beta1
-kogito install data-index --infra kafka --infra infinispan
 ```
 
-You understood that this infra, will manage kafka topics and infinispan cache ! That’s one of the magic kogito I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !
+This infra, will manage kafka topics and infinispan cache ! That’s one of the magic kogito I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !
 
-Sure there is a magic, but it needs a little configuration. Infinispan, needs the models/processes to store all actions done by the process. Below and exemple :
+Sure there is a magic, but it needs a little configuration. Infinispan, needs the models/processes to store all actions done by the process. Below an exemple :
 
 ```protobuf
 syntax = "proto2"; 
@@ -306,7 +367,7 @@ message Variable {
 ```
 
 
- You can find those files (generated by kogito when you build the services) in /target/classes/persistence directory. So, I create a configmap containing all protobuf models of processes : eligibility, notation, loan  and data-index for you. Let’s just create it on Openshift :
+ You can find those files (generated by kogito when you build the services) in /target/classes/persistence directory. So, I create a configmap containing all protobuf models of processes : eligibility, notation, loan and data-index for you. Let’s just apply it on Openshift :
 
 ```shell
 oc apply -f ./manifest/protobuf/data-index-protobuf-files.yml
@@ -315,20 +376,15 @@ oc apply -f ./manifest/protobuf/data-index-protobuf-files.yml
 create a data-index service
 
 ``` shell
-kogito install data-index
+kogito install data-index --infra kafka --infra infinispan
 ```
 
 We need the infinispan username and password
 
 ```shell
-oc get secret/kogito-infinispan-credential -o yaml | grep ' username: ' 
-==> username: ZGV2ZWxvcGVy
-echo ZGV2ZWxvcGVy | base64 -d
-developer
-oc get secret/kogito-infinispan-credential -o yaml | grep ' password: ' 
-==>  password: V1M1bDJmZnA3RHVlbUYzcw==
-echo V1M1bDJmZnA3RHVlbUYzcw== | base64 -d 
-WS5l2ffp7DuemF3s
+oc get secret kogito-infinispan-credential -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
+password: ########
+username: developer
 ```
 
 As I said we don’t need to manage the caches and topics, but we need to specify to Kogito services the kafka and infinispan properties to reach them.
@@ -387,6 +443,10 @@ oc start-build loan --from-dir=target -n bbank
 cd ..
 ```
 
+From the kogito operator, create the management-console
+![management console](./img/management-console.png) 
+
+
 ## We are ready for tests, go find more people for help 😆
 
 First get the route of the management console
@@ -428,7 +488,7 @@ We validate that all services works fine, so let’s deploy the UI using nodejs 
  
 I add some parameters to simplify the integration :
 
-    - a lot of labels to easily manage the app
+    - labels to easily manage the app
     
     - source-secret to pull the source from github
     
@@ -520,18 +580,33 @@ Metrics exposed, let’s install Prometheus and Grafana to catch metrics and sho
 
 ### Prometheus Operator
 
-Install Prometheus operator throw Openshift OperatorHub and add instance from the opertaor
+Install Prometheus operator throw Openshift OperatorHub 
+
+Change "bbank" by your namespace name (namespace, matchNames and app properties) in the following files :
+- ./manifest/services/prometheus-config.yml
+- ./manifest/services/prometheus-services-monitor.yml
+- ./manifest/services/grafana-instance.yml 
+- ./manifest/services/grafana-prometheus-data-source.yml
+- ./manifest/services/grafana-loan-dashboard.yml
+
+Configure prometheus
+
+```shell yaml
+oc apply -f ./manifest/services/prometheus-config.yml
+```
+
+Create prometheus instance
+
+```shell
+oc apply -f ./manifest/services/prometheus-instance.yml 
+```
 
 Expose service
 
 ```shell
 oc expose svc prometheus
 ```
-Configure prometheus
 
-```shell yaml
-oc apply -f ./manifest/services/prometheus-config.yml
-```
 
 add Service Monitor
 
@@ -568,103 +643,3 @@ grafana-route        grafana-route-bbank.apps.ocp4.ouachani.org               gr
 Go to  http://grafana-route-bbank.apps.ocp4.ouachani.org, you will see the metrics :
 
 ![Dashboard](./img/dashboard-grafana.png) 
-
-## Did I forget something ? [This section is under construction]
-
-We built, deploy, test the application. But my boss is not happy, he said  that Business User would like only login once. It means you must integrate all services to our a Single Sign On solution.  Ok Boss !
-The good news is that Quarkus and Kogito comes with a SSO integration, yeah yeah no need to put a dozen of code lines.
-
-Let’s secure communication between services ! Follow the steps :
-
-### Install Keycloak Operator
-Navigate to the OLM Web Console to navigate to the Keycloak Operator using menu on the left side and following Operators → OperatorHub. Then, focus on the search input box and type « keycloak »  : 
-
-![Keycloak Operator HUB](_img/keycloak-ohub.png) 
-
-Next, navigate to Keycloak Operator and click on it. Next, follow the instructions on the screen. Make sure you’ve chosen « bank-apps » namespace when selecting the Subscription in the next screen.
-
-### Create Keycloak cluster using Keycloak Operator
-
-Once Keycloak Operator is subscribed to a « bank-apps », you can install a Keycloak installation by creating a Keycloak Custom Resource:
-
-```shell
-oc apply -f ./manifest/services/bbank-sso-instance
-```
-
-After a few minutes, Keycloak cluster should be up and running. Once the Keycloak instance is created, check if it’s ready:
-
-```shell
-oc get keycloak bbank-sso -o jsonpath=‘{.status.ready}’
-true
-```
-
-### Create Keycloak Realm using Keycloak Operator
-
-Keycloak Operator uses KeycloakRealm Custom Resources to create and manage Realm resources. Create it by using the following command:
-
-```shell
-oc apply -f ./manifest/services/bbank-sso-realm.yml
-```
-
-The above command will create a new Realm in Keycloak installation matched by instanceSelector. The newly created Realm will be named « bank-realm ».
-Once the Realm is created, check if it’s ready:
-```shell
-oc get keycloakrealms bbank-realm -o jsonpath=‘{.status.ready}’
-true 
-```
-
-### Create Keycloak User using Keycloak Operator
-Keycloak Operator uses KeycloakUser Custom Resources to create and manage Users. Create it by using the following command:
-
-```shell
- oc apply -f ./manifest/services/bbank-sso-users.yml 
-```
-
-The above command will create a new User within Keycloak Realm matched by realmSelector. The newly created User will have username set to « mouchan ». If you want to change the username , edit ./manifest/services/bbank-sso-users.yml  and change the username :
-
-```yaml
-spec:
-  user:
-    username: " mouachan "
-```
-
-Once the User is created, you may check if it’s ready:
-```shell
-oc get keycloakuser mouachan -o jsonpath=‘{.status.ready}’
-true 
-```
-
-User’s password is stored in a Secret generated with the following pattern: credential-<realm>-<username>-<namespace> :
-
-```shell
-oc get secret  -o go-template='{{range $k,$v := .data}}{{printf " %s: "  $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64 -d }}{{end}}{{" \n "}}{{end}}'
-```
-
-
-### Create a Client to secure App
-Keycloak Operator uses KeycloakClient Custom Resources to create and manage Client resources. You may create it by using the following command:
-```shell
- oc apply -f ./manifest/services/bbank-sso-
-```
-
-### Secure the management console
-For Quarkus-based Kogito services, you can use the  [Quarkus OpenID Connect adapter](_https://quarkus.io/guides/security-openid-connect_)  with the Kogito Management Console to enable the console to interact with the Kogito Data Index Service using bearer token authorization. These tokens are issued by OpenID Connect and OAuth 2.0 compliant authorization servers such as  [Keycloak](_https://www.keycloak.org/about.html_) .
-
-```yaml
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: management-console
-data:
-  application.properties : |-
-      ## true means auth is disabled
-    kogito.auth.enabled=false 
-    kogito.auth.keycloak.url=https://keycloak-bbank.apps.ocp4.ouachani.org
-    kogito.auth.keycloak.realm=bbank
-    kogito.auth.keycloak.client.id=bbank-console
-```
-
-Create the config map
-```shell
-oc apply -f ./manifest/properties/mgmt-console-auth.yml
-```

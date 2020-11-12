@@ -1,8 +1,15 @@
 apiVersion: app.kiegroup.org/v1alpha1
+kind: KogitoBuild
+metadata:
+  name: task-console
+spec:
+  type: Binary
+---
+apiVersion: app.kiegroup.org/v1alpha1
 kind: KogitoRuntime
 metadata:
   name: task-console
-  namespace: bbank
+  namespace: bbankapps
   labels:
     app: task-console
 spec:

@@ -19,9 +19,8 @@ kind: ServiceMonitor
 metadata:
   labels:
     app: eligibility
-    name: eligibility
   name: eligibility
-  namespace: bbank-apps
+  namespace: bbankapps
 spec:
   endpoints:
   - path: /metrics
@@ -29,20 +28,18 @@ spec:
     scheme: http
   namespaceSelector:
     matchNames:
-    - bbank-apps
+    - bbankapps
   selector:
     matchLabels:
       app: eligibility
-      monitoring-key: eligibility
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
     app: notation
-    name: notation
   name: notation
-  namespace: bbank-apps
+  namespace: bbankapps
 spec:
   endpoints:
   - path: /metrics
@@ -50,20 +47,18 @@ spec:
     scheme: http
   namespaceSelector:
     matchNames:
-    - bbank-apps
+    - bbankapps
   selector:
     matchLabels:
       app: notation
-      monitoring-key: notation
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
     app: loan
-    name: loan
   name: loan
-  namespace: bbank-apps
+  namespace: bbankapps
 spec:
   endpoints:
   - path: /metrics
@@ -71,8 +66,7 @@ spec:
     scheme: http
   namespaceSelector:
     matchNames:
-    - bbank-apps
+    - bbankapps
   selector:
     matchLabels:
       app: loan
-      monitoring-key: loan
