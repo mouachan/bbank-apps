@@ -1,0 +1,55 @@
+/*
+ * Copyright 2017 Kafdrop contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *
+ */
+
+package kafdrop.model;
+
+public final class BrokerVO {
+  private final int id;
+  private final String host;
+  private final int port;
+  private final boolean controller;
+  private final String rack;
+
+  public BrokerVO(int id, String host, int port, String rack, boolean controller) {
+    this.id = id;
+    this.host = host;
+    this.port = port;
+    this.rack = rack;
+    this.controller = controller;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getHost() {
+    return host;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public String getRack() {
+    return rack;
+  }
+
+  public boolean isController() {
+    return controller;
+  }
+}

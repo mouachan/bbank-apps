@@ -1,0 +1,36 @@
+server:
+  port: ${SERVER_PORT:9000}
+  servlet:
+    context-path: /
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  jmx:
+    enabled: true
+    default_domain: Kafdrop
+  jackson:
+    deserialization:
+      fail_on_unknown_properties: false
+      read_unknown_enum_values_as_null: true
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure.include: "*"
+  server:
+    port: 9000
+
+kafdrop.monitor:
+  clientId: Kafdrop
+
+kafka:
+  brokerConnect: localhost:9092
+  isSecured: false
+  saslMechanism: "PLAIN"
+  securityProtocol: "SASL_PLAINTEXT"
+  truststoreFile: "${KAFKA_TRUSTSTORE_FILE:kafka.truststore.jks}"
+  propertiesFile : "${KAFKA_PROPERTIES_FILE:kafka.properties}"
+  keystoreFile: "${KAFKA_KEYSTORE_FILE:kafka.keystore.jks}"
