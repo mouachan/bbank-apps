@@ -16,23 +16,23 @@ data:
     quarkus.infinispan-client.server-list=kogito-infinispan:11222
     quarkus.infinispan-client.use-auth=true
     quarkus.infinispan-client.auth-username=developer
-    quarkus.infinispan-client.auth-password=WS5l2ffp7DuemF3s
+    quarkus.infinispan-client.auth-password=keVRDvVTfRgvHJPF
 
     # OIDC server (keycloak) connection config
-    quarkus.oidc.auth-server-url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org/auth/realms/bbank-apps
-    quarkus.oidc.client-id=bbank-sso-client
-    quarkus.oidc.credentials.secret=secret
+    #quarkus.oidc.auth-server-url=https://keycloak-bbank.apps.ocp4.ouachani.org/auth/realms/bbank
+    #quarkus.oidc.client-id=bbank-sso-client
+    #quarkus.oidc.credentials.secret=secret
     # Endpoint security configuration
-    quarkus.http.auth.permission.authenticated.paths=/*
-    quarkus.http.auth.permission.authenticated.policy=authenticated
+    # quarkus.http.auth.permission.authenticated.paths=/*
+    #quarkus.http.auth.permission.authenticated.policy=authenticated
     
     #kogito 
-    kogito.service.url=http://localhost:8080
-    kogito.dataindex.http.url=data-index-bbank-apps.apps.ocp4.ouachani.org
+    kogito.service.url=http://notation-bbank.apps.ocp4.ouachani.org
+    kogito.dataindex.http.url=http://data-index-bbank.apps.ocp4.ouachani.org
     kogito.dataindex.ws.url=ws://data-index:8080
+    quarkus.http.cors=true
 
-
-    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank-apps.svc:9092
+    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbankapps.svc:9092
     
     
     #kafka notation services messaging

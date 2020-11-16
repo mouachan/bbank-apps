@@ -1,11 +1,17 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: management-console
+  name: management-console-properties
 data:
   application.properties : |-
-	  ## true means auth is disabled
-    kogito.auth.enabled=false 
-    kogito.auth.keycloak.url=https://keycloak-bbank-apps.apps.ocp4.ouachani.org/auth
-    kogito.auth.keycloak.realm=bbank-apps
-    kogito.auth.keycloak.client.id=bbank-apps-console
+    quarkus.http.auth.permission.roles1.paths=/*
+    quarkus.http.auth.permission.roles1.policy=authenticated
+    quarkus.http.cors=true
+    quarkus.oidc.application-type=web-app
+    quarkus.oidc.auth-server-url=https://keycloak-bbank.apps.ocp4.ouachani.org/auth/realms/kogito
+    quarkus.oidc.client-id=kogito-console-quarkus
+    quarkus.oidc.credentials.secret=secret
+    quarkus.oidc.enabled=true
+    quarkus.oidc.logout.path=/logout
+    quarkus.oidc.logout.post-logout-path=/
+    quarkus.oidc.tenant-enabled=true

@@ -29,6 +29,7 @@ In order to use it, please ensure you have Docker Compose installed on your mach
   - Kafka: 9092
   - Prometheus: 9090
   - Grafana: 3000
+  - keycloak : 8280
   
 To access the Grafana dashboard, simply navigate to http://localhost:3000 and login using the default username 'admin' and password 'admin'.
 Prometheus will also be available on http://localhost:9090, no authentication is required. 
@@ -53,6 +54,9 @@ Prometheus will also be available on http://localhost:9090, no authentication is
   ./mgmt-services/run-mgmt-console.sh
   ### Start kafdrop
   ./kafdrop/run-kafdrop.sh
+
+  ### Start keycloak
+  docker run -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e KEYCLOAK_IMPORT=/tmp/kogito-realm.json -v {absolute_path}/kogito-apps/config/kogito-realm.json:/tmp/kogito-realm.json -p 8280:8080 jboss/keycloak
 
   ### Install mongodb
   ```

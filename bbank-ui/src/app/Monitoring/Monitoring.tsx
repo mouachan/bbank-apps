@@ -45,13 +45,22 @@ class Monitoring extends React.Component<{},ISupportProps> {
       months: 0,
       eligible: false,
       reason: "",
+<<<<<<< HEAD
       mgmtconsole: "http://management-console-bbank-apps.apps.ocp4.ouachani.org/Process",
       dashboard: "https://grafana-route-bbank-apps.apps.ocp4.ouachani.org/d/a97116ebad76d14b7171a5eb8be2bb3b/loan-dashboard-v2?orgId=1&refresh=5s",
+=======
+      mgmtconsole: process.env.MANAGEMENT_CONSOLE_URL || "http://localhost:8780/Process",
+      dashboard: "https://grafana-route-bbank.apps.ocp4.ouachani.org/d/a97116ebad76d14b7171a5eb8be2bb3b/loan-dashboard-v2?orgId=1&refresh=5s",
+>>>>>>> v2
       notation: {},
     }
   }
   componentDidMount(){
+<<<<<<< HEAD
     var GRAPHQL_URL = process.env.GRAPHQL_URL || 'http://data-index-bbank-apps.apps.ocp4.ouachani.org/graphql'; 
+=======
+    var GRAPHQL_URL = process.env.GRAPHQL_URL || 'http://localhost:8980/graphql'; 
+>>>>>>> v2
     var idp = localStorage.getItem("idProcess") || "";
     console.log(GRAPHQL_URL);
     console.log("idProcess " + idp)
@@ -92,8 +101,12 @@ class Monitoring extends React.Component<{},ISupportProps> {
         eligible: loan.eligible,
         notation: loan.notation,
         reason: loan.msg,
+<<<<<<< HEAD
         mgmtconsole: "http://management-console-bbank-apps.apps.ocp4.ouachani.org/Process/"+idp,
         dashboard: "https://grafana-route-bbank-apps.apps.ocp4.ouachani.org/d/a97116ebad76d14b7171a5eb8be2bb3b/loan-dashboard-v2?orgId=1&refresh=5s"
+=======
+        mgmtconsole: this.state.mgmtconsole+idp,
+>>>>>>> v2
       })
       })
    }

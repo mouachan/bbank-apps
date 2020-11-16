@@ -1,0 +1,37 @@
+apiVersion: app.kiegroup.org/v1alpha1
+kind: KogitoBuild
+metadata:
+  name: usertask
+spec:
+  #type: Binary
+  type: RemoteSource
+  gitSource:
+    contextDir: /process-usertasks-with-security-oidc-quarkus
+    uri: "https://github.com/mouachan/bbank-apps"
+  #webHooks:
+   # - type: "GitHub"
+    #  secret: "github"
+  # set your maven nexus repository to speed up the build time
+  #mavenMirrorURL:
+---
+apiVersion: app.kiegroup.org/v1alpha1
+kind: KogitoRuntime
+metadata:
+  annotations:
+    org.kie.kogito/managed-by: Kogito Operator
+    org.kie.kogito/operator-crd: KogitoRuntime
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+    prometheus.io/scheme: http
+    prometheus.io/scrape: "true"
+  labels:
+    app: usertask
+    loanValidation: process
+  name: loan
+spec:
+  serviceLabels:
+    app: loan
+  infinispan:
+    useKogitoInfra: true
+  kafka:
+    useKogitoInfra: true

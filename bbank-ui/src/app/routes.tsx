@@ -14,6 +14,7 @@ import { AppLayout } from '@app/AppLayout/AppLayout';
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
+import { MgmtConsole } from './MgmtConsole/MgmtConsole';
 
 
 
@@ -77,7 +78,7 @@ const routes: IAppRoute[] = [
     label: 'Loan Simulation Result',
     path: '/result',
     title: 'Loan Result'
-  },
+  }
 ];
 
 // a custom hook for sending focus to the primary content container

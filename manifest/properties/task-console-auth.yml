@@ -1,0 +1,18 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: task-console-properties
+data:
+  application.properties : |-
+    quarkus.http.auth.permission.roles1.paths=/*
+    quarkus.http.auth.permission.roles1.policy=authenticated
+    quarkus.http.cors=true
+    quarkus.oidc.application-type=web-app
+    quarkus.oidc.auth-server-url=https://keycloak-bbankapps.apps.ocp4.ouachani.org/auth/realms/kogito
+    quarkus.oidc.client-id=kogito-task-console-quarkus
+    quarkus.oidc.credentials.secret=secret
+    quarkus.oidc.enabled=true
+    quarkus.oidc.logout.path=/logout
+    quarkus.oidc.logout.post-logout-path=/
+    quarkus.oidc.tenant-enabled=true
+    kogito.dataindex.http.url=http://data-index-bbankapps.apps.ocp4.ouachani.org/
