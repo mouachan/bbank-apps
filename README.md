@@ -125,7 +125,7 @@ oc secrets link default quay-secret --for=pull
 ### Clone the source from github
 
 ```git
-git clone -b v2 https://github.com/mouachan/bbank-apps.git
+git clone https://github.com/mouachan/bbank-apps.git
 ```
 
 
@@ -167,7 +167,7 @@ oc get secret credential-bbank-sso -o go-template='{{range $k,$v := .data}}{{pri
 Get the RHSSO route
 ```shell
 oc get route | grep keycloak
-keycloak        keycloak-bbankapps.apps.ocp4.ouachani.org               keycloak        keycloak   reencrypt     None
+keycloak        keycloak-bbank.apps.ocp4.ouachani.org               keycloak        keycloak   reencrypt     None
 ```
 before to create the realm, if you use another namespace name, you must change all the urls used by the clients in the ./manifest/services/kogito-realm.json or from the administration console after the realm creation. 
 
@@ -463,7 +463,7 @@ oc start-build task-console --from-file=./task-console-0.17.0-runner.jar -n bban
 Get the task-console route
 ```shell
 oc get route | grep task-console
-task-console         task-console-bbankapps.apps.ocp4.ouachani.org                task-console         http                     None
+task-console         task-console-bbank.apps.ocp4.ouachani.org                task-console         http                     None
 ```
 you can access to the console using 2 users jdoe/jdoe or alice/alice
 ![task console](./img/task-console.png) 
@@ -485,7 +485,7 @@ Let's execute 3 different cases :
 ### Loan Refused 
 
 ```shell
-curl -X POST "http://loan-bbankapps.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":0,\"hq\":2,\"dl\":16,\"ee\":4,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":false,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
+curl -X POST "http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":0,\"hq\":2,\"dl\":16,\"ee\":4,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":false,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
 ```
 
 ### Loan Approved with note A
@@ -564,7 +564,7 @@ I add some parameters to simplify the integration :
     - name : to name the application
 
 ```shell
-oc new-app nodejs:12~http://github.com/mouachan/bbank-apps#v2 --context-dir=/bbank-ui  -l 'name=bbank-ui,app=bbank-ui,app.kubernetes.io/component=bbank-ui,app.kubernetes.io/instance=bbank-ui,deployment=bbank-ui' --source-secret=github -e  LOAN_VALIDATION_URL="http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -e   GRAPHQL_URL="http://data-index-bbank.apps.ocp4.ouachani.org/graphql"  --name=bbank-ui -n bbank
+oc new-app nodejs:12~http://github.com/mouachan/bbank-apps --context-dir=/bbank-ui  -l 'name=bbank-ui,app=bbank-ui,app.kubernetes.io/component=bbank-ui,app.kubernetes.io/instance=bbank-ui,deployment=bbank-ui' --source-secret=github -e  LOAN_VALIDATION_URL="http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -e   GRAPHQL_URL="http://data-index-bbank.apps.ocp4.ouachani.org/graphql"  --name=bbank-ui -n bbank
 ```
 
 Get the route
