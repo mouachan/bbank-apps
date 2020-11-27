@@ -1,8 +1,8 @@
 import Keycloak from 'keycloak-js';
 
-const AUTH_URL= process.env.AUTH_URL || "http://localhost:8280/auth";
-const AUTH_REALM=process.env.AUTH_REALM ||  "kogito" ; 
-const AUTH_CLIENTID=process.env.AUTH_CLIENTID ||  "bbank-ui";
+const AUTH_URL= process.env.AUTH_URL; 
+const AUTH_REALM=process.env.AUTH_REALM; 
+const AUTH_CLIENTID=process.env.AUTH_CLIENTID;
 
 // Setup Keycloak instance as needed
 // Pass initialization options as required or leave blank to load from 'keycloak.json'
