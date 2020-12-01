@@ -138,7 +138,7 @@ Next, navigate to RHSSO Operator and click on it. Next, follow the instructions 
 
 ### Create RHSSO instance using RHSSO Operator
 
-Once RHSSO Operator is subscribed to a « bank », you can install a RHSSO installation by creating a RHSSO Custom Resource:
+Once RHSSO Operator is subscribed to a « bbank », you can install a RHSSO installation by creating a RHSSO Custom Resource:
 
 ```shell
 oc apply -f ./manifest/services/bbank-sso-instance.yml
@@ -151,7 +151,13 @@ oc get keycloak bbank-sso -o jsonpath=‘{.status.ready}’
 true
 ```
 
-### Create Keycloak Realm
+### Add kogito Realm
+
+#### using oc cli
+```shell
+oc apply -f manifest/services/bbank-sso-realm.yml
+```
+#### or manually (realm can be reset by the rhsso operator)
 
 Get the RHSSO credential secret name
 ```shell

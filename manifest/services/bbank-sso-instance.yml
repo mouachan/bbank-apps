@@ -17,3 +17,15 @@ spec:
         memory: 1G
         cpu: 1
       type: Container
+    extraVolumes: |
+      - name: realm-secret
+        secret:
+          secretName: realm-secret
+    extraVolumeMounts: |
+      - name: realm-secret
+        mountPath: "/realm/"
+        readOnly: true
+    extraEnv: |
+      - name: KEYCLOAK_IMPORT
+        value: /realm/kogito-realm.json
+

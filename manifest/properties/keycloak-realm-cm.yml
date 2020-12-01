@@ -1,4 +1,10 @@
-{
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: keycloak-configmap
+data:
+  kogito-realm.json: |
+    {
     "id": "kogito",
     "realm": "kogito",
     "displayName": "kogito",
@@ -43,12 +49,14 @@
           "name": "admin",
           "composite": false,
           "clientRole": false,
+          "containerId": "kogito",
           "attributes": {}
         },
         {
           "name": "confidential",
           "composite": false,
           "clientRole": false,
+          "containerId": "kogito",
           "attributes": {}
         },
         {
@@ -56,12 +64,14 @@
           "description": "${role_offline-access}",
           "composite": false,
           "clientRole": false,
+          "containerId": "kogito",
           "attributes": {}
         },
         {
           "name": "user",
           "composite": false,
           "clientRole": false,
+          "containerId": "kogito",
           "attributes": {}
         },
         {
@@ -69,6 +79,7 @@
           "description": "${role_uma_authorization}",
           "composite": false,
           "clientRole": false,
+          "containerId": "kogito",
           "attributes": {}
         }
       ],
@@ -80,6 +91,7 @@
             "description": "${role_view-identity-providers}",
             "composite": false,
             "clientRole": true,
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -87,6 +99,7 @@
             "description": "${role_query-users}",
             "composite": false,
             "clientRole": true,
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -94,6 +107,7 @@
             "description": "${role_view-authorization}",
             "composite": false,
             "clientRole": true,
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -101,6 +115,7 @@
             "description": "${role_create-client}",
             "composite": false,
             "clientRole": true,
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -108,6 +123,7 @@
             "description": "${role_manage-authorization}",
             "composite": false,
             "clientRole": true,
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -123,7 +139,7 @@
               }
             },
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -131,6 +147,7 @@
             "description": "${role_query-clients}",
             "composite": false,
             "clientRole": true,
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -138,7 +155,7 @@
             "description": "${role_impersonation}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -147,7 +164,7 @@
             "description": "${role_manage-users}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -155,7 +172,7 @@
             "description": "${role_view-realm}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -163,7 +180,7 @@
             "description": "${role_manage-realm}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -171,7 +188,7 @@
             "description": "${role_view-events}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -179,7 +196,7 @@
             "description": "${role_manage-clients}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -187,7 +204,7 @@
             "description": "${role_query-groups}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -202,7 +219,7 @@
               }
             },
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -234,7 +251,7 @@
               }
             },
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -242,7 +259,7 @@
             "description": "${role_query-realms}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -250,7 +267,7 @@
             "description": "${role_manage-identity-providers}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           },
           {
@@ -258,7 +275,7 @@
             "description": "${role_manage-events}",
             "composite": false,
             "clientRole": true,
-            
+            "containerId": "f60ebecd-963b-4256-8d8d-c173788d4315",
             "attributes": {}
           }
         ],
@@ -269,6 +286,7 @@
             "name": "admin",
             "composite": false,
             "clientRole": true,
+            "containerId": "1e57072d-427c-4374-b41c-22a6adb2ba46",
             "attributes": {}
           }
         ],
@@ -280,7 +298,7 @@
             "description": "${role_read-token}",
             "composite": false,
             "clientRole": true,
-           
+            "containerId": "5091f4ad-2539-4fe0-8136-05831d2c4ee8",
             "attributes": {}
           }
         ],
@@ -289,6 +307,7 @@
             "name": "uma_protection",
             "composite": false,
             "clientRole": true,
+            "containerId": "7f078c3b-3e88-40b2-887b-f2ea370931c8",
             "attributes": {}
           }
         ],
@@ -299,6 +318,7 @@
             "description": "${role_manage-account-links}",
             "composite": false,
             "clientRole": true,
+            "containerId": "d11be106-1920-49f7-83bd-b9b53bcf6a06",
             "attributes": {}
           },
           {
@@ -306,6 +326,7 @@
             "description": "${role_view-profile}",
             "composite": false,
             "clientRole": true,
+            "containerId": "d11be106-1920-49f7-83bd-b9b53bcf6a06",
             "attributes": {}
           },
           {
@@ -320,6 +341,7 @@
               }
             },
             "clientRole": true,
+            "containerId": "d11be106-1920-49f7-83bd-b9b53bcf6a06",
             "attributes": {}
           }
         ]
@@ -369,6 +391,7 @@
     "webAuthnPolicyPasswordlessAcceptableAaguids": [],
     "users": [
       {
+        "createdTimestamp": 1603188094179,
         "username": "service-account-kogito-service",
         "enabled": true,
         "totp": false,
@@ -2399,4 +2422,4 @@
     "attributes": {},
     "keycloakVersion": "7.4.2.GA",
     "userManagedAccessAllowed": false
-  }
+    }

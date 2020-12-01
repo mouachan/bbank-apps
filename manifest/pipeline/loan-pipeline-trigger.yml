@@ -1,0 +1,42 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: loan-pipeline-triggertemplate
+  annotations:
+    argocd.argoproj.io/sync-options: Validate=false
+spec:
+  params:
+  - name: gitrevision
+    description: The git revision
+    default: master
+  - name: gitrepositoryurl
+    description: The git repository url
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: source-repo-bbank-apps-$(uid)
+      namespace: bbank
+    spec:
+      type: git
+      params:
+      - name: revision
+        value: $(params.gitrevision)
+      - name: url
+        value: $(params.gitrepositoryurl)
+  - apiVersion: tekton.dev/v1alpha1
+    kind: PipelineRun
+    metadata:
+      name: loan-pipeline-$(uid)
+      namespace: bbank
+    spec:
+      pipelineRef:
+        name: loan-pipeline
+      #serviceAccount: 'pipeline'
+      params:
+      - name: componentName
+        value: loan
+      - name: containerName
+        value: loan
+      - name: imageUrl
+        value: image-registry.openshift-image-registry.svc:5000/bbank-apps/loan:latest

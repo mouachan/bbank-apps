@@ -6,21 +6,21 @@ metadata:
    app: bbank-sso
 spec:
   user:
-    username: "mouachan"
-    firstName: "Mourad"
-    lastName: "Ouachani"
-    email: "mouachan@redhat.com"
-    enabled: True
-    realmRoles:
-      - "offline_access"
-    clientRoles:
-      account:
-        - "manage-account"
-      realm-management:
-        - "manage-users"
-    credentials:
+    id: alice
+    username: alice
+    firstname: alice
+    lastname: alice
+    enabled: true
+    emailVerified: True
+    credentials: 
       - type: "password"
-        value: "r3dhat2020!"
+        value: "alice"
+    disableableCredentialTypes: 
+      - password
+    requiredActions: []
+    realmRoles:
+      - user
+    groups: []
   realmSelector:
     matchLabels:
-      app: bbank-sso
+      app: kogito

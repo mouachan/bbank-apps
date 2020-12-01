@@ -1,0 +1,52 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: bbank-apps-pipeline
+spec:
+  params:
+  - name: componentName
+    default: cheese-quizz-client
+    description: The name of the component
+  - name: containerName
+    default: quizz-client
+    description: The name of the container in deployment
+  - name: imageUrl
+    default: image-registry.openshift-image-registry.svc:5000/cheese-quizz/cheese-quizz-client:latest
+    description: The URL of newly produced image
+  tasks:
+  - name: build-image
+    taskRef:
+      name: oc-start-build
+    params:
+    - name: componentName
+      value: '$(params.componentName)'
+  - name: ensure-no-triggers
+    params:
+      - name: componentName
+        value: $(params.componentName)
+    runAfter:
+      - build-image
+    taskRef:
+      kind: Task
+      name: oc-ensure-no-triggers
+  - name: apply-image
+    params:
+      - name: componentName
+        value: $(params.componentName)
+      - name: containerName
+        value: $(params.containerName)
+      - name: imageUrl
+        value: $(params.imageUrl)
+    runAfter:
+      - ensure-no-triggers
+    taskRef:
+      kind: Task
+      name: oc-apply-deployment
+  - name: deploy
+    taskRef:
+      name: oc-deploy
+    runAfter:
+      - apply-image
+    params:
+    - name: componentName
+      value: '$(params.componentName)'
