@@ -1,0 +1,73 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: bbank-ui
+  labels:
+    app: bbank-ui
+    app.kubernetes.io/component: bbank-ui
+    app.kubernetes.io/instance: bbank-ui
+    deployment: bbank-ui
+    name: bbank-ui
+spec:
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        namespace: openshift
+        name: 'nodejs:12'
+  source:
+    type: Git
+    git:
+      uri: 'http://github.com/mouachan/bbank-apps'
+    contextDir: bbank-ui
+    sourceSecret:
+      name: github
+---
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: bbank-ui
+  labels:
+    app: bbank-ui
+    app.kubernetes.io/component: bbank-ui
+    app.kubernetes.io/instance: bbank-ui
+    deployment: bbank-ui
+    name: bbank-ui
+spec:
+  replicas: 1
+  selector:
+    app: bbank-ui
+  template:
+    metadata:
+      labels:
+        app: bbank-ui
+        app.kubernetes.io/component: bbank-ui
+        app.kubernetes.io/instance: bbank-ui
+        deployment: bbank-ui
+        name: bbank-ui
+    spec:
+      containers:
+        - name: bbank-ui
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/bbank-ui
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: AUTH_CLIENTID
+              value: bbank-ui
+            - name: AUTH_REALM
+              value: kogito
+            - name: AUTH_URL
+              value: 'https://keycloak-bbankapps.apps.ocp4.ouachani.org'
+            - name: GRAFANA_URL
+              value: 'https://grafana-route-bbankapps.apps.ocp4.ouachani.org'
+            - name: GRAPHQL_URL
+              value: 'http://data-index-bbankapps.apps.ocp4.ouachani.org/graphql'
+            - name: LOAN_VALIDATION_URL
+              value: 'http://loan-bbankapps.apps.ocp4.ouachani.org/loanValidation'
+            - name: MANAGEMENT_CONSOLE_URL
+              value: 'http://management-console-bbankapps.apps.ocp4.ouachani.org'
+            - name: TASK_CONSOLE_URL
+              value: 'http://task-console-bbankapps.apps.ocp4.ouachani.org'
