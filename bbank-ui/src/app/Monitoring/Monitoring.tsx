@@ -73,6 +73,7 @@ class Monitoring extends React.Component<{},ISupportProps> {
       })
       .then(r => r.json())
       .then(data => {
+        console.log(data);
         var variables = data.data.ProcessInstances[0]["variables"];
         console.log(variables);
         loan = JSON.parse(variables).loan;
