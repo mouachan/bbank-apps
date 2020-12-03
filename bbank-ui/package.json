@@ -1,9 +1,9 @@
 {
   "name": "bbank-ui",
   "version": "0.0.1",
-  "description": "An open source build scaffolding utility for web apps.",
+  "description": "bbank-ui.",
   "main": "server.js",
-  "repository": "https://github.com/patternfly/patternfly-react-seed.git",
+  "repository": "https://github.com/mouachan/bbank-apps/bbank-ui",
   "license": "MIT",
   "private": true,
   "scripts": {
