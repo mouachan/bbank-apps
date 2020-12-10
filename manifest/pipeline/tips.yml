@@ -1,0 +1,79 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: bbank-sso
+  labels:
+   app: bbank-sso
+spec:
+  instances: 1
+  externalAccess:
+    enabled: True
+  keycloakDeploymentSpec:
+    experimental:
+      args:
+        - "-Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled"
+      env:
+        - name: KEYCLOAK_IMPORT
+          value: /tmp/kogito-realm.json
+      volumes:
+        defaultMode: 0777
+        items:
+          - configMap:
+              name: keycloak-configmap
+              mountPath: /tmp
+  containers:
+    limits:
+    - default:
+      cpu: 2        
+      memory: 4G
+      defaultRequest:
+        memory: 1G
+        cpu: 1
+      type: Container
+    volumeMounts:
+      - name: config-volume
+        mountPath: /tmp
+    env: 
+      - name: JAVA_OPTS
+        value: '-Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled'
+      - name: KEYCLOAK_IMPORT
+        value: /tmp/kogito-realm.json  
+
+  volumes:
+    - name: config-volume
+      configMap:
+        name: keycloak-configmap
+
+
+
+          JAVA_OPTS:  -server -Xlog:gc*:file="/opt/eap/standalone/log/gc.log":time,uptimemillis:filecount=5,filesize=3M -Xms64m -Xmx256m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true 
+          -Djboss.modules.system.pkgs=org.jboss.logmanager,jdk.nashorn.api,com.sun.crypto.provider -Djava.awt.headless=true -XX:+UseParallelOldGC -XX:MinHeapFreeRatio=10 
+          -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:ParallelGCThreads=1 -Djava.util.concurrent.ForkJoinPool.common.parallelism=1 -XX:CICompilerCount=2 
+          -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/./urandom  -javaagent:/opt/jboss/container/jolokia/jolokia.jar=config=/opt/jboss/container/jolokia/etc/jolokia.properties 
+          -Xbootclasspath/a:/opt/eap/modules/system/layers/base/.overlays/layer-base-jboss-eap-7.3.2.CP/org/jboss/logmanager/main/jboss-logmanager-2.1.15.Final-redhat-00001.jar:/opt/eap/modules/system/layers/base/org/glassfish/jakarta/json/main/jakarta.json-1.1.6.r
+          edhat-00001.jar:/opt/eap/modules/system/...
+
+  JAVA_OPTS:  -server -Xlog:gc*:file="/opt/eap/standalone/log/gc.log":time,uptimemillis:filecount=5,filesize=3M -Xms64m -Xmx256m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.logmanager,jdk.nashorn.api,com.sun.crypto.provider -Djava.awt.headless=true -XX:+UseParallelOldGC -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:ParallelGCThreads=1 -Djava.util.concurrent.ForkJoinPool.common.parallelism=1 -XX:CICompilerCount=2 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/./urandom  -javaagent:/opt/jboss/container/jolokia/jolokia.jar=config=/opt/jboss/container/jolokia/etc/jolokia.properties -Xbootclasspath/a:/opt/eap/modules/system/layers/base/.overlays/layer-base-jboss-eap-7.3.2.CP/org/jboss/logmanager/main/jboss-logmanager-2.1.15.Final-redhat-00001.jar:/opt/eap/modules/system/layers/base/org/glassfish/jakarta/json/main/jakarta.json-1.1.6.redhat-00001.jar:/opt/eap/modules/system/...
+
+
+  keycloakDeploymentSpec:
+    experimental:
+      args:
+        - "-Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled"
+      env:
+        - name: KEYCLOAK_IMPORT
+          value: "/tmp/kogito-realm.json /tmp/my_realm.json -v %CD%:/tmp --name"
+        - name: JAVA_OPTS
+          value: "-Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled"
+      volumes:
+        defaultMode: 0777
+        items:
+          - configMap:
+              name: keycloak-configmap
+              mountPath: /tmp
+
+
+
+                  env:
+      - name: JAVA_OPTS
+        value: "-Dkeycloak.profile.feature.scripts=enabled -Dkeycloak.profile.feature.upload_scripts=enabled -Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/tmp/kogito-realm.json -Dkeycloak.migration.strategy=OVERWRITE_EXISTING"

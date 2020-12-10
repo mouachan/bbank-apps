@@ -141,7 +141,7 @@ Next, navigate to RHSSO Operator and click on it. Next, follow the instructions 
 Once RHSSO Operator is subscribed to a « bbank », you can install a RHSSO installation by creating a RHSSO Custom Resource:
 
 ```shell
-oc apply -f ./manifest/services/bbank-sso-instance.yml
+oc apply -f ./manifest/services/rhsso/bbank-sso-instance.yml
 ```
 
 After a few minutes, Keycloak cluster should be up and running. Once the RHSSO instance is created, check if it’s ready:
@@ -155,7 +155,7 @@ true
 
 #### using oc cli
 ```shell
-oc apply -f manifest/services/bbank-sso-realm.yml
+oc apply -f manifest/services/rhsso/bbank-sso-realm.yml
 ```
 #### or manually (realm can be reset by the rhsso operator)
 
@@ -305,6 +305,7 @@ oc apply -f ../manifest/services/companies-svc-knative.yml
 native
 ```shell
 oc apply -f ../manifest/services/companies-svc-native-knative.yml 
+oc expose svc/ 
 ```
 
 #### verify the service availability
@@ -332,7 +333,7 @@ Install Kogito operator
 #### Install data-index e.g the kogito-infra (kogito v0.17)
 
 ```shell
-kogito install infra infinispan --kind Infinispan --apiVersion infinispan.org/v1
+kogito install infra infinispan --kind Infinispan --apiVersion infinispan.org/v1beta1
 kogito install infra kafka --kind Kafka --apiVersion kafka.strimzi.io/v1beta1
 ```
 

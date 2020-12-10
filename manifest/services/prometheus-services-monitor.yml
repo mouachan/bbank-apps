@@ -20,7 +20,6 @@ metadata:
   labels:
     app: eligibility
   name: eligibility
-  namespace: bbankapps
 spec:
   endpoints:
   - path: /metrics
@@ -28,7 +27,7 @@ spec:
     scheme: http
   namespaceSelector:
     matchNames:
-    - bbankapps
+    - bbtest
   selector:
     matchLabels:
       app: eligibility
@@ -39,7 +38,6 @@ metadata:
   labels:
     app: notation
   name: notation
-  namespace: bbankapps
 spec:
   endpoints:
   - path: /metrics
@@ -47,7 +45,7 @@ spec:
     scheme: http
   namespaceSelector:
     matchNames:
-    - bbankapps
+    - bbtest
   selector:
     matchLabels:
       app: notation
@@ -58,7 +56,6 @@ metadata:
   labels:
     app: loan
   name: loan
-  namespace: bbankapps
 spec:
   endpoints:
   - path: /metrics
@@ -66,7 +63,7 @@ spec:
     scheme: http
   namespaceSelector:
     matchNames:
-    - bbankapps
+    - bbtest
   selector:
     matchLabels:
       app: loan

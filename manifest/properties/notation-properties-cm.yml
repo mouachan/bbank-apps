@@ -11,15 +11,22 @@ data:
     quarkus.index-dependency.model.group-id=org.redhat.bbank
     quarkus.index-dependency.model.artifact-id=model
     
-    #infinispan 
+    infinispan.remote.sasl-mechanism=PLAIN
+    infinispan.remote.server-list=kogito-infinispan:11222
+    infinispan.remote.trust-store-file-name=/home/kogito/certs/infinispan/truststore.p12
+    infinispan.remote.trust-store-password=changeit
+    infinispan.remote.trust-store-type=PKCS12
+    infinispan.remote.use-auth=true
+    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbtest.svc:9092
     quarkus.infinispan-client.sasl-mechanism=PLAIN
     quarkus.infinispan-client.server-list=kogito-infinispan:11222
+    quarkus.infinispan-client.trust-store=/home/kogito/certs/infinispan/truststore.p12
+    quarkus.infinispan-client.trust-store-password=changeit
+    quarkus.infinispan-client.trust-store-type=PKCS12
     quarkus.infinispan-client.use-auth=true
-    quarkus.infinispan-client.auth-username=developer
-    quarkus.infinispan-client.auth-password=keVRDvVTfRgvHJPF
 
     # OIDC server (keycloak) connection config
-    #quarkus.oidc.auth-server-url=https://keycloak-bbank.apps.ocp4.ouachani.org/auth/realms/bbank
+    #quarkus.oidc.auth-server-url=https://keycloak-bbtest.apps.ocp4.ouachani.org/auth/realms/bbank
     #quarkus.oidc.client-id=bbank-sso-client
     #quarkus.oidc.credentials.secret=secret
     # Endpoint security configuration
@@ -27,29 +34,25 @@ data:
     #quarkus.http.auth.permission.authenticated.policy=authenticated
     
     #kogito 
-    kogito.service.url=http://notation-bbank.apps.ocp4.ouachani.org
-    kogito.dataindex.http.url=http://data-index-bbank.apps.ocp4.ouachani.org
+    kogito.service.url=http://notation-bbtest.apps.ocp4.ouachani.org
+    kogito.dataindex.http.url=http://data-index-bbtest.apps.ocp4.ouachani.org
     kogito.dataindex.ws.url=ws://data-index:8080
     quarkus.http.cors=true
 
-    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbankapps.svc:9092
-    
-    
-    #kafka notation services messaging
-    mp.messaging.incoming.noteapplication.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.incoming.noteapplication.connector=smallrye-kafka
-    mp.messaging.incoming.noteapplication.topic=noteapplication
-    mp.messaging.incoming.noteapplication.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+    mp.messaging.incoming.kogito_incoming_stream.bootstrap.servers=${kafka.bootstrap.servers}
+    mp.messaging.outgoing.kogito_outgoing_stream.bootstrap.servers=${kafka.bootstrap.servers}
 
-    mp.messaging.outgoing.notnoted.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.outgoing.notnoted.connector=smallrye-kafka
-    mp.messaging.outgoing.notnoted.topic=notnoted
-    mp.messaging.outgoing.notnoted.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+    mp.messaging.incoming.kogito_incoming_stream.connector=smallrye-kafka
+    mp.messaging.incoming.kogito_incoming_stream.topic=noteapplication
+    mp.messaging.incoming.kogito_incoming_stream.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
 
-    mp.messaging.outgoing.model1.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.outgoing.model1.connector=smallrye-kafka
-    mp.messaging.outgoing.model1.topic=model1
-    mp.messaging.outgoing.model1.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+    mp.messaging.outgoing.kogito_outgoing_stream.connector=smallrye-kafka
+    mp.messaging.outgoing.kogito_outgoing_stream.topic=notnoted
+    mp.messaging.outgoing.kogito_outgoing_stream.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+
+    mp.messaging.outgoing.kogito_outgoing_stream.connector=smallrye-kafka
+    mp.messaging.outgoing.kogito_outgoing_stream.topic=model1
+    mp.messaging.outgoing.kogito_outgoing_stream.value.serializer=org.apache.kafka.common.serialization.StringSerializer
 
     # kogito - kafka messaging
     mp.messaging.outgoing.kogito-jobs-events.bootstrap.servers=${kafka.bootstrap.servers}

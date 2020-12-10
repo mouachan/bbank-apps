@@ -9,23 +9,6 @@ spec:
     id: kogito
     realm: kogito
     displayName: kogito
-    notBefore: 1603213542
-    revokeRefreshToken: false
-    refreshTokenMaxReuse: 0
-    accessTokenLifespan: 300
-    accessTokenLifespanForImplicitFlow: 900
-    ssoSessionIdleTimeout: 1800
-    ssoSessionMaxLifespan: 36000
-    ssoSessionIdleTimeoutRememberMe: 0
-    ssoSessionMaxLifespanRememberMe: 0
-    offlineSessionIdleTimeout: 2592000
-    offlineSessionMaxLifespanEnabled: false
-    offlineSessionMaxLifespan: 5184000
-    accessCodeLifespan: 60
-    accessCodeLifespanUserAction: 300
-    accessCodeLifespanLogin: 1800
-    actionTokenGeneratedByAdminLifespan: 43200
-    actionTokenGeneratedByUserLifespan: 300
     enabled: true
     sslRequired: external
     registrationAllowed: false
@@ -441,8 +424,8 @@ spec:
       - offline_access
       - microprofile-jwt
     - clientId: bbank-ui
-      rootUrl: http://bbank-ui-bbankapps.apps.ocp4.ouachani.org
-      adminUrl: http://bbank-ui-bbankapps.apps.ocp4.ouachani.org
+      rootUrl: http://bbank-ui-bbank.apps.ocp4.ouachani.org
+      adminUrl: http://bbank-ui-bbank.apps.ocp4.ouachani.org
       baseUrl: ''
       surrogateAuthRequired: false
       enabled: true
@@ -450,9 +433,9 @@ spec:
       clientAuthenticatorType: client-secret
       secret: "**********"
       redirectUris:
-      - http://bbank-ui-bbankapps.apps.ocp4.ouachani.org/*
+      - http://bbank-ui-bbank.apps.ocp4.ouachani.org/*
       webOrigins:
-      - http://bbank-ui-bbankapps.apps.ocp4.ouachani.org
+      - http://bbank-ui-bbank.apps.ocp4.ouachani.org
       notBefore: 0
       bearerOnly: false
       consentRequired: false
@@ -526,16 +509,16 @@ spec:
       - offline_access
       - microprofile-jwt
     - clientId: kogito-console-quarkus
-      rootUrl: http://management-console-bbankapps.apps.ocp4.ouachani.org
-      adminUrl: http://management-console-bbankapps.apps.ocp4.ouachani.org/
-      baseUrl: http://management-console-bbankapps.apps.ocp4.ouachani.org/
+      rootUrl: http://management-console-bbank.apps.ocp4.ouachani.org
+      adminUrl: http://management-console-bbank.apps.ocp4.ouachani.org/
+      baseUrl: http://management-console-bbank.apps.ocp4.ouachani.org/
       surrogateAuthRequired: false
       enabled: true
       alwaysDisplayInConsole: false
       clientAuthenticatorType: client-secret
       secret: "**********"
       redirectUris:
-      - http://management-console-bbankapps.apps.ocp4.ouachani.org/*
+      - http://management-console-bbank.apps.ocp4.ouachani.org/*
       webOrigins:
       - "*"
       notBefore: 0
@@ -590,16 +573,16 @@ spec:
       - offline_access
       - microprofile-jwt
     - clientId: kogito-task-console-quarkus
-      rootUrl: http://task-console-bbankapps.apps.ocp4.ouachani.org
-      adminUrl: http://task-console-bbankapps.apps.ocp4.ouachani.org/
-      baseUrl: http://task-console-bbankapps.apps.ocp4.ouachani.org/
+      rootUrl: http://task-console-bbank.apps.ocp4.ouachani.org
+      adminUrl: http://task-console-bbank.apps.ocp4.ouachani.org/
+      baseUrl: http://task-console-bbank.apps.ocp4.ouachani.org/
       surrogateAuthRequired: false
       enabled: true
       alwaysDisplayInConsole: false
       clientAuthenticatorType: client-secret
       secret: "**********"
       redirectUris:
-      - http://task-console-bbankapps.apps.ocp4.ouachani.org/*
+      - http://task-console-bbank.apps.ocp4.ouachani.org/*
       webOrigins:
       - "*"
       notBefore: 0
@@ -873,15 +856,15 @@ spec:
         scopes: []
         decisionStrategy: UNANIMOUS
     - clientId: loan
-      rootUrl: http://loan-bbankapps.apps.ocp4.ouachani.org
-      adminUrl: http://loan-bbankapps.apps.ocp4.ouachani.org
+      rootUrl: http://loan-bbank.apps.ocp4.ouachani.org
+      adminUrl: http://loan-bbank.apps.ocp4.ouachani.org
       surrogateAuthRequired: false
       enabled: true
       alwaysDisplayInConsole: false
       clientAuthenticatorType: client-secret
       secret: "**********"
       redirectUris:
-      - http://loan-bbankapps.apps.ocp4.ouachani.org/*
+      - http://loan-bbank.apps.ocp4.ouachani.org/*
       webOrigins:
       - "*"
       notBefore: 0

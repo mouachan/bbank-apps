@@ -1,17 +1,17 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: bbank-apps-pipeline
+  name: loan-pipeline
 spec:
   params:
   - name: componentName
-    default: cheese-quizz-client
+    default: loan
     description: The name of the component
   - name: containerName
-    default: quizz-client
+    default: loan
     description: The name of the container in deployment
   - name: imageUrl
-    default: image-registry.openshift-image-registry.svc:5000/cheese-quizz/cheese-quizz-client:latest
+    default: image-registry.openshift-image-registry.svc:5000/bbank-apps/loan:latest
     description: The URL of newly produced image
   tasks:
   - name: build-image

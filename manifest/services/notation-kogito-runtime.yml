@@ -1,4 +1,4 @@
-apiVersion: app.kiegroup.org/v1alpha1
+apiVersion: app.kiegroup.org/v1beta1
 kind: KogitoRuntime
 metadata:
   annotations:
@@ -16,7 +16,6 @@ metadata:
 spec:
   serviceLabels:
     app: notation
-  infinispan:
-    useKogitoInfra: true
-  kafka:
-    useKogitoInfra: true
+  infra:
+    - kogito-infinispan-infra
+    - kogito-kafka-infra

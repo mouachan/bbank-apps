@@ -4,25 +4,70 @@ metadata:
   name: bbank-ui
   labels:
     app: bbank-ui
-    app.kubernetes.io/component: bbank-ui
+    app.kubernetes.io/part-of: bbank-ui
     app.kubernetes.io/instance: bbank-ui
     deployment: bbank-ui
+    route: bbank-ui
     name: bbank-ui
+    app.kubernetes.io/component: bbank-ui
+    app.openshift.io/runtime: nodejs
+    service: bbank-ui
+    app.kubernetes.io/name: nodejs
+    app.openshift.io/runtime-version: 12-ubi8
 spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'bbank-ui:latest'
+  resources: {}
   strategy:
     type: Source
     sourceStrategy:
       from:
         kind: ImageStreamTag
         namespace: openshift
-        name: 'nodejs:12'
+        name: 'nodejs:12-ubi8'
+      env:
+        - name: AUTH_CLIENTID
+          value: bbank-ui
+        - name: AUTH_REALM
+          value: kogito
+        - name: AUTH_URL
+          value: 'https://keycloak-bbank.apps.ocp4.ouachani.org'
+        - name: GRAFANA_URL
+          value: 'https://grafana-route-bbank.apps.ocp4.ouachani.org'
+        - name: GRAPHQL_URL
+          value: 'http://data-index-bbank.apps.ocp4.ouachani.org/graphql'
+        - name: LOAN_VALIDATION_URL
+          value: 'http://loan-bbank.apps.ocp4.ouachani.org/loanValidation'
+        - name: MANAGEMENT_CONSOLE_URL
+          value: 'http://management-console-bbank.apps.ocp4.ouachani.org'
+        - name: TASK_CONSOLE_URL
+          value: 'http://task-console-bbank.apps.ocp4.ouachani.org'
+  postCommit: {}
   source:
     type: Git
     git:
-      uri: 'http://github.com/mouachan/bbank-apps'
-    contextDir: bbank-ui
+      uri: 'https://github.com/mouachan/bbank-apps'
+    contextDir: /bbank-ui
     sourceSecret:
       name: github
+  triggers:
+    - type: Generic
+      generic:
+        secretReference:
+          name: bbank-ui-generic-webhook-secret
+    - type: GitHub
+      github:
+        secretReference:
+          name: bbank-ui-github-webhook-secret
+    - type: ImageChange
+      imageChange:
+        lastTriggeredImageID: >-
+          image-registry.openshift-image-registry.svc:5000/openshift/nodejs@sha256:e9c86c559685564a79b5084a2d1672ff650aad0c314f57a712506f9182e87df4
+    - type: ConfigChange
+  runPolicy: Serial
 ---
 kind: DeploymentConfig
 apiVersion: apps.openshift.io/v1
@@ -30,44 +75,73 @@ metadata:
   name: bbank-ui
   labels:
     app: bbank-ui
-    app.kubernetes.io/component: bbank-ui
+    app.kubernetes.io/part-of: bbank-ui
     app.kubernetes.io/instance: bbank-ui
     deployment: bbank-ui
+    route: bbank-ui
     name: bbank-ui
+    app.kubernetes.io/component: bbank-ui
+    app.openshift.io/runtime: nodejs
+    service: bbank-ui
+    app.kubernetes.io/name: nodejs
+    app.openshift.io/runtime-version: 12-ubi7
 spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - bbank-ui
+        from:
+          kind: ImageStreamTag
+          namespace: bbank
+          name: 'bbank-ui:latest'
+    - type: ConfigChange
   replicas: 1
+  revisionHistoryLimit: 10
+  test: false
   selector:
     app: bbank-ui
+    deploymentconfig: bbank-ui
   template:
     metadata:
+      creationTimestamp: null
       labels:
         app: bbank-ui
         app.kubernetes.io/component: bbank-ui
         app.kubernetes.io/instance: bbank-ui
         deployment: bbank-ui
+        deploymentconfig: bbank-ui
         name: bbank-ui
+        route: bbank-ui
+        service: bbank-ui
     spec:
       containers:
         - name: bbank-ui
-          image: >-
-            image-registry.openshift-image-registry.svc:5000/bbank-ui
+          image: 'bbank-ui:latest'
           ports:
             - containerPort: 8080
               protocol: TCP
-          env:
-            - name: AUTH_CLIENTID
-              value: bbank-ui
-            - name: AUTH_REALM
-              value: kogito
-            - name: AUTH_URL
-              value: 'https://keycloak-bbankapps.apps.ocp4.ouachani.org'
-            - name: GRAFANA_URL
-              value: 'https://grafana-route-bbankapps.apps.ocp4.ouachani.org'
-            - name: GRAPHQL_URL
-              value: 'http://data-index-bbankapps.apps.ocp4.ouachani.org/graphql'
-            - name: LOAN_VALIDATION_URL
-              value: 'http://loan-bbankapps.apps.ocp4.ouachani.org/loanValidation'
-            - name: MANAGEMENT_CONSOLE_URL
-              value: 'http://management-console-bbankapps.apps.ocp4.ouachani.org'
-            - name: TASK_CONSOLE_URL
-              value: 'http://task-console-bbankapps.apps.ocp4.ouachani.org'
+          resources:
+            limits:
+              memory: 4Gi
+            requests:
+              memory: 2Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler

@@ -1,0 +1,9 @@
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoInfra
+metadata:
+  name: kogito-kafka
+spec:
+  resource:
+    apiVersion: kafka.strimzi.io/v1beta1
+    kind: Kafka
+    ## add -Xms and -Xmx 2048m

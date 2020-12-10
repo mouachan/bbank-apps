@@ -1,0 +1,19 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: bbank-sso
+  labels:
+   app: bbank-sso
+spec:
+  instances: 1
+  externalAccess:
+    enabled: True
+  containers:
+    limits:
+    - default:
+      cpu: 2        
+      memory: 4G
+      defaultRequest:
+        memory: 1G
+        cpu: 1
+
