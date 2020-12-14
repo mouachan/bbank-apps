@@ -1,5 +1,0 @@
-io.smallrye.config.inject.ConfigExtension
-io.smallrye.reactive.messaging.extension.ReactiveMessagingExtension
-
-io.smallrye.metrics.setup.MetricCdiInjectionExtension
-

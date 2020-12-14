@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: 
-Main-Class: io.quarkus.runner.GeneratedMain
-Implementation-Title: data-index-service-infinispan
-Implementation-Version: 1.0.0.Final
-
