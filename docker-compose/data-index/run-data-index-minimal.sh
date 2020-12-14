@@ -1,12 +1,16 @@
-export DATA_INDEX_VERSION="0.17.0"
-#DATA_INDEX_RUNNER=https://search.maven.org/remotecontent?filepath=org/kie/kogito/data-index-service/${DATA_INDEX_VERSION}/data-index-service-${DATA_INDEX_VERSION}-runner.jar
-#wget -nc -O data-index-service-${DATA_INDEX_VERSION}-runner.jar ${DATA_INDEX_RUNNER}
+export DATA_INDEX_VERSION="1.0.0.Final"
+#DATA_INDEX_RUNNER="https://repository.jboss.org/nexus/service/local/artifact/maven/content?r=public&g=org.kie.kogito&a=data-index-service-infinispan&v=${DATA_INDEX_VERSION}&c=runner"
+#wget -nc -O data-index-service-infinispan-${DATA_INDEX_VERSION}-runner.jar ${DATA_INDEX_RUNNER}
 java \
 -Dquarkus.log.console.level=DEBUG -Dquarkus.log.category.\"org.kie.kogito\".min-level=DEBUG \
 -Dquarkus.log.category.\"org.kie.kogito\".level=DEBUG \
--Dquarkus.infinispan-client.server-list=localhost:11222 \
+-Dquarkus.infinispan-client.server-list=127.0.0.1:11222 \
+-Dinfinispan.remote.sasl-mechanism=PLAIN \
+-Dquarkus.infinispan-client.sasl-mechanism=PLAIN \
 -Dkogito.protobuf.folder=`pwd`/persistence \
 -Dkogito.protobuf.watch=true \
--Dquarkus.http.port=8980 \
--jar data-index-service-infinispan-${DATA_INDEX_VERSION}-SNAPSHOT-runner.jar 
+-Dquarkus.http.port=8180 \
+-Dquarkus.infinispan-client.auth-username=admin \
+-Dquarkus.infinispan-client.auth-password=admin \
+-jar data-index-service-infinispan-${DATA_INDEX_VERSION}-runner.jar 
 #-jar data-index-service-${DATA_INDEX_VERSION}-infinispan-runner.jar

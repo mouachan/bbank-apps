@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+     <groupId>org.kie.kogito</groupId>
+     <artifactId>drools</artifactId>
+     <version>1.0.0.Final</version>
+   </parent>
+
+    <artifactId>drools-core-static</artifactId>
+
+    <name>Kogito :: Drools :: Drools Core Static</name>
+    <properties>
+      <java.module.name>org.kie.kogito.drools.core.static</java.module.name>
+    </properties>
+
+    <dependencies>
+      <dependency>
+        <groupId>org.drools</groupId>
+        <artifactId>drools-core-reflective</artifactId>
+        <exclusions>
+          <exclusion>
+           <groupId>org.kie</groupId>
+           <artifactId>kie-api</artifactId>
+         </exclusion>
+         <exclusion>
+           <groupId>org.kie</groupId>
+           <artifactId>kie-internal</artifactId>
+         </exclusion>
+      </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.kie.kogito</groupId>
+        <artifactId>kogito-api</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.kie.kogito</groupId>
+        <artifactId>kogito-internal</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,6 @@
+io.quarkus.runtime.ExecutorHotReplacementSetup
+
+io.quarkus.vertx.core.runtime.VertxHotReplacementSetup
+
+io.quarkus.vertx.http.runtime.devmode.VertxHttpHotReplacementSetup
+io.quarkus.vertx.http.runtime.devmode.StaticResourcesHotReplacementSetup
