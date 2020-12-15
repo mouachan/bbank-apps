@@ -8,68 +8,68 @@ option kogito_id = "computeNotation";
 /* @Indexed */ 
 message Bilan { 
 	option java_package = "org.redhat.credit.computeNotation";
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double dl = 1; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double ee = 2; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double fl = 3; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double fm = 4; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double ga = 5; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double gg = 6; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double hn = 7; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double hp = 8; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double hq = 9; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional string siren = 10; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	repeated Variable variables = 11; 
 }
 /* @Indexed */ 
 message ComputeNotation { 
 	option java_package = "org.redhat.credit.computeNotation";
-	/* @Field(store = Store.YES)
+	/* @Field(store = Store.YES) @SortableField
  @VariableInfo(tags="") */ 
 	optional Notation _notation = 1; 
-	/* @Field(store = Store.YES)
+	/* @Field(store = Store.YES) @SortableField
  @VariableInfo(tags="") */ 
 	optional Bilan bilan = 2; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional string id = 3; 
-	/* @Field(store = Store.YES)
+	/* @Field(store = Store.YES) @SortableField
  @VariableInfo(tags="") */ 
 	optional Variable rentab13 = 4; 
-	/* @Field(store = Store.YES)
+	/* @Field(store = Store.YES) @SortableField
  @VariableInfo(tags="") */ 
 	optional Variable strfin36 = 5; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional org.kie.kogito.index.model.KogitoMetadata metadata = 6; 
 }
 /* @Indexed */ 
 message Notation { 
 	option java_package = "org.redhat.credit.computeNotation";
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double decoupageSectoriel = 1; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional string note = 2; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional string orientation = 3; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double score = 4; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional string typeAiguillage = 5; 
 }
 /* @Indexed */ 
 message Variable { 
 	option java_package = "org.redhat.credit.computeNotation";
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional string type = 1; 
-	/* @Field(store = Store.YES) */ 
+	/* @Field(store = Store.YES) @SortableField */ 
 	optional double value = 2; 
 }

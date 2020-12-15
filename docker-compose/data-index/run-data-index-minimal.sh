@@ -12,5 +12,8 @@ java \
 -Dquarkus.http.port=8180 \
 -Dquarkus.infinispan-client.auth-username=admin \
 -Dquarkus.infinispan-client.auth-password=admin \
+-Dinfinispan.client.hotrod.socket_timeout=5000 \
+-Dinfinispan.client.hotrod.connect_timeout=5000 \
+-Dinfinispan.client.hotrod.max_retries=5 \
 -jar data-index-service-infinispan-${DATA_INDEX_VERSION}-runner.jar 
 #-jar data-index-service-${DATA_INDEX_VERSION}-infinispan-runner.jar

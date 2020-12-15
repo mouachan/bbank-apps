@@ -16,9 +16,10 @@
 package org.kie.kogito.app;
 
 import io.quarkus.qute.Template;
+import io.quarkus.qute.api.ResourcePath;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.inject.Inject;
 
 
 import io.vertx.ext.web.Router;
@@ -31,14 +32,14 @@ import static io.vertx.core.http.HttpMethod.GET;
 @ApplicationScoped
 public class VertxRouter {
     
-    @Inject
-    Template index;
+    @ResourcePath("index")
+    Template indexTemplate;
 
     void setupRouter(@Observes Router router) {
         router.route().handler(LoggerHandler.create());
         router.route().handler(FaviconHandler.create());
         router.route().handler(StaticHandler.create());
-        String template = index.render();
-        router.route(GET, "/").handler(ctx -> ctx.response().end(template));
+        String indexPage = indexTemplate.render();
+        router.route(GET, "/").handler(ctx -> ctx.response().end(indexPage));
     }
 }
