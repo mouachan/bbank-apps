@@ -26,7 +26,8 @@ nb-configuration.xml
 # patch
 *.orig
 *.rej
-
+# mongo data volumes
+**/mongo-volume
 # Maven
 target/
 pom.xml.tag
