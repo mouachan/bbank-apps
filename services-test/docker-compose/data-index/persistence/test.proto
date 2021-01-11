@@ -1,0 +1,24 @@
+syntax = "proto2"; 
+package org.redhat.kogitosub.test; 
+import "kogito-index.proto";
+import "kogito-types.proto";
+option kogito_model = "Test";
+option kogito_id = "test";
+
+/* @Indexed */ 
+message Test { 
+	option java_package = "org.redhat.kogitosub.test";
+	/* @Field(store = Store.YES) @SortableField
+ @VariableInfo(tags="") */ 
+	optional bool eligible = 1; 
+	/* @Field(store = Store.YES) @SortableField */ 
+	optional string id = 2; 
+	/* @Field(store = Store.YES) @SortableField
+ @VariableInfo(tags="") */ 
+	optional string name = 3; 
+	/* @Field(store = Store.YES) @SortableField
+ @VariableInfo(tags="") */ 
+	optional string note = 4; 
+	/* @Field(store = Store.YES) @SortableField */ 
+	optional org.kie.kogito.index.model.KogitoMetadata metadata = 5; 
+}

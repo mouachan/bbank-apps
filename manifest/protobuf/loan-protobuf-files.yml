@@ -4,6 +4,7 @@ metadata:
   name: loan-protobuf-files
   labels:
     app: loan 
+    kogito-protobuf: 'true'
 data:
   loanValidation.proto: |-
     syntax = "proto2"; 

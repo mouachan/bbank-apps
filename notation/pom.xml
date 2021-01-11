@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.redhat.bbank</groupId>
   <artifactId>notation</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.0.Final</version>
   <properties>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
     <maven.compiler.target>11</maven.compiler.target>
@@ -74,14 +74,14 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-infinispan-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>
       <artifactId>infinispan-persistence-addon</artifactId>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>org.kie.kogito</groupId>
       <artifactId>kogito-events-reactive-messaging-addon</artifactId>
@@ -90,6 +90,16 @@
       <groupId>org.kie.kogito</groupId>
       <artifactId>process-management-addon</artifactId>
     </dependency>
+     <!-- begin of : not need it if infinispan is the datasource-->
+     <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>mongodb-persistence-addon</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-mongodb-client</artifactId>
+    </dependency>
+      <!-- end of : not need it if infinispan is the datasource-->
     <!--dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-s2i</artifactId>

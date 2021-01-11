@@ -3,7 +3,9 @@ apiVersion: v1
 metadata:
   name: eligibility-protobuf-files
   labels:
-    app: eligibility 
+    app: eligibility
+    kogito-protobuf: 'true'
+
 data:
   eligibility.proto: |-
     syntax = "proto2"; 

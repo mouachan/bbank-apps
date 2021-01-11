@@ -1,0 +1,31 @@
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+  name: red-replica-set
+spec:
+  members: 3
+  version: 4.2.2-ent
+  opsManager:
+    configMapRef:
+      name: red-project-config
+  credentials: red-orga-api-key
+  security:
+    authentication:
+       enabled: true
+       modes:
+       - SCRAM
+  statefulSet:  
+    spec:
+      template:
+        spec:
+          containers:
+          - env:
+            - name: MANAGED_SECURITY_CONTEXT
+              value: "true"
+            name: mongodb-agent
+          - env:
+            - name: MANAGED_SECURITY_CONTEXT
+              value: "true"
+            name: mongod
+  type: ReplicaSet
+  persistent: true

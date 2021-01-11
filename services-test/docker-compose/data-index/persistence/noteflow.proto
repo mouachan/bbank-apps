@@ -1,0 +1,18 @@
+syntax = "proto2"; 
+package org.redhat.note.noteflow; 
+import "kogito-index.proto";
+import "kogito-types.proto";
+option kogito_model = "Noteflow";
+option kogito_id = "noteflow";
+
+/* @Indexed */ 
+message Noteflow { 
+	option java_package = "org.redhat.note.noteflow";
+	/* @Field(store = Store.YES) @SortableField */ 
+	optional string id = 1; 
+	/* @Field(store = Store.YES) @SortableField
+ @VariableInfo(tags="") */ 
+	optional string note = 2; 
+	/* @Field(store = Store.YES) @SortableField */ 
+	optional org.kie.kogito.index.model.KogitoMetadata metadata = 3; 
+}

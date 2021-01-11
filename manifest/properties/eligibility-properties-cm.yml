@@ -12,7 +12,7 @@ data:
     quarkus.index-dependency.model.artifact-id=model
 
     #rest client 
-    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/url=http://companies-svc-bbtest.apps.ocp4.ouachani.org
+    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/url=COMPANIES_ROUTE_URL
     org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/scope=javax.enterprise.context.ApplicationScoped
     # OIDC server (keycloak) connection config
     #quarkus.oidc.auth-server-url=https://keycloak-bbtest.apps.ocp4.ouachani.org/auth/realms/kogito
@@ -23,8 +23,8 @@ data:
     #quarkus.http.auth.permission.authenticated.policy=authenticated
     
     #kogito (data-index)
-    kogito.service.url=http://eligibility-bbtest.apps.ocp4.ouachani.org
-    kogito.dataindex.http.url=http://data-index-bbtest.apps.ocp4.ouachani.org
+    kogito.service.url=ELIGIBILITY_URL
+    kogito.dataindex.http.url=DATA_INDEX_URL
     kogito.dataindex.ws.url=ws://data-index:8080
     quarkus.http.cors=true    
 
@@ -46,16 +46,13 @@ data:
     mp.messaging.outgoing.kogito_outgoing_stream.bootstrap.servers=${kafka.bootstrap.servers}
 
     mp.messaging.incoming.kogito_incoming_stream.connector=smallrye-kafka
-    mp.messaging.incoming.kogito_incoming_stream.topic=eligibilityapplication
+    mp.messaging.incoming.kogito_incoming_stream.topic=loanapplication
     mp.messaging.incoming.kogito_incoming_stream.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
 
     mp.messaging.outgoing.kogito_outgoing_stream.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito_outgoing_stream.topic=noteligible
+    mp.messaging.outgoing.kogito_outgoing_stream.topic=result
     mp.messaging.outgoing.kogito_outgoing_stream.value.serializer=org.apache.kafka.common.serialization.StringSerializer
 
-    mp.messaging.outgoing.kogito_outgoing_stream.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito_outgoing_stream.topic=eligible
-    mp.messaging.outgoing.kogito_outgoing_stream.value.serializer=org.apache.kafka.common.serialization.StringSerializer
     
     #kafka properties kogito event 
     mp.messaging.outgoing.kogito-jobs-events.bootstrap.servers=${kafka.bootstrap.servers}
@@ -72,22 +69,6 @@ data:
     mp.messaging.outgoing.kogito-usertaskdomain-events.connector=smallrye-kafka
     mp.messaging.outgoing.kogito-usertaskdomain-events.topic=kogito-usertaskdomain-events
     mp.messaging.outgoing.kogito-usertaskdomain-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-    mp.messaging.outgoing.kogito-processinstances-events.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.outgoing.kogito-processinstances-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-processinstances-events.topic=kogito-processinstances-events
-    mp.messaging.outgoing.kogito-processinstances-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-    mp.messaging.outgoing.kogito-usertaskinstances-events.bootstrap.servers=${kafka.bootstrap.servers}   
-    mp.messaging.outgoing.kogito-usertaskinstances-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-usertaskinstances-events.topic=kogito-usertaskinstances-events
-    mp.messaging.outgoing.kogito-usertaskinstances-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-    mp.messaging.outgoing.kogito-variables-events.bootstrap.servers=${kafka.bootstrap.servers}    
-    mp.messaging.outgoing.kogito-variables-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-variables-events.topic=kogito-variables-events
-    mp.messaging.outgoing.kogito-variables-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
 
     mp.messaging.outgoing.kogito-processinstances-events.connector=smallrye-kafka
     mp.messaging.outgoing.kogito-processinstances-events.topic=kogito-processinstances-events

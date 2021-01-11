@@ -66,8 +66,7 @@ message LoanValidation {
 	option java_package = "org.redhat.bbank.loanValidation";
 	/* @Field(store = Store.YES) @SortableField */ 
 	optional string id = 1; 
-	/* @Field(store = Store.YES) @SortableField
- @VariableInfo(tags="") */ 
+	/* @Field(store = Store.YES) @SortableField*/ 
 	optional Loan loan = 2; 
 	/* @Field(store = Store.YES) @SortableField */ 
 	optional org.kie.kogito.index.model.KogitoMetadata metadata = 3; 

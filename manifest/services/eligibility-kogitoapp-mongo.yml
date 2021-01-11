@@ -1,0 +1,37 @@
+#apiVersion: app.kiegroup.org/v1beta1
+#kind: KogitoBuild
+#metadata:
+  #name: eligibility
+#spec:
+  #type: Binary
+ # type: RemoteSource
+ # gitSource:
+ #   contextDir: /eligibility
+  #  uri: "https://github.com/mouachan/bbank-apps"
+  #webHooks:
+  #  - type: "GitHub"
+  #    secret: "github"
+  # set your maven nexus repository to speed up the build time
+  #mavenMirrorURL:
+---
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoRuntime
+metadata:
+  annotations:
+    org.kie.kogito/managed-by: Kogito Operator
+    org.kie.kogito/operator-crd: KogitoRuntime
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+    prometheus.io/scheme: http
+    prometheus.io/scrape: "true"
+  labels:
+    app: eligibility
+    eligibility: process
+  name: eligibility
+spec:
+  image: 'quay.io/mouachan/eligibility:1.0'
+  serviceLabels:
+    app: eligibility
+  infra:
+    - kogito-kafka-infra
+  #  - kogito-mongodb

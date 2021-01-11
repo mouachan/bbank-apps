@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: red-project-config
+data:
+  projectName: "Red Project"
+  orgId: 5ff6ec6941fb38006ec50f48
+  baseUrl: http://ops-manager-svc.mongo.svc.cluster.local:8080

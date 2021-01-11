@@ -1,0 +1,19 @@
+apiVersion: mongodb.com/v1
+kind: MongoDBUser
+metadata:
+  name: mongo-user
+spec:
+  passwordSecretKeyRef:
+    name: kogito-user-secret # the name of the secret that stores this user's password
+    key: Password # the key in the secret that stores the password
+  username: kogitouser
+  db: admin
+  mongodbResourceRef:
+    name: ops-manager # The name of the MongoDB resource this user will be added to
+  roles:
+    - db: kogito_dataindex
+      name: dbOwner
+    - db: kogito_dataindex
+      name: clusterAdmin
+    - db: kogito_dataindex
+      name: userAdminAnyDatabase

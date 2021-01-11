@@ -43,16 +43,13 @@ data:
     mp.messaging.outgoing.kogito_outgoing_stream.bootstrap.servers=${kafka.bootstrap.servers}
 
     mp.messaging.incoming.kogito_incoming_stream.connector=smallrye-kafka
-    mp.messaging.incoming.kogito_incoming_stream.topic=noteapplication
+    mp.messaging.incoming.kogito_incoming_stream.topic=loanapplication
     mp.messaging.incoming.kogito_incoming_stream.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
 
     mp.messaging.outgoing.kogito_outgoing_stream.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito_outgoing_stream.topic=notnoted
+    mp.messaging.outgoing.kogito_outgoing_stream.topic=result
     mp.messaging.outgoing.kogito_outgoing_stream.value.serializer=org.apache.kafka.common.serialization.StringSerializer
 
-    mp.messaging.outgoing.kogito_outgoing_stream.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito_outgoing_stream.topic=model1
-    mp.messaging.outgoing.kogito_outgoing_stream.value.serializer=org.apache.kafka.common.serialization.StringSerializer
 
     # kogito - kafka messaging
     mp.messaging.outgoing.kogito-jobs-events.bootstrap.servers=${kafka.bootstrap.servers}

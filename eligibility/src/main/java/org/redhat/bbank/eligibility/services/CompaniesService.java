@@ -1,12 +1,11 @@
 package org.redhat.bbank.eligibility.services;
 
-import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 
-import org.eclipse.microprofile.faulttolerance.Fallback;
+//import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.redhat.bbank.eligibility.rest.CompaniesRemoteService;
 
@@ -17,7 +16,7 @@ public class CompaniesService {
     @RestClient
     CompaniesRemoteService companiesRemoteService;
 
-    @Fallback(fallbackMethod = "missingCompany")
+    //@Fallback(fallbackMethod = "missingCompany")
     public boolean get(String siren) {
         return companiesRemoteService.get(siren);
     }

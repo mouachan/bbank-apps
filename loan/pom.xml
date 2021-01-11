@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.redhat.bbank</groupId>
   <artifactId>loan</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.0.Final</version>
   <properties>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
     <maven.compiler.target>11</maven.compiler.target>
@@ -36,35 +36,76 @@
       <artifactId>model</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!--dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>tracing-decision-quarkus-addon</artifactId>
-    </dependency-->
     <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>kogito-quarkus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>kogito-cloudevents-quarkus-addon</artifactId>
+    </dependency>
+    <dependency>
+       <groupId>io.quarkus</groupId>
+       <artifactId>quarkus-vertx-web</artifactId>
+     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-qute</artifactId>
+    </dependency>
+     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-rest-client</artifactId>
+      <artifactId>quarkus-resteasy-jackson</artifactId>
+    </dependency>
+     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-hibernate-validator</artifactId>
+    </dependency>
+    <!--dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-infinispan-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>infinispan-persistence-addon</artifactId>
+    </dependency-->
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>kogito-events-reactive-messaging-addon</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>process-management-addon</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>drools-decisiontables</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>monitoring-prometheus-addon</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-qute</artifactId>
+      <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.smallrye</groupId>
-      <artifactId>smallrye-context-propagation-propagators-rxjava2</artifactId>
-      <version>1.0.7</version>
-    </dependency>
+      <!-- begin not need it if infinispan is the datasource-->
+      <dependency>
+        <groupId>org.kie.kogito</groupId>
+        <artifactId>mongodb-persistence-addon</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-mongodb-client</artifactId>
+      </dependency>
+        <!-- end not need it if infinispan is the datasource-->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
@@ -77,47 +118,8 @@
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-quarkus</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-cloudevents-quarkus-addon</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jsonp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>monitoring-prometheus-addon</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-infinispan-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>infinispan-persistence-addon</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-container-image-docker</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-events-reactive-messaging-addon</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>process-management-addon</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-vertx-web</artifactId>
+      <artifactId>kogito-test-utils</artifactId>
+      <scope>test</scope>
     </dependency>
     <!--dependency>
       <groupId>io.quarkus</groupId>
