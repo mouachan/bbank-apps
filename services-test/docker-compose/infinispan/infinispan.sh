@@ -1,1 +1,0 @@
-docker run -p 11222:11222 -e USER="admin" -e PASS="admin" infinispan/server
