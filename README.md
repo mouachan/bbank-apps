@@ -87,6 +87,7 @@ Please install :
 - kn cli : https://docs.openshift.com/container-platform/4.5/serverless/installing_serverless/installing-kn.html#installing-kn
 - kogito cli : https://docs.jboss.org/kogito/release/latest/html_single/#proc-kogito-operator-and-cli-installing_kogito-deploying-on-openshift
 
+
 ### connect to Openshift server
 
 ```shell
@@ -97,7 +98,8 @@ oc login https://ocp-url:6443 -u login -p password
 
 ### create new namespace
 ```shell
-oc new-project bbank
+export PROJECT=bbankapps-infinispan
+oc new-project $PROJECT
 ```
 Routes include the project name, if you choose another one, don't forget to change it on the differents places/files (such kogito-realm) to use the correct urls. 
 ### add a github secret to checkout sources
@@ -118,14 +120,16 @@ oc create secret docker-registry quay-secret \
     --docker-password=password\
     --docker-email=email
 
-oc secrets link builder quay-secret
-oc secrets link default quay-secret --for=pull
+oc secrets link builder quay-secret -n $PROJECT
+oc secrets link default quay-secret --for=pull -n $PROJECT
 ```
 
 ### Clone the source from github
 
 ```git
-git clone https://github.com/mouachan/bbank-apps.git
+git clone -b 1.0.x-infinispan https://github.com/mouachan/bbank-apps.git cd bbank-apps
+export TMP_DIR=tmp
+mkdir $TMP_DIR
 ```
 
 
@@ -141,7 +145,7 @@ Next, navigate to RHSSO Operator and click on it. Next, follow the instructions 
 Once RHSSO Operator is subscribed to a « bbank », you can install a RHSSO installation by creating a RHSSO Custom Resource:
 
 ```shell
-oc apply -f ./manifest/services/rhsso/bbank-sso-instance.yml
+oc apply -f ./manifest/services/rhsso/bbank-sso-instance.yml -n $PROJECT
 ```
 
 After a few minutes, Keycloak cluster should be up and running. Once the RHSSO instance is created, check if it’s ready:
@@ -155,7 +159,7 @@ true
 
 #### using oc cli
 ```shell
-oc apply -f manifest/services/rhsso/bbank-sso-realm.yml
+oc apply -f manifest/services/rhsso/bbank-sso-realm.yml -n $PROJECT
 ```
 #### or manually (realm can be reset by the rhsso operator)
 
@@ -167,7 +171,7 @@ credential-bbank-sso                           Opaque
 
 Get the login/password
 ```shell
-oc get secret credential-bbank-sso -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
+oc get secret credential-bbank-sso -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}' -n $PROJECT
 ```
 
 Get the RHSSO route
@@ -194,15 +198,18 @@ It will create a realm "kogito", clients, users and credentials.
 #### Option 1 : using oc cli
 
 ```shell
-#check if persistent mongo exist
+# check if persistent mongo exist
 
-oc get templates -n openshift | grep mongodb
+oc get templates -n $PROJECT | grep mongodb
+
+# if not create it
+oc create -f https://raw.githubusercontent.com/openshift/origin/master/examples/db-templates/mongodb-persistent-template.json -n $PROJECT
 
 #get paramters list
-oc process --parameters -n openshift mongodb-persistent
+oc process --parameters -n $PROJECT mongodb-persistent
 
 #create the instannce
-oc process mongodb-persistent -n openshift -p MONGODB_USER=admcomp -p MONGODB_PASSWORD=r3dhat2020! -p MONGODB_DATABASE=companies -p MONGODB_ADMIN_PASSWORD=r3dhat2020! \
+oc process mongodb-persistent -n $PROJECT -p MONGODB_USER=admcomp -p MONGODB_PASSWORD=r3dh4t2021! -p MONGODB_DATABASE=companies -p MONGODB_ADMIN_PASSWORD=r3dh4t2021! \
 | oc create -f -
 ```
 
@@ -219,16 +226,13 @@ Click on Instantiate Template (use the filled values)
 
 ![Instantiate the template](./img/instantiate-template-mongodb.png) 
 
-### Build the Loan Model
-
+#### wait until the mongodb is ready
 ```shell
-cd model
-mvn clean install
+oc get pods 
+NAME               READY   STATUS      RESTARTS   AGE
+mongodb-1-9zhxm    1/1     Running     0          41s
+mongodb-1-deploy   0/1     Completed   0          47s 
 ```
-
-
-### Build and deploy companies services management
-
 ####  Create  DB and collection
 
 Get mongo pod name
@@ -242,22 +246,34 @@ mongodb-1-g4mwf    1/1     Running     0          35s
 
 Create the schema 
 ```shell
-oc exec -it mongodb-1-g4mwf -- bash -c  'mongo companies -u admcomp -p r3dhat2020!' < ./manifest/scripts/create-schema.js  
+MONGO_POD_NAME=$(oc get pods --output=jsonpath={.items..metadata.name} -l 'name=mongodb')
+oc exec -it $MONGO_POD_NAME -- bash -c  'mongo companies -u admcomp -p r3dh4t2021!' < ./manifest/scripts/create-schema.js  
 ```
 add records
 ```shell
-oc exec -it mongodb-1-g4mwf -- bash -c  'mongo companies -u admcomp -p r3dhat2020!' < ./manifest/scripts/insert-records.js  
+oc exec -it $MONGO_POD_NAME -- bash -c  'mongo companies -u admcomp -p r3dh4t2021!' < ./manifest/scripts/insert-records.js  
 ```
-
-
-#### Install knative-serving (serverless)
+#### Install Openshift Serverless and knative-serving 
 
 Install openshift-serverless operator from OperatorHub
+
+https://docs.openshift.com/container-platform/4.6/serverless/installing_serverless/installing-openshift-serverless.html
 
 Create a knative-serving instance
 ```shell
 ./manifest/scripts/knative-serving.sh
 ```
+
+
+### Build the Loan Model
+
+```shell
+cd model
+mvn clean install
+```
+
+
+### Build and deploy companies services management
 
 #### Build and deploy serverless companies CRUD services
 
@@ -315,7 +331,7 @@ oc get routes.serving.knative.dev  | grep companies
 companies-svc   companies-svc-bbank.apps.ocp4.ouachani.org          true
 ```
 
-Browse the url  : http://companies-svc-bbank.apps.ocp4.ouachani.org/
+Browse the url  : http://companies-svc-$PROJECT.apps.ocp4.ouachani.org/
 
 ![Verify service](./img/list-companies.png) 
 
@@ -323,148 +339,141 @@ Browse the url  : http://companies-svc-bbank.apps.ocp4.ouachani.org/
 
 #### Install Strimzi, infinispan and kogito operator
 
-Install Infinispan/Red Hat Data Grid operator (operator version 1.1.X)
+Install Infinispan/Red Hat Data Grid operator (operator version 2.0.5)
 ![infinispan installation](./img/install-infinispan-11x.png) 
 Install Strimizi operator
 ![strimzi installation](./img/install-strimzi.png) 
 Install Kogito operator
 ![strimzi installation](./img/install-kogito.png) 
 
-#### Install data-index e.g the kogito-infra (kogito v0.17)
+#### Install data-index e.g the kogito-infra 
 
+Deploy the kogito infra (infinispan and kafka)
 ```shell
-kogito install infra infinispan --kind Infinispan --apiVersion infinispan.org/v1beta1
-kogito install infra kafka --kind Kafka --apiVersion kafka.strimzi.io/v1beta1
+kogito install infra kogito-infinispan-infra --kind Infinispan --apiVersion infinispan.org/v1 -p $PROJECT
+kogito install infra kogito-kafka-infra --kind Kafka --apiVersion kafka.strimzi.io/v1beta1 -p $PROJECT
+```
+create a data-index service
+
+``` shell
+kogito install data-index --infra kogito-infinispan-infra --infra kogito-kafka-infra -p $PROJECT 
+```
+
+Get the generated data-index configmap and add the infinispan client-intelligence property (quarkus.infinispan-client.client-intelligence=BASIC)
+
+``` shell
+oc get cm data-index-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
+echo "quarkus.infinispan-client.client-intelligence=BASIC" >> ./$TMP_DIR/application.properties
+oc create configmap data-index-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f 
+rm application.properties
 ```
 
 This infra, will manage kafka topics and infinispan cache ! That’s one of the magic kogito I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !
 
-Sure there is a magic, but it needs a little configuration. Infinispan, needs the models/processes to store all actions done by the process. Below an exemple :
+For each kogito service created, the Kogito operator will generate a configmap name nameofservice-protobuf-files that contains the protobuf of the models/processes to store all actions done by the process. 
 
-```protobuf
-syntax = "proto2"; 
-package org.kie.kogito.app; 
-import "kogito-types.proto";
+You can find the generated protobuf in /target/classes/persistence directory of each service.
 
-message Bilan { 
-    option java_package = "org.redhat.bbank.model";
-    optional double dl = 1; 
-    optional double ee = 2; 
-    optional double fl = 3; 
-    optional double fm = 4; 
-    optional double ga = 5; 
-    optional double gg = 6; 
-    optional double hn = 7; 
-    optional double hp = 8; 
-    optional double hq = 9; 
-    optional string siren = 10; 
-    repeated Variable variables = 11; 
-}
-message Notation { 
-    option java_package = "org.redhat.bbank.model";
-    optional double decoupageSectoriel = 1; 
-    optional string note = 2; 
-    optional string orientation = 3; 
-    optional double score = 4; 
-    optional string typeAiguillage = 5; 
-}
-message Variable { 
-    option java_package = "org.redhat.bbank.model";
-    optional string type = 1; 
-    optional double value = 2; 
-}
-```
+When the service is created with the property --infra, kogito operator will generate the configuration to connect to infinispan/kafka in (including the secrets), the name  
 
 
- You can find those files (generated by kogito when you build the services) in /target/classes/persistence directory. So, I create a configmap containing all protobuf models of processes : eligibility, notation, loan and data-index for you. Let’s just apply it on Openshift :
-
-```shell
-oc apply -f ./manifest/protobuf/data-index-protobuf-files.yml
-```
-
-create a data-index service
-
+Deploy and configure eligibility service 
 ``` shell
-kogito install data-index --infra kafka --infra infinispan
-```
-
-We need the infinispan username and password
-
-```shell
-oc get secret kogito-infinispan-credential -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
-password: ########
-username: developer
-```
-
-As I said we don’t need to manage the caches and topics, but we need to specify to Kogito services the kafka and infinispan properties to reach them.
-
-Modify the values of the properties values of host/port/credential of  kafka, infinispan, data-index , companies-svc services in ./manifest/*-cm.yml  :
-
-```properties
- #rest client 
-    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/url=companies-svc
-    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/scope=javax.enterprise.context.ApplicationScoped
-    
-    #infinispan 
-    quarkus.infinispan-client.sasl-mechanism=PLAIN
-    quarkus.infinispan-client.server-list=kogito-infinispan:11222
-    quarkus.infinispan-client.auth-username=developer
-    quarkus.infinispan-client.auth-password=jPBNvQ2uqg@xJ6Pd%
-
-    # kafka eligibility service 
-    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank.svc:9092
-```
-
-Create the protobuf  and services properties config maps that’s allow to data-index to load all protobufs and to loan, eligibility, notation services to load their infra properties 
-
-```shell
-oc apply -f ./manifest/properties/eligibility-properties-cm.yml
-oc apply -f ./manifest/protobuf/eligibility-protobuf-files.yml
-
-oc apply -f ./manifest/properties/notation-properties-cm.yml
-oc apply -f ./manifest/protobuf/notation-protobuf-files.yml
-
-oc apply -f ./manifest/properties/loan-properties-cm.yml
-oc apply -f ./manifest/protobuf/loan-protobuf-files.yml 
-```
-
-create  « eligibility, notation, loan » - kogito - services
-``` shell
-oc apply -f ./manifest/services/eligibility-kogitoapp.yml
-oc apply -f ./manifest/services/notation-kogitoapp.yml
-oc apply -f ./manifest/services/loan-kogitoapp.yml
-```
-
-Package and start the build
-```java
+#create the service throw kogito operator
+kogito deploy-service eligibility --infra kogito-infinispan-infra --infra kogito-kafka-infra
 cd eligibility
-mvn clean package -DskipTests=true 
-oc start-build eligibility --from-dir=target -n bbank 
-
-cd ../notation
-mvn clean package -DskipTests=true 
-oc start-build notation --from-dir=target -n bbank 
-
-cd ../loan
-./mvnw clean package -DskipTests=true 
-oc start-build loan --from-dir=target -n bbank 
-
-cd ..
+# package the eligibility service 
+mvn clean package -DskipTests=true
+# deploy the binaries to Openshift
+oc start-build eligibility --from-dir=target -n $PROJECT 
 ```
+Configure eligibility properties
+
+``` shell
+cd ..
+DATA_INDEX_URL=$(oc get route data-index --output=jsonpath={..spec.host})
+echo $DATA_INDEX_URL
+COMPANIES_ROUTE_URL=$(oc get routes.serving.knative.dev --output=jsonpath={..status.url})
+echo $COMPANIES_ROUTE_URL
+ELIGIBILITY_URL=$(oc get route eligibility --output=jsonpath={..spec.host})
+echo $ELIGIBILITY_URL
+cat ./manifest/properties/eligibility.properties >> ./$TMP_DIR/application.properties
+sed  -i "" s~COMPANIES_ROUTE_URL~${COMPANIES_ROUTE_URL}~g ./$TMP_DIR/application.properties 
+sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
+sed  -i "" s~ELIGIBILITY_URL~${ELIGIBILITY_URL}~g ./$TMP_DIR/application.properties
+oc get cm eligibility-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
+oc create configmap eligibility-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f 
+```
+
+Deploy and configure notation service
+ 
+``` shell
+#create the service throw kogito operator
+kogito deploy-service notation --infra kogito-infinispan-infra --infra kogito-kafka-infra
+cd notation
+# package the notation service 
+mvn clean package -DskipTests=true
+# deploy the binaries to Openshift
+oc start-build notation --from-dir=target -n $PROJECT 
+```
+Configure notation properties
+
+``` shell
+cd ..
+NOTATION_URL=$(oc get route notation --output=jsonpath={..spec.host})
+echo $NOTATION_URL
+cat ./manifest/properties/notation.properties >> ./$TMP_DIR/application.properties
+sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
+sed  -i "" s~NOTATION_URL~${NOTATION_URL}~g ./$TMP_DIR/application.properties
+oc get cm notation-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
+oc create configmap notation-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
+rm ./$TMP_DIR/application.properties
+```
+
+Deploy and configure loan service
+ 
+``` shell
+#create the service throw kogito operator
+kogito deploy-service loan --infra kogito-infinispan-infra --infra kogito-kafka-infra
+cd loan
+# package the notation service 
+mvn clean package -DskipTests=true
+# deploy the binaries to Openshift
+oc start-build loan --from-dir=target -n $PROJECT 
+```
+
+Configure loan properties
+
+``` shell
+LOAN_URL=$(oc get route loan --output=jsonpath={..spec.host})
+echo $LOAN_URL
+cat ./manifest/properties/loan.properties >> ./$TMP_DIR/application.properties
+sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
+sed  -i "" s~LOAN_URL~${LOAN_URL}~g ./$TMP_DIR/application.properties
+oc get cm loan-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
+oc create configmap loan-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
+rm ./$TMP_DIR/application.properties
+```
+
 
 From the kogito operator, create the management-console
 ![management console](./img/create-mgmt-console.png) 
-
-We have to deploy the task console from code, it's not included on the management console, we have to create a kogito service based on the latest task-console jar file.
-Get the file 
+Or using the cli
+``` shell
+kogito install mgmt-console -p $PROJECT
+```
+First get the route of the management console
 
 ```shell
-export TASK_CONSOLE_VERSION="0.17.0"
-TASK_CONSOLE_RUNNER=https://search.maven.org/remotecontent?filepath=org/kie/kogito/task-console/${TASK_CONSOLE_VERSION}/task-console-${TASK_CONSOLE_VERSION}-runner.jar
-wget -nc -O task-console-${TASK_CONSOLE_VERSION}-runner.jar ${TASK_CONSOLE_RUNNER}
-oc apply -f manifest/properties/task-console-auth.yml
-oc apply -f manifest/services/task-console.yml
-oc start-build task-console --from-file=./task-console-0.17.0-runner.jar -n bbank
+oc get route management-console  
+NAME                 HOST/PORT                                              PATH   SERVICES             PORT   TERMINATION   WILDCARD
+management-console   management-console-bbank.apps.ocp4.ouachani.org          management-console   8080                 None 
+```
+
+Install task-console
+
+``` shell
+kogito install task-console -p $PROJECT
 ```
 
 Get the task-console route
@@ -478,13 +487,6 @@ you can access to the console using 2 users jdoe/jdoe or alice/alice
 
 ## We are ready for tests, go find more people for help 😆
 
-First get the route of the management console
-
-```shell
-oc get route management-console  
-NAME                 HOST/PORT                                              PATH   SERVICES             PORT   TERMINATION   WILDCARD
-management-console   management-console-bbank.apps.ocp4.ouachani.org          management-console   8080                 None 
-```
 
 Let's execute 3 different cases :
 
@@ -496,6 +498,8 @@ curl -X POST "http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -H  "acce
 ```
 
 ### Loan Approved with note A
+
+curl -X POST "http://loan-bbankapps-infinispan.apps.cluster-c32b.c32b.example.opentlc.com/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"
 
 ```shell
 curl -X POST "http://loan-bbank.apps.ocp4.ouachani.org/loanValidation" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"

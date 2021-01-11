@@ -7,6 +7,6 @@ metadata:
 apiVersion: operator.knative.dev/v1alpha1
 kind: KnativeServing
 metadata:
-  name: knative-serving
-  namespace: knative-serving
+    name: knative-serving
+    namespace: knative-serving
 EOF
