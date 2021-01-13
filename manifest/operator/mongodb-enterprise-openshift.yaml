@@ -4,7 +4,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: enterprise-operator
-  namespace: mongo
+  namespace: PROJECTNAME
 imagePullSecrets: #pull secret to change/create using redhat registry credential https://labs.consol.de/devops/2020/01/14/installing-mongodb-on-openshift.html
 - name: openshift-pull-secrets
 ---
@@ -29,7 +29,7 @@ kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: enterprise-operator-mongodb-webhook-binding
-  namespace: mongo
+  namespace: PROJECTNAME
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -37,14 +37,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: enterprise-operator
-  namespace: mongo
+  namespace: PROJECTNAME
 ---
 # Source: mongodb-enterprise-operator/templates/operator-roles.yaml
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: enterprise-operator-mongodb-certs-binding
-  namespace: mongo
+  namespace: PROJECTNAME
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -52,14 +52,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: enterprise-operator
-  namespace: mongo
+  namespace: PROJECTNAME
 ---
 # Source: mongodb-enterprise-operator/templates/operator-roles.yaml
 kind:  Role 
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: enterprise-operator
-  namespace: mongo
+  namespace: PROJECTNAME
 rules:
 - apiGroups:
   - ""
@@ -116,7 +116,7 @@ kind:  RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: enterprise-operator
-  namespace: mongo
+  namespace: PROJECTNAME
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind:  Role 
@@ -124,7 +124,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: enterprise-operator
-  namespace: mongo
+  namespace: PROJECTNAME
 
 # This ClusterRole is needed if the user wants to use the Kubernetes CA
 # infrastructure to generate certificates.
@@ -134,7 +134,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: mongodb-enterprise-appdb
-  namespace: mongo
+  namespace: PROJECTNAME
 imagePullSecrets: #pull secret to change/create using redhat registry credential https://labs.consol.de/devops/2020/01/14/installing-mongodb-on-openshift.html
 - name: openshift-pull-secrets
 ---
@@ -143,7 +143,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: mongodb-enterprise-database-pods
-  namespace: mongo
+  namespace: PROJECTNAME
 imagePullSecrets: #pull secret to change/create using redhat registry credential https://labs.consol.de/devops/2020/01/14/installing-mongodb-on-openshift.html
 - name: openshift-pull-secrets
 ---
@@ -152,7 +152,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: mongodb-enterprise-ops-manager
-  namespace: mongo
+  namespace: PROJECTNAME
 imagePullSecrets: #pull secret to change/create using redhat registry credential https://labs.consol.de/devops/2020/01/14/installing-mongodb-on-openshift.html
 - name: openshift-pull-secrets
 ---
@@ -161,7 +161,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: mongodb-enterprise-appdb
-  namespace: mongo
+  namespace: PROJECTNAME
 rules:
   - apiGroups:
       - ""
@@ -181,7 +181,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: mongodb-enterprise-appdb
-  namespace: mongo
+  namespace: PROJECTNAME
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -189,14 +189,14 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: mongodb-enterprise-appdb
-    namespace: mongo
+    namespace: PROJECTNAME
 ---
 # Source: mongodb-enterprise-operator/templates/operator.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: enterprise-operator
-  namespace: mongo
+  namespace: PROJECTNAME
 spec:
   replicas: 1
   selector:

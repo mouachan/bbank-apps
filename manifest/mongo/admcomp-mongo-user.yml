@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mms-scram-admcomp
+  # corresponds to user.spec.passwordSecretKeyRef.name
+type: Opaque
+stringData:
+  password: r3dh4t2021!
+---
+apiVersion: mongodb.com/v1
+kind: MongoDBUser
+metadata:
+  name: admcomp
+spec:
+  passwordSecretKeyRef:
+    name: mms-scram-admcomp # the name of the secret that stores this user's password
+    key: password # the key in the secret that stores the password
+  username: admcomp
+  db: "admin"
+  project: "5ffdd293c5836b0070073f22"
+  mongodbResourceRef:
+    name: "red-replica-set"
+    # Match to MongoDB resource using authenticaiton
+  roles:
+  - db: "admin"
+    name: "clusterAdmin"
+  - db: "admin"
+    name: "userAdminAnyDatabase"
+  - db: "admin"
+    name: "readWriteAnyDatabase"
+  - db: "admin"
+    name: "dbAdminAnyDatabase"
+  security:
+    authentication:
+      enabled : true
+      modes: ["SCRAM"]
+    
+
+    

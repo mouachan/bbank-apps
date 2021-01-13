@@ -17,7 +17,8 @@ spec:
     # Match to metadata.name of the User Secret
     key: password
   username: "kogitouser"
-  db: "admin" #
+  db: "admin"
+  project: "5ffdd293c5836b0070073f22"
   mongodbResourceRef:
     name: "red-replica-set"
     # Match to MongoDB resource using authenticaiton
@@ -27,7 +28,9 @@ spec:
   - db: "admin"
     name: "userAdminAnyDatabase"
   - db: "admin"
-    name: "readWrite"
+    name: "readWriteAnyDatabase"
+  - db: "admin"
+    name: "dbAdminAnyDatabase"
   security:
     authentication:
       enabled : true

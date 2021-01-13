@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Secret
 stringData:
-  user: QVRCNNDW
-  publicApiKey: b4177478-8613-4e2a-98a1-729f686a1f49
+  user: LCFWZQUO
+  publicApiKey: 6b3a1fc9-2ff4-42e9-bf74-c048492eea90
 type: Opaque
 metadata:
   name: red-orga-api-key

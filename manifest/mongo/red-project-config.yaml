@@ -4,5 +4,5 @@ metadata:
   name: red-project-config
 data:
   projectName: "Red Project"
-  orgId: 5ff6ec6941fb38006ec50f48
-  baseUrl: http://ops-manager-svc.mongo.svc.cluster.local:8080
+  orgId: 5ffdbec1d7e470007283e62c
+  baseUrl: http://ops-manager-svc.bbankapps-mongo.svc.cluster.local:8080

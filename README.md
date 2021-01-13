@@ -49,10 +49,10 @@ We have finished with the functional stuff :)
  - a monitoring service : functional dashboard based on Prometheus and Grafana 
  - secure services : an SSO such as Keycloak 
  - event messaging : Kafka to manage events throws processes/services 
- - events cache : infinispan cache to manage the events store (which can give the chronology of the execution of the process for example)
+ - events cache : mongodb to manage the events store (which can give the chronology of the execution of the process for example)
  - Serverless : Knative makes the service scalable when needed, it only starts the service if the application receives a request 
 
-all services expose rest api, the processes use reactive messaging (kafka) to consume/push events, all events are stored in infinispan.
+all services expose rest api, the processes use reactive messaging (kafka) to consume/push events, all events are stored in mongodb.
 
 ## What’s the benefits of such architecture ?
 I took some quotes from [Kogito](_https://kogito.kie.org/_) because I found it realistic !
@@ -97,7 +97,8 @@ oc login https://ocp-url:6443 -u login -p password
 
 ### create new namespace
 ```shell
-oc new-project bbank
+export PROJECT=bbankapps-mongo
+oc new-project $PROJECT
 ```
 Routes include the project name, if you choose another one, don't forget to change it on the differents places/files (such kogito-realm) to use the correct urls. 
 ### add a github secret to checkout sources
@@ -125,7 +126,9 @@ oc secrets link default quay-secret --for=pull
 ### Clone the source from github
 
 ```git
-git clone https://github.com/mouachan/bbank-apps.git
+git clone -b 1.0.x-mongo https://github.com/mouachan/bbank-apps.git cd bbank-apps
+export TMP_DIR=tmp
+mkdir $TMP_DIR
 ```
 
 
@@ -189,13 +192,179 @@ It will create a realm "kogito", clients, users and credentials.
 
 
 
-### Create a persistent mongodb
+### MongoDB
 
-#### Option 1 : using oc cli
+#### Install using commandline
+MongoDB builds the container images from the latest builds of the following operating systems:
+
+    If you get your Kubernetes Operator from…	…the Container uses
+    quay.io mongodb-enterprise-operator repository or GitHub	Ubuntu 16.04
+    quay.io mongodb-enterprise-operator-ubi repository	Red Hat UBI 8
+    OpenShift	
+
+    Create a secret that contains credentials authorized to pull images from the registry.connect.redhat.com repository :
+    If you have not already, obtain a Red Hat subscription.
+
+    Create a Registry Service Account.
+
+    Click on your Registry Service Account, then click the Docker Configuration tab.
+
+    Download the <account-name>-auth.json file and open it in a text editor.
+
+    Copy the registry.redhat.io object, and paste another instance of this object into the file. Remember to add a comma after the first object. Rename the second object registry.connect.redhat.com, then save the file:
+    ```yaml
+    {
+    "auths": {
+    "registry.redhat.io": {
+        "auth": "<encoded-string>"
+    },
+    "auths": {
+    "registry.connect.redhat.com": {
+        "auth": "<encoded-string>"
+    }
+    }
+    }
+    ```
+    Create a openshift-pull-secret.yaml file with the contents of the modified <account-name>-auth.json file as stringData named .dockerconfigjson:
+    ```yaml
+    apiVersion: v1
+    kind: Secret
+    metadata:
+    name: openshift-pull-secret
+    stringData:
+    .dockerconfigjson: |
+        {
+            "auths": {
+            "registry.redhat.io": {
+                "auth": "<encoded-string>"
+            },
+            "registry.connect.redhat.com": {
+                "auth": "<encoded-string>"
+            }
+            }
+        }
+    type: kubernetes.io/dockerconfigjson
+    ```
+    The value you provide in the metadata.name field contains the secret name. Provide this value when asked for the <openshift-pull-secret>.
+
+    Create a secret from the openshift-pull-secret.yaml file:
+    ```shell
+    oc apply -f openshift-pull-secret.yaml -n $PROJECT
+    ```
+Before to install the operator you can follow https://docs.mongodb.com/kubernetes-operator/v1.8/tutorial/install-k8s-operator/#install-k8s-operator instructions to install the mandatroy crds, or apply the follwing instructions : 
+
+```shell
+#update the namespace in the crds
+cp ./manifest/operator/mongodb-enterprise-openshift.yaml ./$TMP_DIR/mongodb-enterprise-openshift.yaml
+sed  -i "" s~PROJECTNAME~${PROJECT}~g ./$TMP_DIR/mongodb-enterprise-openshift.yaml
+#apply
+oc apply -f ./$TMP_DIR/mongodb-enterprise-openshift.yaml -n $PROJECT
+```
+
+#### Or install MongoDB Entreprise Operator from Operator HUB
+
+select mongodb-entrerpise-operator from the OperatorHub, select the $PROJECT as a namespace and click on install
+![select mongodb entreprise operator](./img/mongodb-entreprise-operator.png) 
+![install mongodb entreprise operator](./img/install-mongodb-operator.png)
+
+
+#### Install and configure Ops Manager
+Create the admin credential of Ops Manager
+```shell   
+   oc apply -f ./manifest/mongo/opsman-admin-credential.yml -n $PROJECT 
+``` 
+Create the application DB credential of Ops Manager
+```shell 
+   oc apply -f ./manifest/mongo/opsman-db-credential.yml -n $PROJECT 
+``` 
+Deploy the OPS manager instance
+```shell 
+   oc apply -f ./manifest/mongo/opsman-instance.yml -n $PROJECT  
+``` 
+
+track the status of the Operations manager deployment
+```shell 
+oc get om -o yaml -w -n $PROJECT 
+status:
+  applicationDatabase:
+    lastTransition: "2021-01-12T15:10:38Z"
+    members: 3
+    phase: Running
+    type: ReplicaSet
+    version: 4.2.2-ent
+  backup:
+    phase: ""
+  opsManager:
+    lastTransition: "2021-01-12T15:10:38Z"
+    phase: Running
+    replicas: 1
+    url: http://ops-manager-svc.bbankapps-mongo.svc.cluster.local:8080
+    version: 4.2.8
+```
+
+Expose svc 
+```shell
+oc expose svc ops-manager-svc
+```
+Get the route 
+```shell
+oc get route
+NAME              HOST/PORT                                                                    PATH   SERVICES          PORT      TERMINATION   WILDCARD
+ops-manager-svc   ops-manager-svc-bbankapps-mongo.apps.cluster-c32b.c32b.example.opentlc.com          ops-manager-svc   mongodb                 None
+```
+So make sure you are logged into the Operations Manager GUI ops-manager-svc-bbankapps-mongo.apps.cluster-c32b.c32b.example.opentlc.com  (opsman/r3dh4t2021!) .
+Click on the very top right /Operations/ and /Organizations/. Click the green Button /NEW ORGANIZATION/. Give a name (we choose /red-orga/ here). On the next page you have the option to add additional users to your organization with certain roles. Click /Create Organization/ and the organization has come into being.
+
+You now need the organization ID. Go to the page of your newly created organization (e.g. via /Operations/ in the top right corner, /Organizations/ and then the corresponding entry in the list of organizations). Click /Settings/ in the left menu column and note down the organization ID given on that page.
+Next you must create an API key that allows the Operator to access the Operations Manager. Click /Access/ on the left and then select the tab /API keys/. Here click the big green button /Create API Key/. Note down the 8 character code below /Public Key/. Give a name to the API key and choose a permission - either /Organization Owner/ or /Organization Project Creator/. Click /Next/. Here is the only time when you see the private key completely in clear text. Write it down - you will need it shortly. 
+Add a whitelist entry to allow the operator to access the Operations Manager API. Use the Operations Manager pod ID address. You can get it with : 
+```shell
+oc get pod  -l k8s-app=mongodb-enterprise-operator -o jsonpath='{.items[0].status.podIP}' 
+10.128.2.32
+
+Update the private and the public key on the file ./manifest/mongo/red-orga-api-key.yaml 
+```
+Create the API key secret
+```shell
+oc apply -f ./manifest/mongo/red-orga-api-key.yaml -n $PROJECT
+```
+Update the projectName (we choose "Red Project"), orgId and baseUrl properties in ./manifest/mongo/red-project-config.yaml. You can find the organization ID under CONTEXT/red-orga/ORGANIZATION/Settings).
+To get the baseurl :
+```shell
+oc get om -o jsonpath='{.items[0].status.opsManager.url}'
+http://ops-manager-svc.bbankapps-mongo.svc.cluster.local:8080
+```
+
+Deploy a MongoDB replica set cluster with 3 nodes
+```shell
+oc apply -f ./manifest/mongo/red-replica-set.yml -n $PROJECT
+```
+That will create 3 replica set (statfulset) ressources, the project "Red Project"
+
+track the status of rhe replica set deployment
+```shell
+oc get mdb red-replica-set -o yaml -w
+------ truncked response
+status:
+  lastTransition: "2021-01-12T16:50:23Z"
+  link: http://ops-manager-svc.bbankapps-mongo.svc.cluster.local:8080/v2/5ffdd293c5836b0070073f22
+  members: 3
+  phase: Running
+  type: ReplicaSet
+  version: 4.2.2-ent
+-----
+```
+Update the "project" properties using the Project ID found under CONTEXT(select Red Project)/PROJECT/Settings in the files ./manifest/mongo/kogito-mongo-user.yml and ./manifest/mongo/admcomp-mongo-user.yml
+Apply the custom ressources to create the user kogitouser and admcomp with their respectives roles
+
+```shell
+oc apply -f ./manifest/mongo/kogito-mongo-user.yml -n $PROJECT
+```
+
+#### Add 
 
 ```shell
 #check if persistent mongo exist
-
 oc get templates -n openshift | grep mongodb
 
 #get paramters list
