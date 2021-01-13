@@ -30,6 +30,10 @@ spec:
     name: "readWriteAnyDatabase"
   - db: "admin"
     name: "dbAdminAnyDatabase"
+  - db: "companies"
+    name: "dbOwner"
+  - db: "companies"
+    name: "readWrite"
   security:
     authentication:
       enabled : true

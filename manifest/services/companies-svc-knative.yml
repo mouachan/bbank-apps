@@ -21,10 +21,7 @@ spec:
             - name: JAVA_OPTS
               value: "-Dvertx.cacheDirBase=/work/vertx"
             - name: MONGODB_CONNECTION_STRING
-              value: "mongodb://admcomp:r3dh42021!@mongodb:27017/companies"
+              value: "mongodb://admcomp:r3dh4t2021!@ed-replica-set-0.red-replica-set-svc.bbankapps-mongo.svc.cluster.local,red-replica-set-1.red-replica-set-svc.bbankapps-mongo.svc.cluster.local,red-replica-set-2.red-replica-set-svc.bbankapps-mongo.svc.cluster.local"
       imagePullSecrets:
         - name: quay-secret
-
-
-
 

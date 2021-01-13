@@ -176,7 +176,7 @@ oc get secret credential-bbank-sso -o go-template='{{range $k,$v := .data}}{{pri
 Get the RHSSO route
 ```shell
 oc get route | grep keycloak
-keycloak        keycloak-bbank.apps.ocp4.ouachani.org               keycloak        keycloak   reencrypt     None
+keycloak        keycloak-bbankapps-mongo.apps.ocp4.ouachani.org               keycloak        keycloak   reencrypt     None
 ```
 before to create the realm, if you use another namespace name, you must change all the urls used by the clients in the ./manifest/services/kogito-realm.json or from the administration console after the realm creation. 
 
@@ -335,7 +335,7 @@ oc get om -o jsonpath='{.items[0].status.opsManager.url}'
 http://ops-manager-svc.bbankapps-mongo.svc.cluster.local:8080
 ```
 
-Deploy a MongoDB replica set cluster with 3 nodes
+Deploy a MongoDB replica set cluster with 3 nodes ![replica set mongo documentation](https://docs.mongodb.com/kubernetes-operator/v1.8/tutorial/deploy-replica-set/)
 ```shell
 oc apply -f ./manifest/mongo/red-replica-set.yml -n $PROJECT
 ```
@@ -359,48 +359,19 @@ Apply the custom ressources to create the user kogitouser and admcomp with their
 
 ```shell
 oc apply -f ./manifest/mongo/kogito-mongo-user.yml -n $PROJECT
+oc apply -f ./manifest/mongo/admcomp-mongo-user.yml -n $PROJECT
 ```
-
-#### Add 
+expose POD
 
 ```shell
-#check if persistent mongo exist
-oc get templates -n openshift | grep mongodb
-
-#get paramters list
-oc process --parameters -n openshift mongodb-persistent
-
-#create the instannce
-oc process mongodb-persistent -n openshift -p MONGODB_USER=admcomp -p MONGODB_PASSWORD=r3dhat2020! -p MONGODB_DATABASE=companies -p MONGODB_ADMIN_PASSWORD=r3dhat2020! \
-| oc create -f -
+oc expose pod/red-replica-set-0 —type="NodePort"  —port 27017
+oc expose pod/red-replica-set-1 —type="NodePort"  —port 27017
+oc expose pod/red-replica-set-2 —type="NodePort"  —port 27017
 ```
-
-#### Option 2: using Openshift UI
-From Developer view, click on Add,select Database
-
-![Add database app](./img/catalog-db-ocp.png) 
-
-From the developer catalog, click on MongoDB Template (persistent)
-
-![Developer catalog](./img/developer-catalog.png) 
-
-Click on Instantiate Template (use the filled values)
-
-![Instantiate the template](./img/instantiate-template-mongodb.png) 
-
-### Build the Loan Model
-
-```shell
-cd model
-mvn clean install
-```
-
-
-### Build and deploy companies services management
 
 ####  Create  DB and collection
 
-Get mongo pod name
+Get mongodb replica sets 
 ```shell
 oc get pods    
 
@@ -411,21 +382,89 @@ mongodb-1-g4mwf    1/1     Running     0          35s
 
 Create the schema 
 ```shell
-oc exec -it mongodb-1-g4mwf -- bash -c  'mongo companies -u admcomp -p r3dhat2020!' < ./manifest/scripts/create-schema.js  
+oc exec -it red-replica-set-2 -- /var/lib/mongodb-mms-automation/mongodb-linux-x86_64-4.2.2-ent/bin/mongo --host red-replica-set/red-replica-set-0:27017,red-replica-set-1:27017,red-replica-set-2:27017 --authenticationDatabase admin -u admcomp -p r3dh4t2021! < ./manifest/scripts/create-schema.js 
+
+---- Result ----
+MongoDB shell version v4.2.2
+connecting to: mongodb://red-replica-set-0:27017,red-replica-set-1:27017,red-replica-set-2:27017/?authSource=admin&compressors=disabled&gssapiServiceName=mongodb&replicaSet=red-replica-set
+2021-01-13T06:40:19.603+0000 I  NETWORK  [js] Starting new replica set monitor for red-replica-set/red-replica-set-0:27017,red-replica-set-1:27017,red-replica-set-2:27017
+2021-01-13T06:40:19.603+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-1:27017
+2021-01-13T06:40:19.603+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-0:27017
+2021-01-13T06:40:19.603+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-2:27017
+2021-01-13T06:40:19.622+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-0.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017
+2021-01-13T06:40:19.625+0000 I  NETWORK  [ReplicaSetMonitor-TaskExecutor] Confirmed replica set for red-replica-set is red-replica-set/red-replica-set-0.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017,red-replica-set-1.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017,red-replica-set-2.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017
+2021-01-13T06:40:19.625+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-2.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017
+2021-01-13T06:40:19.625+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-1.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017
+Implicit session: session { "id" : UUID("aed27591-73cd-4289-8683-9f0ad43d3a69") }
+MongoDB server version: 4.2.2
+switched to db companies
+{
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1610520019, 1),
+		"signature" : {
+			"hash" : BinData(0,"UhLf3TpK2VncSGp0gzYyytNe9ck="),
+			"keyId" : NumberLong("6916916951851728899")
+		}
+	},
+	"operationTime" : Timestamp(1610520019, 1)
+}
+{
+	"ok" : 1,
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1610520019, 2),
+		"signature" : {
+			"hash" : BinData(0,"UhLf3TpK2VncSGp0gzYyytNe9ck="),
+			"keyId" : NumberLong("6916916951851728899")
+		}
+	},
+	"operationTime" : Timestamp(1610520019, 2)
+}
+bye
+----
 ```
 add records
 ```shell
-oc exec -it mongodb-1-g4mwf -- bash -c  'mongo companies -u admcomp -p r3dhat2020!' < ./manifest/scripts/insert-records.js  
-```
+oc exec -it red-replica-set-2 -- /var/lib/mongodb-mms-automation/mongodb-linux-x86_64-4.2.2-ent/bin/mongo --host red-replica-set/red-replica-set-0:27017,red-replica-set-1:27017,red-replica-set-2:27017 companies -u admcomp -p r3dh4t2021! < ./manifest/scripts/insert-records.js
 
+---- Result -----
+MongoDB shell version v4.2.2
+connecting to: mongodb://red-replica-set-0:27017,red-replica-set-1:27017,red-replica-set-2:27017/?authSource=admin&compressors=disabled&gssapiServiceName=mongodb&replicaSet=red-replica-set
+2021-01-13T06:42:06.475+0000 I  NETWORK  [js] Starting new replica set monitor for red-replica-set/red-replica-set-0:27017,red-replica-set-1:27017,red-replica-set-2:27017
+2021-01-13T06:42:06.475+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-1:27017
+2021-01-13T06:42:06.475+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-2:27017
+2021-01-13T06:42:06.475+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-0:27017
+2021-01-13T06:42:06.488+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-0.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017
+2021-01-13T06:42:06.500+0000 I  NETWORK  [ReplicaSetMonitor-TaskExecutor] Confirmed replica set for red-replica-set is red-replica-set/red-replica-set-0.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017,red-replica-set-1.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017,red-replica-set-2.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017
+2021-01-13T06:42:06.500+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-2.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017
+2021-01-13T06:42:06.500+0000 I  CONNPOOL [ReplicaSetMonitor-TaskExecutor] Connecting to red-replica-set-1.red-replica-set-svc.bbankapps-mongo.svc.cluster.local:27017
+Implicit session: session { "id" : UUID("e53a1a4b-e8cd-4977-a1a7-666bf743d916") }
+MongoDB server version: 4.2.2
+WriteResult({ "nInserted" : 1 })
+WriteResult({ "nInserted" : 1 })
+WriteResult({ "nInserted" : 1 })
+WriteResult({ "nInserted" : 1 })
+bye
+------  
+```
 
 #### Install knative-serving (serverless)
 
 Install openshift-serverless operator from OperatorHub
 
+https://docs.openshift.com/container-platform/4.6/serverless/installing_serverless/installing-openshift-serverless.html
+
+
 Create a knative-serving instance
 ```shell
 ./manifest/scripts/knative-serving.sh
+```
+
+### Build the Loan Model
+
+```shell
+cd model
+mvn clean install
 ```
 
 #### Build and deploy serverless companies CRUD services
@@ -434,22 +473,16 @@ delete the services if exist
 ```shell
 oc delete all,configmap,pvc,serviceaccount,rolebinding --selector app=companies-svc
 ```
-##### option 1 : source to image native build (S2I)
-The native build consume a lot of ressources 
 
-```shell
-oc new-app quay.io/quarkus/ubi-quarkus-native-s2i:20.1.0-java11~https://github.com/mouachan/bbank-apps.git \
---name=companies-svc \
---context-dir=companies-svc \
--e MONGODB_SERVICE_HOST=mongodb \
--e MONGODB_SERVICE_PORT=27017 \
---source-secret=github
-```
-
-##### option 2 :  build the container locally and push to the registry (java or native)
+##### build the container locally and push to the registry (java or native)
 ```shell
 cd ../companies-svc
 ```
+Update the following commands, ./manifest/services/companies-svc-knative.yml ./manifest/services/companies-svc-native-knative.yml files with 
+- your own quay/docker repository
+- the connection string should be : username:password@replica-set-x.replica-set-service.namespace.svc.cluster.local              
+
+mongodb://admcomp:r3dh4t2021!@ed-replica-set-0.red-replica-set-svc.bbankapps-mongo.svc.cluster.local,red-replica-set-1.red-replica-set-svc.bbankapps-mongo.svc.cluster.local,red-replica-set-2.red-replica-set-svc.bbankapps-mongo.svc.cluster.local"
 
 java
 ```shell
@@ -469,12 +502,15 @@ docker push quay.io/mouachan/companies-svc:native-1.0
 deploy a knative service 
 java
 ```shell
-oc apply -f ../manifest/services/companies-svc-knative.yml 
+cd ..
+#change the namespace if your namespace is different to bbankapps-mongo
+sed  -i "" s~bbankapps-mongo${PROJECT}~g ./manifest/services/companies-svc-knative.yml 
+oc apply -f ./manifest/services/companies-svc-knative.yml -n $PROJECT
 ```
 native
 ```shell
-oc apply -f ../manifest/services/companies-svc-native-knative.yml 
-oc expose svc/ 
+sed  -i "" s~bbankapps-mongo${PROJECT}~g ./manifest/services/companies-svc-native-knative.yml 
+oc apply -f ./manifest/services/companies-svc-native-knative.yml -n $PROJECT
 ```
 
 #### verify the service availability
@@ -484,7 +520,7 @@ oc get routes.serving.knative.dev  | grep companies
 companies-svc   companies-svc-bbank.apps.ocp4.ouachani.org          true
 ```
 
-Browse the url  : http://companies-svc-bbank.apps.ocp4.ouachani.org/
+Browse the url  : http://companies-svc-bbankapps-mongo.apps.ocp4.ouachani.org/
 
 ![Verify service](./img/list-companies.png) 
 
@@ -493,22 +529,29 @@ Browse the url  : http://companies-svc-bbank.apps.ocp4.ouachani.org/
 #### Install Strimzi, infinispan and kogito operator
 
 Install Infinispan/Red Hat Data Grid operator (operator version 1.1.X)
-![infinispan installation](./img/install-infinispan-11x.png) 
 Install Strimizi operator
 ![strimzi installation](./img/install-strimzi.png) 
 Install Kogito operator
-![strimzi installation](./img/install-kogito.png) 
+![kogito installation](./img/install-kogito.png) 
 
 #### Install data-index e.g the kogito-infra (kogito v0.17)
+Deploy kafka infra
+```shell
+kogito install infra kogito-kafka-infra --kind Kafka --apiVersion kafka.strimzi.io/v1beta1 -p $PROJECT
+```
+Deploy data-index service
 
 ```shell
-kogito install infra infinispan --kind Infinispan --apiVersion infinispan.org/v1beta1
-kogito install infra kafka --kind Kafka --apiVersion kafka.strimzi.io/v1beta1
+kogito install data-index --infra kogito-kafka-infra --image quay.io/kiegroup/kogito-data-index-mongodb:latest --config quarkus.mongodb.connection-string='mongodb://kogitouser:r3dh4t2021!@ red-replica-set-0.red-replica-set-svc.bbankapps-mongo.svc.cluster.local,red-replica-set-1.red-replica-set-svc.bbankapps-mongo.svc.cluster.local,red-replica-set-2.red-replica-set-svc.bbankapps-mongo.svc.cluster.local' --config quarkus.mongodb.database=kogito —config quarkus.mongodb.credentials.username=kogitouser --config quarkus.mongodb.credentials.password='r3dh4t2021!'  -p $PROJECT
 ```
 
 This infra, will manage kafka topics and infinispan cache ! That’s one of the magic kogito I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !
 
-Sure there is a magic, but it needs a little configuration. Infinispan, needs the models/processes to store all actions done by the process. Below an exemple :
+For each kogito service created, the Kogito operator will generate a configmap name nameofservice-protobuf-files that contains the protobuf of the models/processes to store all actions done by the process.
+
+You can find the generated protobuf in /target/classes/persistence directory of each service.
+
+Below an example of the gernerated protobuf
 
 ```protobuf
 syntax = "proto2"; 
@@ -545,81 +588,80 @@ message Variable {
 ```
 
 
- You can find those files (generated by kogito when you build the services) in /target/classes/persistence directory. So, I create a configmap containing all protobuf models of processes : eligibility, notation, loan and data-index for you. Let’s just apply it on Openshift :
+Let's deploy the kogito services
 
-```shell
-oc apply -f ./manifest/protobuf/data-index-protobuf-files.yml
+
+Deploy and configure eligibility service
 ```
-
-create a data-index service
-
-``` shell
-kogito install data-index --infra kafka --infra infinispan
-```
-
-We need the infinispan username and password
-
-```shell
-oc get secret kogito-infinispan-credential -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
-password: ########
-username: developer
-```
-
-As I said we don’t need to manage the caches and topics, but we need to specify to Kogito services the kafka and infinispan properties to reach them.
-
-Modify the values of the properties values of host/port/credential of  kafka, infinispan, data-index , companies-svc services in ./manifest/*-cm.yml  :
-
-```properties
- #rest client 
-    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/url=companies-svc
-    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/scope=javax.enterprise.context.ApplicationScoped
-    
-    #infinispan 
-    quarkus.infinispan-client.sasl-mechanism=PLAIN
-    quarkus.infinispan-client.server-list=kogito-infinispan:11222
-    quarkus.infinispan-client.auth-username=developer
-    quarkus.infinispan-client.auth-password=jPBNvQ2uqg@xJ6Pd%
-
-    # kafka eligibility service 
-    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbank.svc:9092
-```
-
-Create the protobuf  and services properties config maps that’s allow to data-index to load all protobufs and to loan, eligibility, notation services to load their infra properties 
-
-```shell
-oc apply -f ./manifest/properties/eligibility-properties-cm.yml
-oc apply -f ./manifest/protobuf/eligibility-protobuf-files.yml
-
-oc apply -f ./manifest/properties/notation-properties-cm.yml
-oc apply -f ./manifest/protobuf/notation-protobuf-files.yml
-
-oc apply -f ./manifest/properties/loan-properties-cm.yml
-oc apply -f ./manifest/protobuf/loan-protobuf-files.yml 
-```
-
-create  « eligibility, notation, loan » - kogito - services
-``` shell
-oc apply -f ./manifest/services/eligibility-kogitoapp.yml
-oc apply -f ./manifest/services/notation-kogitoapp.yml
-oc apply -f ./manifest/services/loan-kogitoapp.yml
-```
-
-Package and start the build
-```java
+#create the service throw kogito operator
+kogito deploy-service eligibility --enable-persistence --enable-events
 cd eligibility
-mvn clean package -DskipTests=true 
-oc start-build eligibility --from-dir=target -n bbank 
-
-cd ../notation
-mvn clean package -DskipTests=true 
-oc start-build notation --from-dir=target -n bbank 
-
-cd ../loan
-./mvnw clean package -DskipTests=true 
-oc start-build loan --from-dir=target -n bbank 
-
-cd ..
+# package the eligibility service 
+mvn clean package -DskipTests=true
+# deploy the binaries to Openshift
+oc start-build eligibility --from-dir=target -n $PROJECT 
 ```
+Configure eligibility properties
+```
+cd ..
+DATA_INDEX_URL=$(oc get route data-index --output=jsonpath={..spec.host})
+echo $DATA_INDEX_URL
+COMPANIES_ROUTE_URL=$(oc get routes.serving.knative.dev --output=jsonpath={..status.url})
+echo $COMPANIES_ROUTE_URL
+ELIGIBILITY_URL=$(oc get route eligibility --output=jsonpath={..spec.host})
+echo $ELIGIBILITY_URL
+cat ./manifest/properties/eligibility.properties >> ./$TMP_DIR/application.properties
+sed  -i "" s~COMPANIES_ROUTE_URL~${COMPANIES_ROUTE_URL}~g ./$TMP_DIR/application.properties 
+sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
+sed  -i "" s~ELIGIBILITY_URL~${ELIGIBILITY_URL}~g ./$TMP_DIR/application.properties
+oc get cm data-index-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
+oc create configmap data-index-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f 
+```
+Deploy and configure notation service
+```
+#create the service throw kogito operator
+kogito deploy-service notation --enable-persistence --enable-events
+cd notation
+# package the notation service 
+mvn clean package -DskipTests=true
+# deploy the binaries to Openshift
+oc start-build notation --from-dir=target -n $PROJECT 
+```
+Configure notation properties
+```
+cd ..
+NOTATION_URL=$(oc get route notation --output=jsonpath={..spec.host})
+echo $NOTATION_URL
+cat ./manifest/properties/notation.properties >> ./$TMP_DIR/application.properties
+sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
+sed  -i "" s~NOTATION_URL~${NOTATION_URL}~g ./$TMP_DIR/application.properties
+oc get cm data-index-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
+oc create configmap data-index-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
+rm ./$TMP_DIR/application.properties
+```
+Deploy and configure loan service
+```
+#create the service throw kogito operator
+kogito deploy-service loan --enable-persistence --enable-events
+cd loan
+# package the notation service 
+mvn clean package -DskipTests=true
+# deploy the binaries to Openshift
+oc start-build loan --from-dir=target -n $PROJECT 
+```
+Configure loan properties
+```
+LOAN_URL=$(oc get route loan --output=jsonpath={..spec.host})
+echo $LOAN_URL
+cat ./manifest/properties/loan.properties >> ./$TMP_DIR/application.properties
+sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
+sed  -i "" s~LOAN_URL~${LOAN_URL}~g ./$TMP_DIR/application.properties
+oc get cm data-index-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
+oc create configmap data-index-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
+rm ./$TMP_DIR/application.properties
+```
+
+
 
 From the kogito operator, create the management-console
 ![management console](./img/create-mgmt-console.png) 

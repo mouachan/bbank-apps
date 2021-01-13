@@ -1,3 +1,4 @@
+use companies
 db.createCollection( "companyInfo", {
    validator: { $jsonSchema: {
       bsonType: "object",
