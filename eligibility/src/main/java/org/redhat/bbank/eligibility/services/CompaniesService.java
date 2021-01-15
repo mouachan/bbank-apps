@@ -17,11 +17,11 @@ public class CompaniesService {
     CompaniesRemoteService companiesRemoteService;
 
     //@Fallback(fallbackMethod = "missingCompany")
-    public boolean get(String siren) {
+    public Boolean get(String siren) {
         return companiesRemoteService.get(siren);
     }
     
-    public boolean missingCompany(String siren) {
+    public Boolean missingCompany(String siren) {
         return false;
     }
 

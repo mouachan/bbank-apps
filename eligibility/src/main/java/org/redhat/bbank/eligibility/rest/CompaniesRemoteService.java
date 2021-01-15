@@ -20,7 +20,7 @@ public interface CompaniesRemoteService {
     @GET
     @Path("/companies/exist/{siren}")
     @Produces("application/json")
-    boolean get(@PathParam("siren") String siren);
+    Boolean get(@PathParam("siren") String siren);
 
    
 
