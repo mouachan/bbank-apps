@@ -194,6 +194,11 @@ It will create a realm "kogito", clients, users and credentials.
 
 ### MongoDB
 
+Some usefull links 
+![Mongodb installation github](https://github.com/mongodb/mongodb-enterprise-kubernetes/blob/master/openshift-install.md)
+![Mongodb installation documentation](https://docs.mongodb.com/kubernetes-operator/v1.8/installation/)
+![Deploy Replicaset](https://docs.mongodb.com/kubernetes-operator/v1.8/tutorial/deploy-replica-set/)
+
 #### Install using commandline
 MongoDB builds the container images from the latest builds of the following operating systems:
 
@@ -636,7 +641,7 @@ cat ./manifest/properties/notation.properties >> ./$TMP_DIR/application.properti
 sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
 sed  -i "" s~NOTATION_URL~${NOTATION_URL}~g ./$TMP_DIR/application.properties
 oc get cm data-index-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
-oc create configmap data-index-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
+oc create configmap notation-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
 rm ./$TMP_DIR/application.properties
 ```
 Deploy and configure loan service
@@ -650,14 +655,14 @@ mvn clean package -DskipTests=true
 oc start-build loan --from-dir=target -n $PROJECT 
 ```
 Configure loan properties
-```
+```shell
 LOAN_URL=$(oc get route loan --output=jsonpath={..spec.host})
 echo $LOAN_URL
 cat ./manifest/properties/loan.properties >> ./$TMP_DIR/application.properties
 sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
 sed  -i "" s~LOAN_URL~${LOAN_URL}~g ./$TMP_DIR/application.properties
 oc get cm data-index-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
-oc create configmap data-index-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
+oc create configmap loan-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
 rm ./$TMP_DIR/application.properties
 ```
 
@@ -666,22 +671,26 @@ rm ./$TMP_DIR/application.properties
 From the kogito operator, create the management-console
 ![management console](./img/create-mgmt-console.png) 
 
-We have to deploy the task console from code, it's not included on the management console, we have to create a kogito service based on the latest task-console jar file.
-Get the file 
-
+Or using cli
 ```shell
-export TASK_CONSOLE_VERSION="0.17.0"
-TASK_CONSOLE_RUNNER=https://search.maven.org/remotecontent?filepath=org/kie/kogito/task-console/${TASK_CONSOLE_VERSION}/task-console-${TASK_CONSOLE_VERSION}-runner.jar
-wget -nc -O task-console-${TASK_CONSOLE_VERSION}-runner.jar ${TASK_CONSOLE_RUNNER}
-oc apply -f manifest/properties/task-console-auth.yml
-oc apply -f manifest/services/task-console.yml
-oc start-build task-console --from-file=./task-console-0.17.0-runner.jar -n bbank
+kogito install mgmt-console -p $PROJECT
 ```
 
+First get the route of the management console
+```shell
+oc get route management-console  
+NAME                 HOST/PORT                                              PATH   SERVICES             PORT   TERMINATION   WILDCARD
+management-console   management-console-bbankapps-mongo.apps.ocp4.ouachani.org          management-console   8080                 None 
+```
+
+Install task-console
+```shell
+kogito install task-console -p $PROJECT
+```
 Get the task-console route
 ```shell
 oc get route | grep task-console
-task-console         task-console-bbank.apps.ocp4.ouachani.org                task-console         http                     None
+task-console         task-console-bbankapps-mongo.apps.ocp4.ouachani.org     
 ```
 you can access to the console using 2 users jdoe/jdoe or alice/alice
 ![task console](./img/task-console.png) 
@@ -689,13 +698,6 @@ you can access to the console using 2 users jdoe/jdoe or alice/alice
 
 ## We are ready for tests, go find more people for help 😆
 
-First get the route of the management console
-
-```shell
-oc get route management-console  
-NAME                 HOST/PORT                                              PATH   SERVICES             PORT   TERMINATION   WILDCARD
-management-console   management-console-bbank.apps.ocp4.ouachani.org          management-console   8080                 None 
-```
 
 Let's execute 3 different cases :
 
