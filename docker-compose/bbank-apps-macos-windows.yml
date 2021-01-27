@@ -4,16 +4,16 @@ volumes:
       driver: local
 services:
 
- #infinispan:
- #   image: infinispan/server:11.0.7.Final
- #   ports:
- #       - 11222:11222
- #   command: "/opt/infinispan/bin/server.sh -c infinispan-demo.xml"
- #   volumes:
- #     - ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z
- #     - ./infinispan/users.properties:/opt/infinispan/server/conf/users.properties:z
- #     - ./infinispan/identities.yaml:/opt/infinispan/server/conf/generated-identities.yaml:z
- #     - ./infinispan/jgroups-tcp.xml:/opt/infinispan/server/conf/jgroups-tcp.xml:z
+  infinispan:
+   image: infinispan/server:11.0.7.Final
+   ports:
+       - 11222:11222
+   command: "/opt/infinispan/bin/server.sh -c infinispan-demo.xml"
+   volumes:
+     - ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z
+     - ./infinispan/users.properties:/opt/infinispan/server/conf/users.properties:z
+     - ./infinispan/identities.yaml:/opt/infinispan/server/conf/generated-identities.yaml:z
+     - ./infinispan/jgroups-tcp.xml:/opt/infinispan/server/conf/jgroups-tcp.xml:z
 
   mongo:
     image: mongo:4.0.10
