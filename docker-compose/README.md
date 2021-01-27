@@ -51,7 +51,7 @@ To stop all services, simply run:
 docker-compose stop
 ```
 It is also recommended to remove any of stopped containers by running:
-``` docker
+```docker
 docker-compose rm
 ```
 For more details please check the Docker Compose documentation.
