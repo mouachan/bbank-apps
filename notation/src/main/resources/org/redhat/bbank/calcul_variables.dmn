@@ -95,7 +95,7 @@
       <dmn:requiredInput href="#_F4F81372-91D2-4E9A-9DC2-3BEA5A34E694"/>
     </dmn:informationRequirement>
     <dmn:literalExpression id="_EA65DCE4-0CE8-4FEF-8E0B-165BEB1D1027">
-      <dmn:text>sum(bilan.gg,bilan.ga,bilan.hp,bilan.hq)</dmn:text>
+      <dmn:text>sum(bilan.gg,bilan.ga,bilan.hp,bilan.hq) / prod</dmn:text>
     </dmn:literalExpression>
   </dmn:decision>
   <dmndi:DMNDI>
