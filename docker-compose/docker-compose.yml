@@ -2,20 +2,6 @@ version: '2.1'
 
 services:
 
-  infinispan:
-    image: infinispan/server:11.0.4.Final
-    container_name: infinispan
-    ports:
-        - 11222:11222
-    command: "/opt/infinispan/bin/server.sh -c infinispan-demo.xml"
-    volumes:
-      - ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:11222/rest/v2/cache-managers/default/health/status" ]
-      interval: 1s
-      timeout: 1s
-      retries: 50
-
   zookeeper:
     container_name: zookeeper
     image: strimzi/kafka:0.20.1-kafka-2.6.0
@@ -74,18 +60,16 @@ services:
 
   data-index:
     container_name: data-index
-    image: quay.io/kiegroup/kogito-data-index-infinispan:${KOGITO_VERSION}
+    image: quay.io/kiegroup/kogito-data-index-mongodb:${KOGITO_VERSION}
     ports:
       - "8180:8080"
     depends_on:
       kafka:
         condition: service_started
-      infinispan:
-        condition: service_healthy
     volumes:
-      - ./target/protobuf:/home/kogito/data/protobufs/
+      - ./data-index/persistence:/home/kogito/data/protobufs/
     environment:
-      QUARKUS_INFINISPAN_CLIENT_SERVER_LIST: infinispan:11222
+      QUARKUS_MONGODB_CONNECTION_STRING: mongodb://localhost:27017 
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KOGITO_DATA_INDEX_PROPS: -Dkogito.protobuf.folder=/home/kogito/data/protobufs/
 
@@ -93,6 +77,47 @@ services:
     container_name: management-console
     image: quay.io/kiegroup/kogito-management-console:${KOGITO_VERSION}
     ports:
-      - 8280:8080
+      - 8780:8080
     depends_on:
       - data-index
+
+  postgres:
+      image: postgres
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: password
+  keycloak:
+      image: quay.io/keycloak/keycloak:latest
+      command: -Dkeycloak.profile.feature.upload_scripts=enabled
+      environment:
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_SCHEMA: public
+        DB_PASSWORD: password
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: admin
+        KEYCLOAK_IMPORT: /tmp/kogito-realm.json 
+        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+        #JDBC_PARAMS: "ssl=true"
+      ports:
+        - 8280:8080
+      volumes:
+        - ./keycloak/config/kogito-realm.json:/tmp/kogito-realm.json
+      depends_on:
+        - postgres
+  mongo:
+      image: mongo:4.0.10
+      ports:
+        - 27017:27017
+      volumes:
+        - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+        - ./mongo-volume:/data/db
+      environment:
+        - MONGO_INITDB_DATABASE=kogito
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=admin
