@@ -3,13 +3,13 @@
 
 To allow a quick setup of all services required to run this demo, we provide a docker compose template that starts the following services:
 
-Kafka 
-Prometheus 
-Grafana 
-Kogito Data Index 
-Kogito Management Console 
-Keycloak 
-Mongo
+* Kafka 
+* Prometheus 
+* Grafana 
+* Kogito Data Index 
+* Kogito Management Console 
+* Keycloak 
+* Mongo
 
 This setup ensures that all services are connected using the default configuration as well as provisioning the bbank-apps dashboard to Grafana.
 
@@ -18,9 +18,9 @@ In order to use it, please ensure you have Docker Compose installed on your mach
 Starting required services You should start all the services before you execute any of the bbank-apps applications, to do that please execute:
 
 For Linux and MacOS:
-
+```shell
 ./startServices.sh
-
+```
 For Windows:
 
 Create a .env file with the content containing the version of the Kogito images you would like to run, example:
@@ -31,21 +31,26 @@ Then run
 
 docker-compose up Once all services bootstrap, the following ports will be assigned on your local machine:
 
-Kafka: 9092 
-Prometheus: 9090 
-Grafana: 3000 
-Data Index: 8180 
-Management Console: 8780 
-Keycloak: 8280
-Mongo: 27017 
+* Kafka: 9092 
+* Prometheus: 9090 
+* Grafana: 3000 
+* Data Index: 8180 
+* Management Console: 8780 
+* Keycloak: 8280
+* Mongo: 27017 
 
 
 To access the Grafana dashboard, simply navigate to http://localhost:3000 and login using the default username 'admin' and password 'admin'. Prometheus will also be available on http://localhost:9090, no authentication is required.
 
 Stopping and removing volume data To stop all services, simply run:
-
-docker-compose stop It is also recommended to remove any of stopped containers by running:
-
-docker-compose rm For more details please check the Docker Compose documentation.
-
+```docker
+docker-compose stop 
+```
+It is also recommended to remove any of stopped containers by running:
+```docker
+docker-compose rm 
+```
+For more details please check the Docker Compose documentation.
+```docker
 docker-compose --help
+```
