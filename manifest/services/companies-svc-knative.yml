@@ -21,7 +21,7 @@ spec:
             - name: JAVA_OPTS
               value: "-Dvertx.cacheDirBase=/work/vertx"
             - name: MONGODB_CONNECTION_STRING
-              value: 'mongodb://admcomp:r3dh4t2021!@mongodb:27017'
+              value: 'mongodb://admcomp:r3dhat2020!@mongodb:27017'
       imagePullSecrets:
         - name: quay-secret
 

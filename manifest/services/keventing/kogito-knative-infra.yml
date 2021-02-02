@@ -1,0 +1,10 @@
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoInfra
+metadata:
+  name: kogito-knative-infra
+spec:
+  # Bind Knative Broker to the service
+  resource:
+    apiVersion: eventing.knative.dev/v1
+    kind: Broker
+    name: default

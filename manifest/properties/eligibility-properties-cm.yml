@@ -12,7 +12,7 @@ data:
     quarkus.index-dependency.model.artifact-id=model
 
     #rest client 
-    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/url=COMPANIES_ROUTE_URL
+    org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/url=http://companies-svc-bbankapps.apps.ocp4.ouachani.org/companies
     org.redhat.bbank.eligibility.rest.CompaniesRemoteService/mp-rest/scope=javax.enterprise.context.ApplicationScoped
     # OIDC server (keycloak) connection config
     #quarkus.oidc.auth-server-url=https://keycloak-bbtest.apps.ocp4.ouachani.org/auth/realms/kogito
@@ -23,24 +23,24 @@ data:
     #quarkus.http.auth.permission.authenticated.policy=authenticated
     
     #kogito (data-index)
-    kogito.service.url=ELIGIBILITY_URL
-    kogito.dataindex.http.url=DATA_INDEX_URL
-    kogito.dataindex.ws.url=ws://data-index:8080
-    quarkus.http.cors=true    
+    # kogito.service.url=ELIGIBILITY_URL
+    # kogito.dataindex.http.url=DATA_INDEX_URL
+    # kogito.dataindex.ws.url=ws://data-index:8080
+    # quarkus.http.cors=true    
 
-    infinispan.remote.sasl-mechanism=PLAIN
-    infinispan.remote.server-list=kogito-infinispan:11222
-    infinispan.remote.trust-store-file-name=/home/kogito/certs/infinispan/truststore.p12
-    infinispan.remote.trust-store-password=changeit
-    infinispan.remote.trust-store-type=PKCS12
-    infinispan.remote.use-auth=true
-    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbtest.svc:9092
-    quarkus.infinispan-client.sasl-mechanism=PLAIN
-    quarkus.infinispan-client.server-list=kogito-infinispan:11222
-    quarkus.infinispan-client.trust-store=/home/kogito/certs/infinispan/truststore.p12
-    quarkus.infinispan-client.trust-store-password=changeit
-    quarkus.infinispan-client.trust-store-type=PKCS12
-    quarkus.infinispan-client.use-auth=true
+    # infinispan.remote.sasl-mechanism=PLAIN
+    # infinispan.remote.server-list=kogito-infinispan:11222
+    # infinispan.remote.trust-store-file-name=/home/kogito/certs/infinispan/truststore.p12
+    # infinispan.remote.trust-store-password=changeit
+    # infinispan.remote.trust-store-type=PKCS12
+    # infinispan.remote.use-auth=true
+    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbankapps-kevent.svc:9092
+    # quarkus.infinispan-client.sasl-mechanism=PLAIN
+    # quarkus.infinispan-client.server-list=kogito-infinispan:11222
+    # quarkus.infinispan-client.trust-store=/home/kogito/certs/infinispan/truststore.p12
+    # quarkus.infinispan-client.trust-store-password=changeit
+    # quarkus.infinispan-client.trust-store-type=PKCS12
+    # quarkus.infinispan-client.use-auth=true
     
     mp.messaging.incoming.kogito_incoming_stream.bootstrap.servers=${kafka.bootstrap.servers}
     mp.messaging.outgoing.kogito_outgoing_stream.bootstrap.servers=${kafka.bootstrap.servers}

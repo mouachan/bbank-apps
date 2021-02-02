@@ -6,81 +6,26 @@ data:
   application.properties : |-
     # Maximum Java heap to be used during the native image generation
     quarkus.native.native-image-xmx=4g
-    
+    quarkus.http.cors=true
+    kogito.service.url=http://notation-bbankapps-kevent.apps.cluster-e80d.e80d.example.opentlc.com
+    kogito.dataindex.http.url=http://data-index-bbankapps-kevent.apps.cluster-e80d.e80d.example.opentlc.com
+    kogito.dataindex.ws.url=ws://data-index:8080
     #index of model (jandex)
     quarkus.index-dependency.model.group-id=org.redhat.bbank
     quarkus.index-dependency.model.artifact-id=model
-    
     infinispan.remote.sasl-mechanism=PLAIN
     infinispan.remote.server-list=kogito-infinispan:11222
     infinispan.remote.trust-store-file-name=/home/kogito/certs/infinispan/truststore.p12
     infinispan.remote.trust-store-password=changeit
     infinispan.remote.trust-store-type=PKCS12
     infinispan.remote.use-auth=true
-    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbtest.svc:9092
+    kafka.bootstrap.servers=kogito-kafka-kafka-bootstrap.bbankapps-kevent.svc:9092
     quarkus.infinispan-client.sasl-mechanism=PLAIN
     quarkus.infinispan-client.server-list=kogito-infinispan:11222
     quarkus.infinispan-client.trust-store=/home/kogito/certs/infinispan/truststore.p12
     quarkus.infinispan-client.trust-store-password=changeit
     quarkus.infinispan-client.trust-store-type=PKCS12
     quarkus.infinispan-client.use-auth=true
-
-    # OIDC server (keycloak) connection config
-    #quarkus.oidc.auth-server-url=https://keycloak-bbtest.apps.ocp4.ouachani.org/auth/realms/bbank
-    #quarkus.oidc.client-id=bbank-sso-client
-    #quarkus.oidc.credentials.secret=secret
-    # Endpoint security configuration
-    # quarkus.http.auth.permission.authenticated.paths=/*
-    #quarkus.http.auth.permission.authenticated.policy=authenticated
-    
-    #kogito 
-    kogito.service.url=http://notation-bbtest.apps.ocp4.ouachani.org
-    kogito.dataindex.http.url=http://data-index-bbtest.apps.ocp4.ouachani.org
-    kogito.dataindex.ws.url=ws://data-index:8080
-    quarkus.http.cors=true
-
-    mp.messaging.incoming.kogito_incoming_stream.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.outgoing.kogito_outgoing_stream.bootstrap.servers=${kafka.bootstrap.servers}
-
-    mp.messaging.incoming.kogito_incoming_stream.connector=smallrye-kafka
-    mp.messaging.incoming.kogito_incoming_stream.topic=loanapplication
-    mp.messaging.incoming.kogito_incoming_stream.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
-
-    mp.messaging.outgoing.kogito_outgoing_stream.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito_outgoing_stream.topic=result
-    mp.messaging.outgoing.kogito_outgoing_stream.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-
-    # kogito - kafka messaging
-    mp.messaging.outgoing.kogito-jobs-events.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.outgoing.kogito-jobs-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-jobs-events.topic=kogito-jobs-events
-    mp.messaging.outgoing.kogito-jobs-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-
-    mp.messaging.outgoing.kogito-processdomain-events.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.outgoing.kogito-processdomain-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-processdomain-events.topic=kogito-processdomain-events
-    mp.messaging.outgoing.kogito-processdomain-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-
-    mp.messaging.outgoing.kogito-usertaskdomain-events.bootstrap.servers=${kafka.bootstrap.servers} 
-    mp.messaging.outgoing.kogito-usertaskdomain-events.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.outgoing.kogito-usertaskdomain-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-usertaskdomain-events.topic=kogito-usertaskdomain-events
-    mp.messaging.outgoing.kogito-usertaskdomain-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-    mp.messaging.outgoing.kogito-processinstances-events.bootstrap.servers=${kafka.bootstrap.servers}
-    mp.messaging.outgoing.kogito-processinstances-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-processinstances-events.topic=kogito-processinstances-events
-    mp.messaging.outgoing.kogito-processinstances-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-    mp.messaging.outgoing.kogito-usertaskinstances-events.bootstrap.servers=${kafka.bootstrap.servers}   
-    mp.messaging.outgoing.kogito-usertaskinstances-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-usertaskinstances-events.topic=kogito-usertaskinstances-events
-    mp.messaging.outgoing.kogito-usertaskinstances-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
-
-    mp.messaging.outgoing.kogito-variables-events.bootstrap.servers=${kafka.bootstrap.servers}    
-    mp.messaging.outgoing.kogito-variables-events.connector=smallrye-kafka
-    mp.messaging.outgoing.kogito-variables-events.topic=kogito-variables-events
-    mp.messaging.outgoing.kogito-variables-events.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+    mp.messaging.incoming.kogito_incoming_stream.connector=smallrye-http
+    mp.messaging.outgoing.kogito_outgoing_stream.connector=smallrye-http
+    mp.messaging.outgoing.kogito_outgoing_stream.url=${K_SINK}
