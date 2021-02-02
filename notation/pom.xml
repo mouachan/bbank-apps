@@ -4,20 +4,22 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.redhat.bbank</groupId>
   <artifactId>notation</artifactId>
-  <version>1.0.0.Final</version>
+  <version>1.1.0.Final</version>
   <properties>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
     <maven.compiler.target>11</maven.compiler.target>
-    <quarkus.platform.version>1.10.3.Final</quarkus.platform.version>
+    <quarkus.platform.version>1.11.0.Final</quarkus.platform.version>
     <maven.compiler.source>11</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <quarkus-plugin.version>1.10.3.Final</quarkus-plugin.version>
+    <quarkus-plugin.version>1.11.0.Final</quarkus-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <kogito.version>${project.version}</kogito.version>
+    <infinispan.version>11.0.4.Final</infinispan.version>
+    <version.wiremock>2.27.2</version.wiremock>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -41,38 +43,24 @@
       <artifactId>quarkus-resteasy</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-qute</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-openapi</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>rest-assured</artifactId>
-      <scope>test</scope>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>kogito-quarkus</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-quarkus</artifactId>
+      <artifactId>knative-eventing-addon</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>
       <artifactId>kogito-cloudevents-quarkus-addon</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>monitoring-prometheus-addon</artifactId>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-reactive-messaging</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
+      <groupId>io.smallrye.reactive</groupId>
+      <artifactId>smallrye-reactive-messaging-http</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -84,12 +72,50 @@
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-events-reactive-messaging-addon</artifactId>
+      <artifactId>kogito-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>
       <artifactId>process-management-addon</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>monitoring-prometheus-quarkus-addon</artifactId>
+     </dependency>
+     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-docker</artifactId>
+    </dependency>
+     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>kogito-test-utils</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- required to mock the sink server -->
+    <!-- Unfortunately MockWebServer is incompatible with RestEasy:
+    java.lang.NoSuchMethodError: 'com.github.fge.jackson.JsonNumEquals com.github.fge.jackson.JsonNumEquals.getInstance()'
+    -->
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
+      <version>${version.wiremock}</version>
+      <scope>test</scope>
+    </dependency>
+
     <!--dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-s2i</artifactId>

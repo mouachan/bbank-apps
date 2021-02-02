@@ -1,6 +1,8 @@
 package org.redhat.notation;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -13,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class OrientationTest {
 
      
-
+     @Disabled
      @Test
      public void testModelNonNote() {
  
@@ -39,6 +41,7 @@ public class OrientationTest {
   /**
    * Model_1
    */
+    @Disabled
     @Test
     public void testModelOneNoteA() {
 
@@ -70,7 +73,7 @@ public class OrientationTest {
             .body("Notation.TypeAiguillage", is("MODELE_1"));
     }
    // {"Variables":[{"valeur":10,"type":"rentab_13"},{"valeur":25,"type":"strfin_36"}],"ContrePartie":{"DecoupageSectoriel":1,"TypeAiguillage":"MODELE_1"},"ScoreFinal":[[0,{"valeur":10,"type":"rentab_13"}],[0,{"valeur":25,"type":"strfin_36"}]],"Score":"function Score( Var, CP )","rules":[],"Notation":{"Score":0,"DecoupageSectoriel":1,"Note":"A","TypeAiguillage":"MODELE_1","Orientation":"Favorable","Detail":[[0,{"valeur":10,"type":"rentab_13"}],[0,{"valeur":25,"type":"strfin_36"}]]},"CodeNaf":"1012Z"}
-
+   @Disabled
    @Test
    public void testModelOneNoteB() {
 
@@ -102,7 +105,7 @@ public class OrientationTest {
            .body("Notation.TypeAiguillage", is("MODELE_1"));
    }
   
-
+  @Disabled
   @Test
   public void testModelOneNoteD() {
 
@@ -142,6 +145,7 @@ public class OrientationTest {
    * Model_2
    */
   @Test
+  @Disabled
   public void testModelTwoNoteA() {
 
       String body_calcul_variables = "{\"bilan\": { \"hn\": -52, \"ga\": 2, \"fl\": 3, \"fm\": 7, \"dl\": 24, \"ee\": 2 }}"; 
@@ -172,7 +176,7 @@ public class OrientationTest {
           .body("Notation.Orientation",is("Favorable"))
           .body("Notation.TypeAiguillage", is("MODELE_2"));
   }
-
+ @Disabled
  @Test
  public void testModelTwoNoteB() {
 
@@ -203,7 +207,7 @@ public class OrientationTest {
          .body("Notation.TypeAiguillage", is("MODELE_2"));
  }
 
-
+@Disabled
 @Test
 public void testModelTwoNoteC() {
 

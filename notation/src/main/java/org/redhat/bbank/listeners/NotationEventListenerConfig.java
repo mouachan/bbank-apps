@@ -3,7 +3,7 @@ package org.redhat.bbank.listeners;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.drools.core.config.DefaultRuleEventListenerConfig;
-import org.kie.kogito.monitoring.rule.PrometheusMetricsDroolsListener;
+import org.kie.kogito.monitoring.prometheus.common.rule.PrometheusMetricsDroolsListener;
 
 @ApplicationScoped
 public class NotationEventListenerConfig extends DefaultRuleEventListenerConfig {
