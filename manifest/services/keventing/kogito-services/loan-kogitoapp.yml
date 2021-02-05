@@ -33,5 +33,4 @@ spec:
   serviceLabels:
     app: loan
   infra:
-    - kogito-infinispan-infra
-    - kogito-kafka-infra
+    - kogito-knative-infra

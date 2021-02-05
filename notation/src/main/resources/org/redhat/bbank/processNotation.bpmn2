@@ -1,8 +1,9 @@
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_HR1PsEbmEDmRrtGLkADWgw" exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_MU0ZcEn8EDmmvNdkEenjbA" exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
   <bpmn2:itemDefinition id="_bilanItem" structureRef="org.redhat.bbank.model.Bilan"/>
   <bpmn2:itemDefinition id="_rentab13Item" structureRef="org.redhat.bbank.model.Variable"/>
   <bpmn2:itemDefinition id="_strfin36Item" structureRef="org.redhat.bbank.model.Variable"/>
   <bpmn2:itemDefinition id="__notationItem" structureRef="org.redhat.bbank.model.Notation"/>
+  <bpmn2:itemDefinition id="_loanItem" structureRef="org.redhat.bbank.model.Loan"/>
   <bpmn2:itemDefinition id="__C5DA00BC-E2D0-4375-A06A-BACD4E9D96D1_namespaceInputXItem" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="__C5DA00BC-E2D0-4375-A06A-BACD4E9D96D1_modelInputXItem" structureRef="java.lang.String"/>
   <bpmn2:itemDefinition id="__C5DA00BC-E2D0-4375-A06A-BACD4E9D96D1_decisionInputXItem" structureRef="java.lang.String"/>
@@ -21,21 +22,23 @@
   <bpmn2:itemDefinition id="__31A6C898-13C9-4E3F-B091-33CE766FCF6C_notation.scoreOutputXItem" structureRef="double"/>
   <bpmn2:itemDefinition id="__EA350BB0-8E13-4970-A1E4-137858771CCB_eventInputXItem" structureRef="org.redhat.bbank.model.Notation"/>
   <bpmn2:itemDefinition id="model1Type" structureRef="org.redhat.bbank.model.Notation"/>
-  <bpmn2:itemDefinition id="__8D34DBD0-9252-436C-A03E-91E183265D27_eventOutputXItem" structureRef="org.redhat.bbank.model.Bilan"/>
-  <bpmn2:itemDefinition id="noteapplicationType" structureRef="org.redhat.bbank.model.Bilan"/>
-  <bpmn2:message id="_HR4TAEbmEDmRrtGLkADWgw" itemRef="model1Type" name="model1"/>
-  <bpmn2:message id="_HR4TAUbmEDmRrtGLkADWgw" itemRef="noteapplicationType" name="noteapplication"/>
-  <bpmn2:process id="computeNotation" drools:packageName="org.redhat.credit" drools:version="1.0" drools:adHoc="false" name="computeNotation" isExecutable="true" processType="Public">
+  <bpmn2:itemDefinition id="__8D34DBD0-9252-436C-A03E-91E183265D27_eventOutputXItem" structureRef="org.redhat.bbank.model.Loan"/>
+  <bpmn2:itemDefinition id="process.eligibility.noteapplicationType" structureRef="org.redhat.bbank.model.Loan"/>
+  <bpmn2:message id="_MU21sEn8EDmmvNdkEenjbA" itemRef="model1Type" name="model1"/>
+  <bpmn2:message id="_MU21sUn8EDmmvNdkEenjbA" itemRef="process.eligibility.noteapplicationType" name="process.eligibility.noteapplication"/>
+  <bpmn2:process id="notation" drools:packageName="org.redhat.bbank" drools:version="1.0" drools:adHoc="false" name="notation" isExecutable="true" processType="Public">
     <bpmn2:extensionElements>
       <drools:import name="java.util.List"/>
       <drools:import name="java.util.ArrayList"/>
       <drools:import name="org.redhat.bbank.model.Variable"/>
       <drools:import name="org.redhat.bbank.model.Notation"/>
+      <drools:import name="org.redhat.bbank.model.Loan"/>
     </bpmn2:extensionElements>
     <bpmn2:property id="bilan" itemSubjectRef="_bilanItem" name="bilan"/>
     <bpmn2:property id="rentab13" itemSubjectRef="_rentab13Item" name="rentab13"/>
     <bpmn2:property id="strfin36" itemSubjectRef="_strfin36Item" name="strfin36"/>
     <bpmn2:property id="_notation" itemSubjectRef="__notationItem" name="_notation"/>
+    <bpmn2:property id="loan" itemSubjectRef="_loanItem" name="loan"/>
     <bpmn2:sequenceFlow id="_BD313F06-0C2F-4236-8C79-4E01B56E86A0" sourceRef="_DCCF02E7-6DC6-41FB-B031-9544B74067BF" targetRef="_EA350BB0-8E13-4970-A1E4-137858771CCB">
       <bpmn2:extensionElements>
         <drools:metaData name="isAutoConnection.target">
@@ -61,20 +64,20 @@
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:outgoing>_B2448220-FB61-485D-8B01-37218E524E5F</bpmn2:outgoing>
-      <bpmn2:dataOutput id="_8D34DBD0-9252-436C-A03E-91E183265D27_eventOutputX" drools:dtype="org.redhat.bbank.model.Bilan" itemSubjectRef="__8D34DBD0-9252-436C-A03E-91E183265D27_eventOutputXItem" name="event"/>
+      <bpmn2:dataOutput id="_8D34DBD0-9252-436C-A03E-91E183265D27_eventOutputX" drools:dtype="org.redhat.bbank.model.Loan" itemSubjectRef="__8D34DBD0-9252-436C-A03E-91E183265D27_eventOutputXItem" name="event"/>
       <bpmn2:dataOutputAssociation>
         <bpmn2:sourceRef>_8D34DBD0-9252-436C-A03E-91E183265D27_eventOutputX</bpmn2:sourceRef>
-        <bpmn2:targetRef>bilan</bpmn2:targetRef>
+        <bpmn2:targetRef>loan</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
       <bpmn2:outputSet>
         <bpmn2:dataOutputRefs>_8D34DBD0-9252-436C-A03E-91E183265D27_eventOutputX</bpmn2:dataOutputRefs>
       </bpmn2:outputSet>
-      <bpmn2:messageEventDefinition drools:msgref="noteapplication" messageRef="_HR4TAUbmEDmRrtGLkADWgw"/>
+      <bpmn2:messageEventDefinition drools:msgref="process.eligibility.noteapplication" messageRef="_MU21sUn8EDmmvNdkEenjbA"/>
     </bpmn2:startEvent>
-    <bpmn2:endEvent id="_EA350BB0-8E13-4970-A1E4-137858771CCB" name="model1">
+    <bpmn2:endEvent id="_EA350BB0-8E13-4970-A1E4-137858771CCB" name="notation.model1">
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[model1]]></drools:metaValue>
+          <drools:metaValue><![CDATA[notation.model1]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>_BD313F06-0C2F-4236-8C79-4E01B56E86A0</bpmn2:incoming>
@@ -86,7 +89,7 @@
       <bpmn2:inputSet>
         <bpmn2:dataInputRefs>_EA350BB0-8E13-4970-A1E4-137858771CCB_eventInputX</bpmn2:dataInputRefs>
       </bpmn2:inputSet>
-      <bpmn2:messageEventDefinition drools:msgref="model1" messageRef="_HR4TAEbmEDmRrtGLkADWgw"/>
+      <bpmn2:messageEventDefinition drools:msgref="model1" messageRef="_MU21sEn8EDmmvNdkEenjbA"/>
     </bpmn2:endEvent>
     <bpmn2:scriptTask id="_DCCF02E7-6DC6-41FB-B031-9544B74067BF" name="Log Result" scriptFormat="http://www.java.com/java">
       <bpmn2:extensionElements>
@@ -218,8 +221,9 @@ kcontext.setVariable("_notation",_notation);</bpmn2:script>
       </bpmn2:extensionElements>
       <bpmn2:incoming>_B2448220-FB61-485D-8B01-37218E524E5F</bpmn2:incoming>
       <bpmn2:outgoing>_07FA3DF5-B7E8-4F71-AF8E-70D7C4A9319D</bpmn2:outgoing>
-      <bpmn2:script>System.out.println("bilan received "+bilan);
-kcontext.setVariable("bilan",bilan);
+      <bpmn2:script>bilan = loan.getBilan();
+System.out.println("bilan received "+bilan);
+kcontext.setVariable("bilan",loan.getBilan());
 rentab13 = new org.redhat.bbank.model.Variable();
 rentab13.setType("rentab_13");
 strfin36 = new org.redhat.bbank.model.Variable();
@@ -287,7 +291,7 @@ kcontext.setVariable("strfin36",strfin36);
     </bpmn2:businessRuleTask>
   </bpmn2:process>
   <bpmndi:BPMNDiagram>
-    <bpmndi:BPMNPlane bpmnElement="computeNotation">
+    <bpmndi:BPMNPlane bpmnElement="notation">
       <bpmndi:BPMNShape id="shape__C5DA00BC-E2D0-4375-A06A-BACD4E9D96D1" bpmnElement="_C5DA00BC-E2D0-4375-A06A-BACD4E9D96D1">
         <dc:Bounds height="65" width="195" x="643" y="251"/>
       </bpmndi:BPMNShape>
@@ -443,7 +447,7 @@ kcontext.setVariable("strfin36",strfin36);
         </bpsim:Scenario>
       </bpsim:BPSimData>
     </bpmn2:extensionElements>
-    <bpmn2:source>_HR1PsEbmEDmRrtGLkADWgw</bpmn2:source>
-    <bpmn2:target>_HR1PsEbmEDmRrtGLkADWgw</bpmn2:target>
+    <bpmn2:source>_MU0ZcEn8EDmmvNdkEenjbA</bpmn2:source>
+    <bpmn2:target>_MU0ZcEn8EDmmvNdkEenjbA</bpmn2:target>
   </bpmn2:relationship>
 </bpmn2:definitions>

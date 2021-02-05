@@ -1,0 +1,12 @@
+apiVersion: messaging.knative.dev/v1
+kind: Channel
+metadata:
+  name: channel
+  labels:
+    app: channel
+    app.kubernetes.io/component: channel
+    app.kubernetes.io/instance: channel
+spec:
+  channelTemplate:
+    apiVersion: messaging.knative.dev/v1beta1
+    kind: InMemoryChannel

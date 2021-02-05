@@ -70,24 +70,14 @@ Create a knative-serving and knative-eventing instance
 
 Create the knative bkoker
 ```shell
-oc apply -f manifest/services/keventing/broker.yml
+oc apply -f manifest/services/keventing/infra/broker.yml
 ```
 Add the event-display service to follow the cloud native events 
 ```shell
-oc apply -f manifest/services/keventing/event-display-service.yml
+oc apply -f manifest/services/keventing/kogito-service/event-display-service.yml
 ```
-Any event that matches the event-type of the notation service start node in the Broker is sent to notation service
-```shell
-oc apply -f manifest/services/keventing/notation-trigger-consumer.yml
-```
-Any cloud event produced by notation service is delivred to the broker
-```shell
-oc apply -f manifest/services/keventing/notation-sinkbinding.yml
-```
-Add a trigger to catch calculated event and subscribe the event-display to the type of the event
-```shell
-oc apply -f manifest/services/keventing/model1-event-display-trigger.yml
-```
+
+
 
 ### Build the Loan Model
 
@@ -98,85 +88,62 @@ mvn clean install
 
 ### deploy kogito infra and notation service
 
-#### Install Strimzi, infinispan and kogito operator
+#### Install Kogito operator
 
-Install Infinispan/Red Hat Data Grid operator (operator version 2.0.56)
-![infinispan installation](./img/install-infinispan-11x.png) 
-Install Strimizi operator
-![strimzi installation](./img/install-strimzi.png) 
 Install Kogito operator
 ![strimzi installation](./img/install-kogito.png) 
 
-#### Install data-index e.g the kogito-infra 
+#### Install the kogito-infra 
 
-Deploy the kogito infra (infinispan, kafka and knative eventing)
+* deploy the kogito infra 
 ```shell
-kogito install infra kogito-infinispan-infra --kind Infinispan --apiVersion infinispan.org/v1 -p $PROJECT
-kogito install infra kogito-kafka-infra --kind Kafka --apiVersion kafka.strimzi.io/v1beta1 -p $PROJECT
-oc apply -f ./manifest/services/keventing/kogito-knative-infra.yml -n $PROJECT
-
-```
-create a data-index service
-
-``` shell
-kogito install data-index --infra kogito-infinispan-infra --infra kogito-kafka-infra -p $PROJECT 
-```
-
-Get the generated data-index configmap and add the infinispan client-intelligence property (quarkus.infinispan-client.client-intelligence=BASIC)
-
-``` shell
-oc get cm data-index-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
-echo "quarkus.infinispan-client.client-intelligence=BASIC" >> ./$TMP_DIR/application.properties
-oc create configmap data-index-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f 
-rm application.properties
-```
-
-This infra, will manage kafka topics and infinispan cache ! That’s one of the magic kogito I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !
-
-For each kogito service created, the Kogito operator will generate a configmap name nameofservice-protobuf-files that contains the protobuf of the models/processes to store all actions done by the process. 
-
-You can find the generated protobuf in /target/classes/persistence directory of each service.
-
-When the service is created with the property --infra, kogito operator will generate the configuration to connect to infinispan/kafka in (including the secrets), the name  
-
-Deploy and configure notation service
- 
-``` shell
-#create the service throw kogito operator (change the image registry by your own)
-oc apply -f ./manifest/services/keventing/notation-kogito-runtime.yml
-cd notation
-mvn clean package  -Dquarkus.container-image.build=true -Dquarkus.container-image.name=notation -Dquarkus.container-image.tag=1.0 -DskipTests=true
-docker tag mouachani/notation:1.0 quay.io/mouachan/notation:1.0
-docker push quay.io/mouachan/notation:1.0
-```
-Configure notation properties
-
-``` shell
 cd ..
-NOTATION_URL=$(oc get route notation --output=jsonpath={..spec.host})
-echo $NOTATION_URL
-cat ./manifest/properties/notation.properties >> ./$TMP_DIR/application.properties
-sed  -i "" s~DATA_INDEX_URL~${DATA_INDEX_URL}~g ./$TMP_DIR/application.properties
-sed  -i "" s~NOTATION_URL~${NOTATION_URL}~g ./$TMP_DIR/application.properties
-oc get cm notation-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
-oc create configmap notation-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f -
-rm ./$TMP_DIR/application.properties
+oc apply -f ./manifest/services/keventing/infra/kogito-knative-infra.yml -n $PROJECT
+```
+
+* deploy eligibility/notation service
+
+``` shell
+#create the service throw kogito operator 
+oc apply -f ./manifest/services/keventing/kogito-service/eligibility-kogitoapp.yml
+cd notation
+mvn clean package  -DskipTests=true
+oc start-build eligibility --from-dir=target 
+```
+ 
+```shell
+#create the service throw kogito operator 
+cd ../notation
+oc apply -f ../manifest/services/keventing/kogito-service/notation-kogitoapp.yml
+mvn clean package  -DskipTests=true
+oc start-build notation --from-dir=target 
+```
+
+* deploy event-display trigger
+```shell
+oc apply -f ../manifest/services/keventing/trigger/eligible-event-display-trigger.yml
+oc apply -f ../manifest/services/keventing/trigger/model1-event-display-trigger.yml
+```
+
+* deploy notation trigger (cloud event produced from eligbility should trigger the notation service ) <== not working yet
+```shell
+oc apply -f ../manifest/services/keventing/trigger/eligible-event-notation.yml
 ```
 
 
-
-## We are ready for tests, go find more people for help 😆
+## We are ready for tests, 😆
 
 ### Note A
 ```shell
-curl -X POST \                                                     08:47:20
+curl -X POST \                                                            18:29:06
 -H "content-type: application/json"  \
 -H "ce-specversion: 1.0"  \
 -H "ce-source: /from/localhost"  \
--H "ce-type: noteapplication" \
+-H "ce-type: process.eligibility.noteapplication" \
 -H "ce-id: 12346"  \
--d '{"gg":5,"ga":2,"hp":1,"hq":2,"dl":50,"ee":2,"siren":"423646512","variables":[]}' \
-http://notation-bbankapps-kevent.apps.cluster-e80d.e80d.example.opentlc.com
+-d "{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}" \
+http://notation-bbankapps-keventing.apps.cluster-e80d.e80d.example.opentlc.com
+
 ```
 Display the event catched by event-display
 ``` shell
@@ -193,4 +160,5 @@ Data,
   {"score":0.0,"note":"A","orientation":"Approved","decoupageSectoriel":1.0,"typeAiguillage":"MODELE_1"}
 ``` 
 
-As you can see the event-display service is triggered  :  ##{"score":0.0,"note":"A","orientation":"Approved","decoupageSectoriel":1.0,"typeAiguillage":"MODELE_1"}##
+As you can see the event-display service is triggered  :  
+* {"score":0.0,"note":"A","orientation":"Approved","decoupageSectoriel":1.0,"typeAiguillage":"MODELE_1"} *

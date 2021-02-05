@@ -76,9 +76,7 @@
     <module>notation</module>
           
     <module>loan</module>
-        
-    <module>kevent-trace</module>
-      
+              
   </modules>
   
 </project>

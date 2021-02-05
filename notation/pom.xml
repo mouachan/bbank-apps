@@ -18,7 +18,6 @@
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <kogito.version>${project.version}</kogito.version>
-    <infinispan.version>11.0.4.Final</infinispan.version>
     <version.wiremock>2.27.2</version.wiremock>
   </properties>
   <dependencyManagement>
@@ -61,14 +60,6 @@
     <dependency>
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>smallrye-reactive-messaging-http</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-infinispan-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>infinispan-persistence-addon</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>

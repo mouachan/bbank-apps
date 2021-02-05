@@ -8,7 +8,7 @@ spec:
   filter:
     attributes:
       # Name of the message node in the process.
-      type: noteapplication
+      type: process.eligibility.notation
   # The subscriber is the deployed service. Any event that matches the filter in the Broker is sent here.
   subscriber:
     ref:

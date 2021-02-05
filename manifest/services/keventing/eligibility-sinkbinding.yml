@@ -1,15 +1,17 @@
-apiVersion: sources.knative.dev/v1beta1
-kind: KafkaSource
+apiVersion: sources.knative.dev/v1alpha1
+kind: SinkBinding
 metadata:
-  name: kafka-source
+  name: eligibility-sink
 spec:
-  consumerGroup: knative-group
-  bootstrapServers:
-  - my-cluster-kafka-bootstrap.kafka:9092
-  topics:
-  - result
+  subject:
+    apiVersion: apps/v1
+    kind: Deployment
+    selector:
+      matchLabels:
+        app: eligibility
+  # Any cloud event produced by the application is delivered to the Broker.
   sink:
     ref:
-      apiVersion: serving.knative.dev/v1
-      kind: Service
-      name: event-display
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default

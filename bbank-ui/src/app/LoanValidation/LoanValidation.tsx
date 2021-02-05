@@ -1,6 +1,9 @@
 import * as React from 'react';
 
+
+
 import 'whatwg-fetch';
+import { CloudEvent, CloudEventV1, Emitter, HTTP } from 'cloudevents';
 import { Form,
   Card, 
   CardTitle, 
@@ -25,7 +28,9 @@ import { Form,
 import ReactJson from 'react-json-view';
 
 
-
+const PORT = process.env.PORT || 8080
+const target = process.env.K_SINK
+const emitter = new Emitter({ url: target})
 
 interface ILoanValidation {
   idProcess: string,
@@ -92,69 +97,11 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
   
  
   getUniqueId = () => (new Date().getTime());
-  checkStateProcess = (graphql, id) => {
-    fetch(graphql, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({query: "{ ProcessInstances (where: {id: {equal: \""+id+"\"}}){state} }"})
-      })
-      .then(r => r.json())
-      .then(data => {
-        console.log(data);
-        if((data != null) && (data.data !== null)  && (data.data.ProcessInstances != null) && (data.data.ProcessInstances.length > 0) && (data.data.ProcessInstances[0]["state"] == "COMPLETED")){
-          this.getNotation(graphql,id);
-        } else {
-          this.checkStateProcess(graphql, id);
-        }
-      })
-  };
-  getNotation = (graphql, id) => {
-    console.log(graphql);
-     fetch(graphql, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({query: "{ ProcessInstances (where: {id: {equal: \""+id+"\"}}){variables} }"})
-      })
-      .then(r => r.json())
-      .then(data => {
-        var variables = data.data.ProcessInstances[0]["variables"];
-        console.log(variables);
-        var loan = JSON.parse(variables).loan;
-        console.log(loan);
-       // var notation = JSON.parse(loan).notation
-        console.log(loan.notation);
-        var result;
-        if(loan.eligible){
-          result = "Approved"
-      } else {
-          result = "Refused"
-          loan.notation = null;
-      }
-      this.setState({
-        loan: loan,
-        result: result,
-        isResultModal: true
-    })
+  
 
-      })
-   };
-
-   handleSubmit(event) {
-
-    var LOAN_VALIDATION_URL = process.env.LOAN_VALIDATION_URL || 'http://localhost:8480/loanValidation';
-    var MANAGMENT_CONSOLE_URL = process.env.MANAGMENT_CONSOLE_URL;
-    var GRAPHQL_URL = process.env.GRAPHQL_URL || 'http://localhost:8980/graphql'; 
-
-     console.log("Loan Validation : "+LOAN_VALIDATION_URL);
-     console.log("Graphql : "+GRAPHQL_URL);
-   const payload =JSON.stringify({
-      "loan":{
+    receiveAndSend = () => {
+    const data = JSON.stringify({
+      //"loan":{
       "siren": this.state.siren,
       "ca": this.state.ca,
       "nbEmployees": this.state.nbEmployees,
@@ -172,40 +119,56 @@ class LoanValidationForm extends React.Component<{},ILoanValidation> {
         "score": 0,
         "typeAiguillage": ""
       }
-    }
+    //}
     });
-
-
-    console.log(payload);
-    fetch(LOAN_VALIDATION_URL , {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: payload
+    const newCloudEvent = new CloudEvent({
+      type: 'eligibilityapplication',
+      source: 'bbankui',
+      specversion: '1.0',
+      id: this.getUniqueId,
+      data
     })
-    .then(
-      (result) => {
-        if(result.ok){
-          result.json().then((body) => { 
-              console.log(body);
-              this.setState({
-                idProcess: body.id
-              });
-              //this.checkStateProcess(GRAPHQL_URL, this.state.idProcess);
-              localStorage.setItem('idProcess', body.id);
- 
-              console.log(body.id);
-            });
-          } else {
-            this.addAlert('Call Error : ' + result.status + ' ' + result.statusText , 'danger', this.getUniqueId());
-          }
-      },
-      (error) => {
-        this.addAlert('Network Error : ' + error, 'danger', this.getUniqueId());
-      }
-    );
+  
+    // With only an endpoint URL, this creates a v1 emitter
+  
+    // Reply back to dispatcher/client as soon as possible
+    res.status(202).end()
+  
+    // Send the new Event to the K_SINK
+    emitter.send(newCloudEvent)
+      .then((res) => {
+        console.log(`Sent event: ${JSON.stringify(newCloudEvent, null, 2)}`)
+        console.log(`K_SINK responded: ${JSON.stringify({ status: res.status, headers: res.headers, data: res.data }, null, 2)}`)
+      })
+      .catch(console.error)
+  }
+  
+  /*receiveAndReply responds with new event
+  const receiveAndReply = (cloudEvent, res) => {
+    const data = handle(cloudEvent.data)
+    const newCloudEvent = new CloudEvent({
+      type: 'eligibilityapplication',
+      source: 'bbankui',
+      specversion: '1.0',
+      data
+    })
+  
+    console.log(`Reply event: ${JSON.stringify(newCloudEvent, null, 2)}`)
+    const message = HTTP.binary(newCloudEvent);
+    res.set(message.headers)
+    res.status(200).send(message.body)
+  }*/
+  
+
+   handleSubmit(event) {
+   
+    console.log(`Cookie monster is hungry for some cloudevents on port ${PORT}!`)
+    const modeMessage = target ? `send cloudevents to K_SINK: ${target}` : 'reply back with cloudevents'
+    console.log(`Cookie monster is going to ${modeMessage}`)
+    HTTP.toEvent({headers: attributes, body: data})
+
+    
+   
     event.preventDefault();
   }
 

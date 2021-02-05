@@ -69,7 +69,8 @@
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^4.1.4"
+    "webpack-merge": "^4.1.4",
+    "standard": "^14.3.4"
   },
   "dependencies": {
     "@patternfly/patternfly": "^4.16.7",
@@ -90,7 +91,9 @@
     "react-json-view": "1.19.1",
     "react-keycloak": "^8.0.1-191210",
     "react-router-last-location": "^2.0.1",
-    "whatwg-fetch": "^3.0.0"
+    "whatwg-fetch": "^3.0.0",
+    "cloudevents": "^4.0.0",
+    "nodemon": "^2.0.4"
   },
   "proxy": "http://localhost:8080"
 }
