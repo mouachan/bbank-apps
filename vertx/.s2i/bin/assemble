@@ -1,0 +1,191 @@
+#!/bin/bash -e
+#
+# S2I assemble script for the 'vertx-s2i' image.
+# The 'assemble' script builds your application source ready to run.
+#
+# For more information refer to the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+if [ "$1" = "-h" ]; then
+	# If the 'vertx-s2i' assemble script is executed with '-h' flag,
+	# print the usage.
+	exec /usr/local/s2i/usage
+	exit 0
+fi
+
+# # Restore artifacts from the previous build (if they exist).
+# #
+# if [ "$(ls /tmp/artifacts/ 2>/dev/null)" ]; then
+#   echo "---> Restoring build artifacts"
+#   mv /tmp/artifacts/. ./
+# fi
+#
+# echo "---> Installing application source"
+# cp -Rf /tmp/src/. ./
+#
+# echo "---> Building application from source"
+#
+
+##############################################################################
+
+# Source code provided to STI is at ${HOME}/source
+HOME=/opt/app-root/src
+LOCAL_SOURCE_DIR=${HOME}/source
+mkdir -p ${LOCAL_SOURCE_DIR}
+
+DEPLOY_DIR=/opt/openshift
+
+function copy_artifacts() {
+  if [ -d ${LOCAL_SOURCE_DIR}/$1 ]; then
+    echo "Copying all (fat) JAR artifacts from $LOCAL_SOURCE_DIR/$1 directory into $DEPLOY_DIR for later deployment..."
+    cp -v ${LOCAL_SOURCE_DIR}/$1/*.jar ${DEPLOY_DIR} 2> /dev/null
+  fi
+
+	# Copy src/env to deploy directory
+	if [ -d ${LOCAL_SOURCE_DIR}/src/env ]; then
+		echo "Copying external files from  $LOCAL_SOURCE_DIR/src/env/ directory into $DEPLOY_DIR for later deployment..."
+		cp -R -v ${LOCAL_SOURCE_DIR}/src/env/* ${DEPLOY_DIR} 2> /dev/null
+	fi
+
+  # Copy output_dir/env to deploy directory (for processed files)
+	if [ -d ${LOCAL_SOURCE_DIR}/$1/env ]; then
+		echo "Copying external files from  $LOCAL_SOURCE_DIR/$1/env/ directory into $DEPLOY_DIR for later deployment..."
+		cp -R -v ${LOCAL_SOURCE_DIR}/$1/env/* ${DEPLOY_DIR} 2> /dev/null
+	fi
+}
+
+# Copy the source for compilation
+cp -ad /tmp/src/* ${LOCAL_SOURCE_DIR}
+
+# If a pom.xml is present, this is a normal build scenario
+# so run maven.
+if [ -f "$LOCAL_SOURCE_DIR/pom.xml" ]; then
+  echo "Building with maven. $LOCAL_SOURCE_DIR/pom.xml found."
+
+	if [ -z "$OUTPUT_DIR" ]; then
+	  export OUTPUT_DIR="target"
+	elif [[ ${OUTPUT_DIR} != /* ]]; then
+	  export OUTPUT_DIR="$OUTPUT_DIR"
+	fi
+
+	echo "OUTPUT_DIR : ${OUTPUT_DIR}"
+
+  pushd ${LOCAL_SOURCE_DIR} &> /dev/null
+
+  if [ -z "$BUILDER_ARGS" ]; then
+    export BUILDER_ARGS="package -Popenshift -DskipTests -B"
+  fi
+
+  echo "Found pom.xml... attempting to build with 'mvn -e ${BUILDER_ARGS}'"
+
+  echo "Maven version:"
+  mvn --version
+
+  # Execute the actual build
+  mvn -e ${BUILDER_ARGS}
+
+  ERR=$?
+  if [ ${ERR} -ne 0 ]; then
+    echo "Aborting due to error code $ERR from Maven build"
+    exit ${ERR}
+  fi
+
+  # Copy built artifacts (if any!) from the target (output dir) directory
+  # to the $DEPLOY_DIR directory for later deployment
+  copy_artifacts ${OUTPUT_DIR}
+
+  # clean up after maven
+  mvn clean
+  if [ -d "$HOME/.m2/repository" ]; then
+    rm -r "$HOME/.m2/repository"
+  fi
+
+  popd &> /dev/null
+elif [ -f "$LOCAL_SOURCE_DIR/build.gradle" ]; then
+   echo "Building with gradle. $LOCAL_SOURCE_DIR/build.gradle found."
+
+	 if [ -z "$OUTPUT_DIR" ]; then
+ 	  export OUTPUT_DIR="build/libs"
+ 	elif [[ ${OUTPUT_DIR} != /* ]]; then
+ 	  export OUTPUT_DIR="$OUTPUT_DIR"
+ 	fi
+
+   pushd ${LOCAL_SOURCE_DIR} &> /dev/null
+
+  if [ -z "$BUILDER_ARGS" ]; then
+    export BUILDER_ARGS="shadowJar -x test"
+  fi
+
+  echo "Found gradle.build ... attempting to build with 'gradle -s ${BUILDER_ARGS}'"
+
+  echo "Gradle version:"
+  gradle --version
+
+  # Execute the actual build
+  gradle -s ${BUILDER_ARGS}
+
+  ERR=$?
+  if [ ${ERR} -ne 0 ]; then
+    echo "Aborting due to error code $ERR from Gradle build"
+    exit ${ERR}
+  fi
+
+  # Copy built artifacts (if any!) from the build/libs (output dir) directory
+  # to the $DEPLOY_DIR directory for later deployment
+  copy_artifacts ${OUTPUT_DIR}
+
+  # clean up after maven
+  gradle clean
+  if [ -d "$HOME/.m2/repository" ]; then
+    rm -r "$HOME/.m2/repository"
+  fi
+
+  if [ -d "$HOME/.gradle/caches" ]; then
+    rm -r "$HOME/.gradle/caches"
+  fi
+
+  popd &> /dev/null
+fi
+
+CONTAINER_HEAP_PERCENT=${CONTAINER_HEAP_PERCENT:-0.50}
+CONTAINER_MEMORY_IN_BYTES=`cat /sys/fs/cgroup/memory/memory.limit_in_bytes`
+
+DEFAULT_MEMORY_CEILING=$((2**40-1))
+if [ "${CONTAINER_MEMORY_IN_BYTES}" -lt "${DEFAULT_MEMORY_CEILING}" ]; then
+  CONTAINER_MEMORY_IN_MB=$((${CONTAINER_MEMORY_IN_BYTES}/1024**2))
+  CONTAINER_HEAP_MAX=$(echo "${CONTAINER_MEMORY_IN_MB} ${CONTAINER_HEAP_PERCENT}" | awk '{ printf "%d", $1 * $2 }')
+  JAVA_HEAP_MAX=-Xmx${CONTAINER_HEAP_MAX}
+fi
+
+# Java configuration
+
+if [ -z $JAVA_GC_OPTS ]; then
+  # note - MaxPermSize no longer valid with v8 of the jdk ... used to have -XX:MaxPermSize=100m
+  JAVA_GC_OPTS="-XX:+UseParallelGC -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -XX:MaxMetaspaceSize=100m"
+fi
+if [ ! -z "${CONTAINER_CORE_LIMIT}" ]; then
+  JAVA_CORE_LIMIT="-XX:ParallelGCThreads=${CONTAINER_CORE_LIMIT} -Djava.util.concurrent.ForkJoinPool.common.parallelism=${CONTAINER_CORE_LIMT} -XX:CICompilerCount=2"
+fi
+if [ ! -z "${USE_JAVA_DIAGNOSTICS}" ]; then
+  JAVA_DIAGNOSTICS="-XX:NativeMemoryTracking=summary -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UnlockDiagnosticVMOptions"
+fi
+
+# Copy (probably binary) artifacts from the deployments/
+# directory to the $DEPLOY_DIR directory for later deployment
+# copy_artifacts "deployments"
+
+# if [ -d $LOCAL_SOURCE_DIR/configuration ]; then
+#   echo "Copying config files from project..."
+#   cp -v $LOCAL_SOURCE_DIR/configuration/* $ARTIFACTS_HOME
+# fi
+
+if [ $(ls /opt/openshift/*.jar | wc -l) -eq 1 ]; then
+  mv /opt/openshift/*-fat.jar /opt/openshift/vertx-app.jar
+  [ ! -f /opt/openshift/vertx-app.jar ] && echo "Application could not be properly built." && exit 1
+  echo "Application jar file is located in /opt/openshift/vertx-app.jar"
+	echo "Files located in the application directory:"
+	ls -l /opt/openshift
+else
+  exit 1
+fi
