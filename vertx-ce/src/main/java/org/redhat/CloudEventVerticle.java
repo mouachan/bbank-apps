@@ -11,7 +11,7 @@ public class CloudEventVerticle extends AbstractVerticle {
       .subscribe((receivedEvent, throwable) -> {
         if (receivedEvent != null) {
           // I got a CloudEvent object:
-          System.out.println("The event type: " + receivedEvent.getType())
+          System.out.println("The event type: " + receivedEvent.getType());
         }
       }))
       .rxListen(8080)
