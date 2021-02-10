@@ -8,11 +8,8 @@ public class SampleHTTPServer {
 
     public static void main(String[] args) {
 
-        if (args.length != 1) {
-            System.err.println("Usage: SampleHTTPServer <port>");
-            return;
-        }
-        final int port = Integer.parseInt(args[0]);
+
+        final int port = 8080;
 
         final Vertx vertx = Vertx.vertx();
 

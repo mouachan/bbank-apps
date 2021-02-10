@@ -24,7 +24,7 @@ public class SampleHTTPClient {
             System.err.println("Usage: SampleHTTPClient <event_sink>");
             return;
         }
-        final String eventSink = args[0];
+        /*final String eventSink = args[0];
 
         final Vertx vertx = Vertx.vertx();
         final WebClient webClient = WebClient.create(vertx);
@@ -58,6 +58,6 @@ public class SampleHTTPClient {
                 .map(MessageReader::toEvent) // ...then to event
                 .onSuccess(System.out::println) // Print the received message
                 .onFailure(System.err::println); // Print the eventual failure
-        }
+        }*/
     }
 }
