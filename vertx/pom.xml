@@ -51,9 +51,9 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
                         <archive>
-                            <manifestEntries>
-                                <Automatic-Module-Name>${module-name}</Automatic-Module-Name>
-                            </manifestEntries>
+                            <manifest>
+                            <mainClass>io.cloudevents.examples.vertx.SampleHTTPServer</mainClass>
+                            </manifest>
                         </archive>
                     </configuration>
                 </plugin>
