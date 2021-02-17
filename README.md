@@ -6,10 +6,37 @@
 
 As part of the Serverless Workflow implementation, Kogito offers a Kubernetes Operator to deploy these workflows with Knative. The goal is to make it as simple as possible to deploy and manage user-defined workflows in cloud environments. Knative Eventing plays a very important role in this scenario by providing the underlying infrastructure for event-driven architectures. " [[1]](#1)
 
-The goal is to demonstrate how it's easy and fast to deploy a business application and optimize consumption of resources (RAM/CPU), by using kogito to build business application and knative serverless/eventing to run application only when it need it.
+
 <br>
 
-## How it works
+## Ambition
+
+The goal is to demonstrate how it's easy and fast to deploy a business application and optimize consumption of resources (RAM/CPU), by using kogito to build business application and knative serverless/eventing to run application only when it need it.
+
+We will demonstrate, how it's easy to:
+
+- deploy 3 business/kogito services that represent the eligibility, notation and offer parts of a loan  workflow.
+
+- trigger each service through broker/trigger/"SinkBinding event source" a knative eventing resources
+- trigger each service through Kafka broker/trigger/"Kafka event source" a knative eventing resources
+
+- chain all services using Sequence Knative resource   
+
+- run a loan "notation" (scoring) service to calculate a score only when an event comes through an http call with an CloudEvents specification.
+
+## Broker, trigger and event source 
+
+Knative eventing offer different ways to implement our goal :
+  - by using InMemoryChannel channel-based broker , SinkBinding as an event source and trigger to dispatch to  notation service 
+  - by using Kafka channel broker, Kafka event source and trigger to dispatch to  notation service     
+
+ ![knative description](./img/archi-broker-trigger-kevent.png)  
+
+What brings kogito service to simplify knative implementation?
+
+Apart the  
+
+ ![kogito knative description](./img/knative-kogito-arch.png)    
 
 
 ## Deploy localy

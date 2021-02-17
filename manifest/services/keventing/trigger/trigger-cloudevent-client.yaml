@@ -1,7 +1,7 @@
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
 metadata:
-  name: eligible-trigger-notation
+  name: trigger-cloudevent-client
 spec:
   # The default Broker is enabled in the namespace.
   broker: default
@@ -15,4 +15,4 @@ spec:
     ref:
       apiVersion: v1
       kind: Service
-      name: vertx
+      name: cloudevents-client

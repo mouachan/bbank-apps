@@ -1,0 +1,14 @@
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: display-all-events-ed-trigger
+spec:
+  # The default Broker is enabled in the namespace.
+  broker: default
+  # The subscriber is the deployed displayer service. Any event that matches the filter in the Broker is sent here.
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: event-display
+

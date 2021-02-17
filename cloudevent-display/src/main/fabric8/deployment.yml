@@ -1,0 +1,9 @@
+spec:
+ template:
+   spec:
+     containers:
+       - env:
+         - name: JAVA_OPTIONS
+           value: "-Dvertx.disableFileCPResolving=true"
+         - name: K_SINK
+           value: "http://broker-ingress.knative-eventing.svc.cluster.local/keventing-inmemory/default" 
