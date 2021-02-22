@@ -86,6 +86,52 @@
               <step>loan</step>
             </ExpressionElement>
             <ExpressionElement>
+              <step>eligible</step>
+            </ExpressionElement>
+          </expressionElements>
+          <expressionIdentifier>
+            <name>1613590562626</name>
+            <type>GIVEN</type>
+          </expressionIdentifier>
+          <factIdentifier>
+            <name>loan</name>
+            <className>loan</className>
+          </factIdentifier>
+          <className>boolean</className>
+          <factAlias>loan</factAlias>
+          <expressionAlias>eligible</expressionAlias>
+          <columnWidth>114</columnWidth>
+          <factMappingValueType>NOT_EXPRESSION</factMappingValueType>
+        </FactMapping>
+        <FactMapping>
+          <expressionElements>
+            <ExpressionElement>
+              <step>loan</step>
+            </ExpressionElement>
+            <ExpressionElement>
+              <step>msg</step>
+            </ExpressionElement>
+          </expressionElements>
+          <expressionIdentifier>
+            <name>1613590582245</name>
+            <type>GIVEN</type>
+          </expressionIdentifier>
+          <factIdentifier>
+            <name>loan</name>
+            <className>loan</className>
+          </factIdentifier>
+          <className>string</className>
+          <factAlias>loan</factAlias>
+          <expressionAlias>msg</expressionAlias>
+          <columnWidth>114</columnWidth>
+          <factMappingValueType>NOT_EXPRESSION</factMappingValueType>
+        </FactMapping>
+        <FactMapping>
+          <expressionElements>
+            <ExpressionElement>
+              <step>loan</step>
+            </ExpressionElement>
+            <ExpressionElement>
               <step>ca</step>
             </ExpressionElement>
           </expressionElements>
@@ -339,7 +385,7 @@
               <name>1|9</name>
               <type>GIVEN</type>
             </expressionIdentifier>
-            <rawValue class="string">IRD</rawValue>
+            <rawValue class="string">"IRD"</rawValue>
           </FactMappingValue>
           <FactMappingValue>
             <factIdentifier>
@@ -373,6 +419,28 @@
               <type>OTHER</type>
             </expressionIdentifier>
             <rawValue class="string">1</rawValue>
+          </FactMappingValue>
+          <FactMappingValue>
+            <factIdentifier>
+              <name>loan</name>
+              <className>loan</className>
+            </factIdentifier>
+            <expressionIdentifier>
+              <name>1613590562626</name>
+              <type>GIVEN</type>
+            </expressionIdentifier>
+            <rawValue class="string">false</rawValue>
+          </FactMappingValue>
+          <FactMappingValue>
+            <factIdentifier>
+              <name>loan</name>
+              <className>loan</className>
+            </factIdentifier>
+            <expressionIdentifier>
+              <name>1613590582245</name>
+              <type>GIVEN</type>
+            </expressionIdentifier>
+            <rawValue class="string">""</rawValue>
           </FactMappingValue>
         </factMappingValues>
       </Scenario>

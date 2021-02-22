@@ -1,4 +1,4 @@
-# Vertx + CloudEvents sample
+# Vertx + CloudEvents display
 
 ## Build
 
@@ -6,14 +6,26 @@
 mvn package
 ```
 
-## Start HTTP Server
+## Run
 
 ```shell
-mvn exec:java -Dexec.mainClass="io.cloudevents.examples.vertx.SampleHTTPServer" -Dexec.args="8080"
+mvn vertx:run 
 ```
 
-## Start HTTP Client
-
+## test
 ```shell
-mvn exec:java -Dexec.mainClass="io.cloudevents.examples.vertx.SampleHTTPClient" -Dexec.args="http://localhost:8080"
+curl -X POST \                                                                  09:14:34
+-H "content-type: application/json"  \
+-H "ce-specversion: 1.0"  \
+-H "ce-source: /from/localhost"  \
+-H "ce-type: eligibilityapplication" \
+-H "ce-id: 12346"  \
+-d "{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":1,\"hq\":2,\"dl\":50,\"ee\":2,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":true,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}" \
+http://localhost:8080
+{"age":3,"amount":50000,"bilan":{"gg":5,"ga":2,"hp":1,"hq":2,"dl":50,"ee":2,"siren":"423646512","variables":[]},"ca":200000,"eligible":false,"msg":"string","nbEmployees":10,"notation":{"decoupageSectoriel":0,"note":"string","orientation":"string","score":0,"typeAiguillage":"string"},"publicSupport":true,"siren":"423646512","typeProjet":"IRD"}
 ```
+## Build container
+```shell
+mvn compile jib:build -Dimage=registry.hub.docker.com/mouachani/cloudevent-display 
+```
+

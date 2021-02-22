@@ -4,13 +4,14 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <groupId>io.cloudevents</groupId>
     <version>2.0.0.RC2</version>
-    <artifactId>cloudevents-client</artifactId>
+    <artifactId>cloudevents-display</artifactId>
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <vertx.version>4.0.0</vertx.version>
         <vertx-maven-plugin.version>1.0.20</vertx-maven-plugin.version>
         <vertx.verticle>org.redhat.bbank.cloudevent.CloudEventClientVerticle</vertx.verticle>
-        <vertx.directory></vertx.directory>
+        <slf4j.version>1.7.21</slf4j.version>
+        <log4j2.version>2.5</log4j2.version>
 
         <!-- Specify the JDK builder image used to build your application. -->
         <fabric8.generator.from>registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift:latest</fabric8.generator.from>
@@ -61,6 +62,31 @@
             <artifactId>cloudevents-json-jackson</artifactId>
             <version>${io.cloudevents.version}</version>
         </dependency>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-slf4j-impl</artifactId>
+          <version>2.5</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-api</artifactId>
+          <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+          <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>2.9.3</version>
+      </dependency>
       </dependencies>
     
       <!-- Specify the repositories containing Vert.x artifacts. -->
@@ -94,11 +120,11 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>2.0.0</version>
+                <version>2.7.1</version>
                 <configuration>
                     <container>
                         <jvmFlags>
-                            <jvmFlag>-Dorg.slf4j.simpleLogger.defaultLogLevel=warn</jvmFlag>
+                            <jvmFlag>-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory</jvmFlag>
                         </jvmFlags>
                         <mainClass>org.redhat.bbank.cloudevent.CloudEventClientVerticle</mainClass>
                     </container>
@@ -109,6 +135,11 @@
                 <groupId>io.reactiverse</groupId>
                 <artifactId>vertx-maven-plugin</artifactId>
                 <version>1.0.22</version>
+                <configuration>
+                  <runArgs>
+                    -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory
+                  </runArgs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
