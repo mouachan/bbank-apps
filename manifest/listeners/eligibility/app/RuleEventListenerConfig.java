@@ -25,6 +25,6 @@ public class RuleEventListenerConfig extends DefaultRuleEventListenerConfig {
 
     
     public RuleEventListenerConfig() {
-        super(new PrometheusMetricsDroolsListener("eligibility"));
+        //super(new PrometheusMetricsDroolsListener("eligibility"));
     }
 }

@@ -5,7 +5,7 @@ metadata:
 spec:
   template:
     metadata:
-      name: companies-svc-v1
+      name: companies-svc-v2
       annotations:
         # disable istio-proxy injection
         sidecar.istio.io/inject: "false"
@@ -14,11 +14,10 @@ spec:
         # Target 10 crud-requests per pod.
         autoscaling.knative.dev/target: "10"
         autoscaling.knative.dev/metric: "rps"
-
     spec:
       containers:
         - image: >-
-            quay.io/mouachan/companies-svc:2.0
+            quay.io/mouachan/companies-svc:3.0
           env:
             - name: JAVA_OPTS
               value: "-Dvertx.cacheDirBase=/work/vertx"

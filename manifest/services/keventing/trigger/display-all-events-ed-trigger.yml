@@ -10,5 +10,5 @@ spec:
     ref:
       apiVersion: serving.knative.dev/v1
       kind: Service
-      name: event-display
+      name: cloudevent-display
 

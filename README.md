@@ -106,6 +106,7 @@ Routes include the project name, if you choose another one, don't forget to chan
     ```sh
     ./manifest/scripts/knative-serving.sh
     ./manifest/scripts/knative-eventing.sh
+    oc label namespace kogito-knative-bbank bindings.knative.dev/include=true 
     ```
 
   * create the knative bkoker
@@ -114,7 +115,7 @@ Routes include the project name, if you choose another one, don't forget to chan
     ```
   * add the event-display service to follow the cloud native events 
     ```sh
-    oc apply -f manifest/services/keventing/kogito-service/event-display-service.yml
+    oc apply -f manifest/services/keventing/kogito-services/event-display-service.yml
     ```
 
 
@@ -143,8 +144,8 @@ Routes include the project name, if you choose another one, don't forget to chan
 
     ```sh
     #create the service throw kogito operator 
-    oc apply -f ./manifest/services/keventing/kogito-service/eligibility-kogitoapp.yml
-    cd notation
+    oc apply -f ./manifest/services/keventing/kogito-services/eligibility-kogitoapp.yml
+    cd eligibility
     mvn clean package  -DskipTests=true
     oc start-build eligibility --from-dir=target 
     ```
@@ -152,7 +153,7 @@ Routes include the project name, if you choose another one, don't forget to chan
     ```sh
     #create the service throw kogito operator 
     cd ../notation
-    oc apply -f ../manifest/services/keventing/kogito-service/notation-kogitoapp.yml
+    oc apply -f ../manifest/services/keventing/kogito-services/notation-kogitoapp.yml
     mvn clean package  -DskipTests=true
     oc start-build notation --from-dir=target 
     ```
@@ -166,7 +167,7 @@ Routes include the project name, if you choose another one, don't forget to chan
 
   * call the notation service
     ```sh
-    curl -X POST \                                                            18:29:06
+    curl -X POST \
     -H "content-type: application/json"  \
     -H "ce-specversion: 1.0"  \
     -H "ce-source: /from/localhost"  \

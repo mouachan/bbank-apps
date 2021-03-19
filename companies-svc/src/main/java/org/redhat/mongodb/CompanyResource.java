@@ -36,15 +36,15 @@ public class CompanyResource {
 
     @GET
     @Path("/exist/{siren}")
-    public boolean exist(@PathParam("siren") String siren){
+    public String exist(@PathParam("siren") String siren){
 
         if(CompanyInfo.findFirstBySiren(siren) != null){
             System.out.println("company number :" +siren+" found");
-            return true;
+            return "company number :" +siren+" found";
         }
         else {
             System.out.println("company number :" +siren+" not found");
-            return false;
+            return "company number :" +siren+" not found";
         
         }
     }

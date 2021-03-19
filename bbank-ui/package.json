@@ -11,7 +11,7 @@
     "dr:surge": "node dr-surge.js",
     "build": "webpack --config webpack.prod.js && npm run dr:surge",
     "start": "webpack  --config webpack.prod.js && node server.js",
-    "start:dev": "webpack-dev-server --hot --color --progress --info=true --config webpack.dev.js",
+    "start:dev": "webpack-dev-server --port 9200 --hot --color --progress --info=true --config webpack.dev.js",
     "test": "jest",
     "eslint": "eslint --ext .tsx,.js ./src/",
     "lint": "npm run eslint",

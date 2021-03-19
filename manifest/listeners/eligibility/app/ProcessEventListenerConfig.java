@@ -31,12 +31,12 @@ public class ProcessEventListenerConfig extends DefaultProcessEventListenerConfi
     
     @PostConstruct
     public void setup() {
-    	this.listener = new EligibilityPrometheusProcessEventListener("eligibility");
-    	register(this.listener);
+    	//this.listener = new EligibilityPrometheusProcessEventListener("eligibility");
+    	//register(this.listener);
     }
     
     @PreDestroy
     public void close() { 
-    	this.listener.cleanup();;
+    	//this.listener.cleanup();;
     }
 }
