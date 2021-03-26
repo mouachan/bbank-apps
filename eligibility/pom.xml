@@ -4,17 +4,17 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>or.redhat.banking</groupId>
   <artifactId>eligibility</artifactId>
-  <version>1.0.0.Final</version>
+  <version>1.4.1.Final</version>
   <properties>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
     <maven.compiler.target>11</maven.compiler.target>
-    <quarkus.platform.version>1.10.3.Final</quarkus.platform.version>
+    <quarkus.platform.version>1.12.2.Final</quarkus.platform.version>
     <maven.compiler.source>11</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <quarkus-plugin.version>1.10.3.Final</quarkus-plugin.version>
+    <quarkus-plugin.version>1.12.2.Final</quarkus-plugin.version>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <kogito.version>${project.version}</kogito.version>
@@ -32,11 +32,11 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
-    <dependency>
+    <!--dependency>
       <groupId>org.redhat.bbank</groupId>
       <artifactId>model</artifactId>
       <version>${project.version}</version>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client</artifactId>
@@ -71,8 +71,8 @@
     </dependency>
     <dependency>
       <groupId>org.kie.kogito</groupId>
-      <artifactId>monitoring-prometheus-addon</artifactId>
-     </dependency>
+      <artifactId>monitoring-prometheus-quarkus-addon</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-infinispan-client</artifactId>
@@ -93,7 +93,6 @@
       <groupId>org.kie.kogito</groupId>
       <artifactId>drools-decisiontables</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
@@ -102,7 +101,10 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-smallrye-health</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>

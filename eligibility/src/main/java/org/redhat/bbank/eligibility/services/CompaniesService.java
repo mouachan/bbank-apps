@@ -8,6 +8,8 @@ import javax.inject.Inject;
 //import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.redhat.bbank.eligibility.rest.CompaniesRemoteService;
+//import org.eclipse.microprofile.faulttolerance.Fallback;
+
 
 @ApplicationScoped
 public class CompaniesService {
@@ -16,13 +18,13 @@ public class CompaniesService {
     @RestClient
     CompaniesRemoteService companiesRemoteService;
 
-    //@Fallback(fallbackMethod = "missingCompany")
-    public boolean get(String siren) {
+    public Boolean get(String siren) {
         return companiesRemoteService.get(siren);
     }
-    
-    public boolean missingCompany(String siren) {
-        return false;
-    }
+
+    // @Fallback(fallbackMethod = "missingCompany")
+    // public boolean missingCompany(String siren) {
+    //     return false;
+    // }
 
 }

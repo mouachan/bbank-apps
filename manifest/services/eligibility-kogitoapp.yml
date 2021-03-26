@@ -4,15 +4,6 @@ metadata:
   name: eligibility
 spec:
   type: Binary
- # type: RemoteSource
- # gitSource:
- #   contextDir: /eligibility
-  #  uri: "https://github.com/mouachan/bbank-apps"
-  #webHooks:
-  #  - type: "GitHub"
-  #    secret: "github"
-  # set your maven nexus repository to speed up the build time
-  #mavenMirrorURL:
 ---
 apiVersion: app.kiegroup.org/v1beta1
 kind: KogitoRuntime
@@ -34,3 +25,8 @@ spec:
   infra:
     - kogito-infinispan-infra
     - kogito-kafka-infra
+  resources:
+    requests:
+      memory: 4Gi 
+    limits:
+      memory: 6Gi 
