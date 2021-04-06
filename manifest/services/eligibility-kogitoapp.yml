@@ -27,6 +27,7 @@ spec:
     - kogito-kafka-infra
   resources:
     requests:
-      memory: 4Gi 
+      memory: 1Gi 
     limits:
-      memory: 6Gi 
+      memory: 2Gi 
+  replicas: 0

@@ -159,7 +159,7 @@ mongodb-1-deploy   0/1     Completed   0          47s
 ```
 ####  Create  DB and collection
 
-Get mongo pod name
+Wait until mongodb is running 
 ```shell
 oc get pods    
 
@@ -245,7 +245,10 @@ oc apply -f ../manifest/services/companies-svc-knative.yml
 native
 ```shell
 oc apply -f ../manifest/services/companies-svc-native-knative.yml 
-oc expose svc/ 
+```
+##### option 3 : use my container :)
+```shell
+oc apply -f ../manifest/services/companies-svc-knative.yml 
 ```
 
 #### verify the service availability
@@ -277,28 +280,22 @@ Deploy the kogito infra (infinispan and kafka)
 kogito install infra kogito-infinispan-infra --kind Infinispan --apiVersion infinispan.org/v1 -p $PROJECT
 kogito install infra kogito-kafka-infra --kind Kafka --apiVersion kafka.strimzi.io/v1beta1 -p $PROJECT
 ```
+
+Wait until the services are running
+
 create a data-index service
 
 ``` shell
 kogito install data-index --infra kogito-infinispan-infra --infra kogito-kafka-infra -p $PROJECT 
 ```
 
-Get the generated data-index configmap and add the infinispan client-intelligence property (quarkus.infinispan-client.client-intelligence=BASIC)
-
-``` shell
-oc get cm data-index-properties -o jsonpath='{.data.application\.properties}' >> ./$TMP_DIR/application.properties
-echo "quarkus.infinispan-client.client-intelligence=BASIC" >> ./$TMP_DIR/application.properties
-oc create configmap data-index-properties --from-file=./$TMP_DIR/application.properties --dry-run -o yaml | oc apply -f 
-rm application.properties
-```
-
 This infra, will manage kafka topics and infinispan cache ! That’s one of the magic kogito I prefer, no need to worry about it. Kogito Operator will take care on topics/caches for us !
 
-For each kogito service created, the Kogito operator will generate a configmap name nameofservice-protobuf-files that contains the protobuf of the models/processes to store all actions done by the process. 
+For each kogito service created, the Kogito operator will generate a configmap name nameofservice-protobuf-files that contains the protobuf of the models and processes to store all actions done by the process. 
 
 You can find the generated protobuf in /target/classes/persistence directory of each service.
 
-When the service is created with the property --infra, kogito operator will generate the configuration to connect to infinispan/kafka in (including the secrets), the name  
+When the service is created with the property --infra, Kogito operator generates configmaps containing infinispan and kafka configuration (including the secrets)  
 
 
 Deploy and configure eligibility service 
@@ -311,7 +308,8 @@ mvn clean package -DskipTests=true
 # deploy the binaries to Openshift
 oc start-build eligibility --from-dir=target -n $PROJECT 
 ```
-Configure eligibility properties
+
+Wait t
 
 ``` shell
 cd ..

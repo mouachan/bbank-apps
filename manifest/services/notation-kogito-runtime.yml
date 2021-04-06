@@ -19,3 +19,9 @@ spec:
   infra:
     - kogito-infinispan-infra
     - kogito-kafka-infra
+  resources:
+    requests:
+      memory: 4Gi 
+    limits:
+      memory: 6Gi 
+  replicas: 0

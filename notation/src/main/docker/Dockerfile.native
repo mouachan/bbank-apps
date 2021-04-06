@@ -7,11 +7,11 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native -t quarkus/companies-loan-application-svc .
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/eligibility .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/companies-loan-application-svc
+# docker run -i --rm -p 8080:8080 quarkus/eligibility
 #
 ###
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.1

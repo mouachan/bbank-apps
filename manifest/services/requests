@@ -1,0 +1,5 @@
+{"age":3,"amount":50000,"bilan":{"gg":5,"ga":2,"hp":1,"hq":2,"dl":50,"ee":2,"siren":"423646512","variables":[]},"ca":200000,"eligible":false,"msg":"string","nbEmployees":10,"notation":{"decoupageSectoriel":0,"note":"string","orientation":"string","score":0,"typeAiguillage":"string"},"publicSupport":true,"siren":"423646512","typeProjet":"IRD"}
+
+curl -X POST 
+
+curl -X POST http://loan-loanvalidation.apps.cluster-2ab3.2ab3.sandbox777.opentlc.com  -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"loan\":{\"age\":3,\"amount\":50000,\"bilan\":{\"gg\":5,\"ga\":2,\"hp\":0,\"hq\":2,\"dl\":16,\"ee\":4,\"siren\":\"423646512\",\"variables\":[]},\"ca\":200000,\"eligible\":false,\"msg\":\"string\",\"nbEmployees\":10,\"notation\":{\"decoupageSectoriel\":0,\"note\":\"string\",\"orientation\":\"string\",\"score\":0,\"typeAiguillage\":\"string\"},\"publicSupport\":false,\"siren\":\"423646512\",\"typeProjet\":\"IRD\"}}"

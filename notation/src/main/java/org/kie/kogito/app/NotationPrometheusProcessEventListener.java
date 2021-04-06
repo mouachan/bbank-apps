@@ -16,11 +16,11 @@
 package org.kie.kogito.app;
 
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
-import org.kie.kogito.monitoring.process.PrometheusProcessEventListener;
 import org.redhat.bbank.model.Bilan;
 import org.redhat.bbank.model.Variable;
 import org.redhat.bbank.model.Notation;
 import org.kie.api.event.process.ProcessCompletedEvent;
+import org.kie.kogito.monitoring.prometheus.common.process.PrometheusProcessEventListener;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;

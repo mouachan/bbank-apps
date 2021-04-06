@@ -15,17 +15,28 @@
  */
 package org.kie.kogito.app;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 
-import org.drools.core.config.DefaultRuleEventListenerConfig;
-import org.kie.kogito.monitoring.prometheus.common.rule.PrometheusMetricsDroolsListener;
+import org.kie.kogito.process.impl.DefaultProcessEventListenerConfig;
 
-
-@ApplicationScoped
-public class RuleEventListenerConfig extends DefaultRuleEventListenerConfig {
-
+//@ApplicationScoped
+public class ProcessEventListenerConfig extends DefaultProcessEventListenerConfig {
+   
+	private EligibilityPrometheusProcessEventListener listener;
+    public ProcessEventListenerConfig() {
+        super();
+    }
     
-    public RuleEventListenerConfig() {
-        super(new PrometheusMetricsDroolsListener("eligibility"));
+    @PostConstruct
+    public void setup() {
+    	this.listener = new EligibilityPrometheusProcessEventListener("eligibility");
+    	register(this.listener);
+    }
+    
+    @PreDestroy
+    public void close() { 
+    	this.listener.cleanup();;
     }
 }
