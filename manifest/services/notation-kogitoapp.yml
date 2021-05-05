@@ -30,4 +30,4 @@ spec:
       memory: 1Gi 
     limits:
       memory: 2Gi 
-  replicas: 0
+  replicas: 1
